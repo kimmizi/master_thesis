@@ -409,4 +409,3 @@ thinking_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_thinking_prompt.csv", 
 
 thinking_df_explanation_GPT = pd.DataFrame(thinking_explanation_GPT, columns = ["thinking"])
 thinking_df_explanation_GPT.to_csv("../exp/y_pred_LLMs/GPT/explanation_GPT_thinking_prompt.csv", sep = ",", index = False)
-
