@@ -3,6 +3,7 @@
 
 
 #### 0 Imports ####
+
 import os
 import pandas as pd
 import anthropic
@@ -97,11 +98,13 @@ print("LLMs \n",
 
 
 
-#### 1.2 Prompting with ChatGPT ####
+#### 1.2 Prompting with ChatGPT-3o ####
+
+
 
 #### Simple prompt ####
 
-simple_y_pred_GPT = []
+y_pred_simple_GPT = []
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -127,46 +130,46 @@ for prompt in X_test_simple_prompt:
             input = prompt
         )
 
-    simple_y_pred_GPT.append(response.output_text)
+    y_pred_simple_GPT.append(response.output_text)
     print(response.output_text)
 
     # save responses to csv after every 50th prompt
-    if len(simple_y_pred_GPT) % 50 == 0:
-        print("\n \n prompt", len(simple_y_pred_GPT))
+    if len(y_pred_simple_GPT) % 50 == 0:
+        print("\n \n prompt", len(y_pred_simple_GPT))
         # value counts for array
-        counts_simple_GPT = pd.Series(simple_y_pred_GPT).value_counts()
+        counts_simple_GPT = pd.Series(y_pred_simple_GPT).value_counts()
         print(counts_simple_GPT)
 
         # convert YES to 1 and NO to 0
-        simple_y_pred_GPT = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in simple_y_pred_GPT]
+        y_pred_simple_GPT = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_GPT]
 
         # save the array to a csv file
-        simple_prompt_df_GPT = pd.DataFrame(simple_y_pred_GPT, columns = ["y_pred"])
-        simple_prompt_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_simple_prompt.csv", sep = ",", index = False)
+        simple_df_GPT = pd.DataFrame(y_pred_simple_GPT, columns = ["y_pred"])
+        simple_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_simple_prompt.csv", sep = ",", index = False)
         print("\n \n csv saved \n \n")
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
 time_GPT_simple_prompt = end - start
-time_GPT_simple_prompt_df = pd.DataFrame({"time": [time_GPT_simple_prompt]})
-time_GPT_simple_prompt_df.to_csv("../exp/times_LLMs/GPT/time_GPT_simple_prompt.csv", sep = ",", index = False)
+time_GPT_simple_df = pd.DataFrame({"time": [time_GPT_simple_prompt]})
+time_GPT_simple_df.to_csv("../exp/times_LLMs/GPT/time_GPT_simple_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_simple_GPT = pd.Series(simple_y_pred_GPT).value_counts()
+counts_simple_GPT = pd.Series(y_pred_simple_GPT).value_counts()
 print(counts_simple_GPT)
 
 # convert YES to 1 and NO to 0
-simple_y_pred_GPT = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in simple_y_pred_GPT]
+y_pred_simple_GPT = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_GPT]
 
 # save the array to a csv file
-simple_prompt_df_GPT = pd.DataFrame(simple_y_pred_GPT, columns = ["y_pred"])
-simple_prompt_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_simple_prompt.csv", sep = ",", index = False)
+simple_df_GPT = pd.DataFrame(y_pred_simple_GPT, columns = ["y_pred"])
+simple_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_simple_prompt.csv", sep = ",", index = False)
 
 
 
 #### Class definition prompt ####
 
-class_def_y_pred_GPT = []
+y_pred_class_def_GPT = []
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -191,7 +194,7 @@ for prompt in X_test_class_definitions_prompt:
             input = prompt
         )
 
-    class_def_y_pred_GPT.append(response.output_text)
+    y_pred_class_def_GPT.append(response.output_text)
     print(response.output_text)
 
 end = time.time()
@@ -201,21 +204,21 @@ time_GPT_class_definitions_df = pd.DataFrame({"time": [time_GPT_class_definition
 time_GPT_class_definitions_df.to_csv("../exp/times_LLMs/GPT/time_GPT_class_definitions_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_class_def_GPT = pd.Series(class_def_y_pred_GPT).value_counts()
+counts_class_def_GPT = pd.Series(y_pred_class_def_GPT).value_counts()
 print(counts_class_def_GPT)
 
 # convert YES to 1 and NO to 0
-class_def_y_pred_GPT = [1 if response == "YES" else 0 for response in class_def_y_pred_GPT]
+y_pred_class_def_GPT = [1 if response == "YES" else 0 for response in y_pred_class_def_GPT]
 
 # save the array to a csv file
-class_def_df_GPT = pd.DataFrame(class_def_y_pred_GPT, columns = ["y_pred"])
+class_def_df_GPT = pd.DataFrame(y_pred_class_def_GPT, columns = ["y_pred"])
 class_def_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_class_definitions_prompt.csv", sep = ",", index = False)
 
 
 
 #### Profiled simple prompt ####
 
-profiled_simple_y_pred_GPT = []
+y_pred_profiled_simple_GPT = []
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -240,7 +243,7 @@ for prompt in X_test_profiled_simple_prompt:
             input = prompt
         )
 
-    profiled_simple_y_pred_GPT.append(response.output_text)
+    y_pred_profiled_simple_GPT.append(response.output_text)
     print(response.output_text)
 
 end = time.time()
@@ -250,21 +253,21 @@ time_GPT_profiled_simple_df = pd.DataFrame({"time": [time_GPT_profiled_simple]})
 time_GPT_profiled_simple_df.to_csv("../exp/times_LLMs/GPT/time_GPT_profiled_simple_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_profiled_simple_GPT = pd.Series(profiled_simple_y_pred_GPT).value_counts()
+counts_profiled_simple_GPT = pd.Series(y_pred_profiled_simple_GPT).value_counts()
 print(counts_profiled_simple_GPT)
 
 # convert YES to 1 and NO to 0
-profiled_simple_y_pred_GPT_val = [1 if response == "YES" else 0 for response in profiled_simple_y_pred_GPT]
+y_pred_profiled_simple_GPT_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_GPT]
 
 # save the array to a csv file
-profiled_simple_df_GPT = pd.DataFrame(profiled_simple_y_pred_GPT_val, columns = ["y_pred"])
+profiled_simple_df_GPT = pd.DataFrame(y_pred_profiled_simple_GPT_val, columns = ["y_pred"])
 profiled_simple_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_profiled_simple_prompt.csv", sep = ",", index = False)
 
 
 
 #### Few shot prompt ####
 
-few_shot_y_pred_GPT = []
+y_pred_few_shot_GPT = []
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -289,7 +292,7 @@ for prompt in X_test_few_shot_prompt:
             input = prompt
         )
 
-    few_shot_y_pred_GPT.append(response.output_text)
+    y_pred_few_shot_GPT.append(response.output_text)
     print(response.output_text)
 
 end = time.time()
@@ -299,21 +302,21 @@ time_GPT_few_shot_df = pd.DataFrame({"time": [time_GPT_few_shot]})
 time_GPT_few_shot_df.to_csv("../exp/times_LLMs/GPT/time_GPT_few_shot_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_few_shot_GPT = pd.Series(few_shot_y_pred_GPT).value_counts()
+counts_few_shot_GPT = pd.Series(y_pred_few_shot_GPT).value_counts()
 print(counts_few_shot_GPT)
 
 # convert YES to 1 and NO to 0
-few_shot_y_pred_GPT_val = [1 if response == "YES" else 0 for response in few_shot_y_pred_GPT]
+y_pred_few_shot_GPT_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_GPT]
 
 # save the array to a csv file
-few_shot_df_GPT = pd.DataFrame(few_shot_y_pred_GPT_val, columns = ["y_pred"])
+few_shot_df_GPT = pd.DataFrame(y_pred_few_shot_GPT_val, columns = ["y_pred"])
 few_shot_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_few_shot_prompt.csv", sep = ",", index = False)
 
 
 
 #### Vignette prompt ####
 
-vignette_y_pred_GPT = []
+y_pred_vignette_GPT = []
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -338,7 +341,7 @@ for prompt in X_test_vignette_prompt:
             input = prompt
         )
 
-    vignette_y_pred_GPT.append(response.output_text)
+    y_pred_vignette_GPT.append(response.output_text)
     print(response.output_text)
 
 end = time.time()
@@ -348,21 +351,22 @@ time_GPT_vignette_df = pd.DataFrame({"time": [time_GPT_vignette]})
 time_GPT_vignette_df.to_csv("../exp/times_LLMs/GPT/time_GPT_vignette_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_vignette_GPT = pd.Series(vignette_y_pred_GPT).value_counts()
+counts_vignette_GPT = pd.Series(y_pred_vignette_GPT).value_counts()
 print(counts_vignette_GPT)
 
 # convert YES to 1 and NO to 0
-vignette_y_pred_GPT_val = [1 if response == "YES" else 0 for response in vignette_y_pred_GPT]
+y_pred_vignette_GPT_val = [1 if response == "YES" else 0 for response in y_pred_vignette_GPT]
 
 # save the array to a csv file
-vignette_df_GPT = pd.DataFrame(vignette_y_pred_GPT_val, columns = ["y_pred"])
+vignette_df_GPT = pd.DataFrame(y_pred_vignette_GPT_val, columns = ["y_pred"])
 vignette_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_vignette_prompt.csv", sep = ",", index = False)
 
 
-#### Chain-of-Thought prompt ####
 
-thinking_y_pred_GPT = []
-thinking_explanation_GPT = []
+#### Chain-of-thought prompt ####
+
+y_pred_cot_GPT = []
+explanation_cot_GPT = []
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -372,40 +376,40 @@ client = OpenAI(
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_thinking_prompt:
+for prompt in X_test_cot_prompt:
     response = client.responses.create(
         model = "o3-2025-04-16",
-        instructions = thinking_instruction,
+        instructions = cot_instruction,
         input = prompt
     )
 
     try:
         prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
         explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
-        thinking_y_pred_GPT.append(prediction)
-        thinking_explanation_GPT.append(explanation)
+        y_pred_cot_GPT.append(prediction)
+        explanation_cot_GPT.append(explanation)
         print(prediction)
     except IndexError:
         print("IndexError")
-        thinking_y_pred_GPT.append("IndexError")
-        thinking_explanation_GPT.append("IndexError")
+        y_pred_cot_GPT.append("IndexError")
+        explanation_cot_GPT.append("IndexError")
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
-time_GPT_thinking = end - start
-time_GPT_thinking_df = pd.DataFrame({"time": [time_GPT_thinking]})
-time_GPT_thinking_df.to_csv("../exp/times_LLMs/GPT/time_GPT_thinking_prompt.csv", sep = ",", index = False)
+time_GPT_cot = end - start
+time_GPT_cot_df = pd.DataFrame({"time": [time_GPT_cot]})
+time_GPT_cot_df.to_csv("../exp/times_LLMs/GPT/time_GPT_cot_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_thinking_GPT = pd.Series(thinking_y_pred_GPT).value_counts()
-print(counts_thinking_GPT)
+counts_cot_GPT = pd.Series(y_pred_cot_GPT).value_counts()
+print(counts_cot_GPT)
 
 # convert YES to 1 and NO to 0
-thinking_y_pred_GPT_val = [1 if response == "YES" else 0 for response in thinking_y_pred_GPT]
+y_pred_cot_GPT_val = [1 if response == "YES" else 0 for response in y_pred_cot_GPT]
 
 # save the array to a csv file
-thinking_df_GPT = pd.DataFrame(thinking_y_pred_GPT_val, columns = ["y_pred"])
-thinking_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_thinking_prompt.csv", sep = ",", index = False)
+cot_df_GPT = pd.DataFrame(y_pred_cot_GPT_val, columns = ["y_pred"])
+cot_df_GPT.to_csv("../exp/y_pred_LLMs/GPT/y_pred_GPT_cot_prompt.csv", sep = ",", index = False)
 
-thinking_df_explanation_GPT = pd.DataFrame(thinking_explanation_GPT, columns = ["thinking"])
-thinking_df_explanation_GPT.to_csv("../exp/y_pred_LLMs/GPT/explanation_GPT_thinking_prompt.csv", sep = ",", index = False)
+cot_df_explanation_GPT = pd.DataFrame(explanation_cot_GPT, columns = ["cot"])
+cot_df_explanation_GPT.to_csv("../exp/y_pred_LLMs/GPT/explanation_GPT_cot_prompt.csv", sep = ",", index = False)
