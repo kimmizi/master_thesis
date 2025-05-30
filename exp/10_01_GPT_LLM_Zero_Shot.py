@@ -6,14 +6,10 @@
 
 import os
 import pandas as pd
-import anthropic
 import numpy as np
 import time
 import re
 from openai import OpenAI
-# from mistralai import Mistral
-from google import genai
-from google.genai import types
 from sklearn.model_selection import train_test_split
 
 data_change = pd.read_csv("../dat/dips/DIPS_Data_cleaned_change.csv", sep = ",", low_memory = False)
@@ -81,7 +77,7 @@ print("LLMs \n",
 
 
 
-#### 1.1 Testing prompting ####
+#### 1 Testing prompting ####
 
 # client = OpenAI(
 #     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -98,7 +94,7 @@ print("LLMs \n",
 
 
 
-#### 1.2 Prompting with ChatGPT-3o ####
+#### 2 Prompting with ChatGPT-3o ####
 
 
 

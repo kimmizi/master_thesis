@@ -6,12 +6,9 @@
 
 import os
 import pandas as pd
-import anthropic
 import numpy as np
 import time
 import re
-from openai import OpenAI
-# from mistralai import Mistral
 from google import genai
 from google.genai import types
 from sklearn.model_selection import train_test_split
@@ -81,7 +78,7 @@ print("LLMs \n",
 
 
 
-### 2.1 Testing prompting ####
+### 1 Testing prompting ####
 
 # client = genai.Client(api_key = os.environ.get("GEMINI_API_KEY"))
 #
@@ -106,7 +103,7 @@ print("LLMs \n",
 
 
 
-### 2.2 Prompting with Gemini 2.5 Pro ####
+### 2 Prompting with Gemini 2.5 Pro ####
 
 
 
