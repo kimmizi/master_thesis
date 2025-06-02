@@ -9,8 +9,8 @@ import anthropic
 import numpy as np
 import time
 import re
+from tqdm import tqdm
 from openai import OpenAI
-# from mistralai import Mistral
 from google import genai
 from google.genai import types
 from sklearn.model_selection import train_test_split
