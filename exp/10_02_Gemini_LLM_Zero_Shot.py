@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import time
 import re
+from tqdm import tqdm
 from google import genai
 from google.genai import types
 from sklearn.model_selection import train_test_split
@@ -89,17 +90,36 @@ print("LLMs \n",
 #
 # print(response.text)
 
-# client = genai.Client(
-#     api_key = os.environ.get("GEMINI_API_KEY")
-# )
-#
-# response = client.models.generate_content(
-#     model = "gemini-2.5-pro-preview-05-06",
-#     config = types.GenerateContentConfig(system_instruction = simple_instruction),
-#     contents = X_test_simple_prompt[0]
-# )
-#
-# print(response.text)
+client = genai.Client(
+    api_key = os.environ.get("GEMINI_API_KEY")
+)
+
+response = client.models.generate_content(
+    model = "gemini-2.5-pro-preview-05-06",
+    config = types.GenerateContentConfig(
+        system_instruction = simple_instruction,
+        thinking_config = types.ThinkingConfig(
+            include_thoughts = True
+        )
+    ),
+    contents = X_test_simple_prompt[0]
+)
+
+print(response.text)
+
+print(response.candidates[0].content.parts)
+
+for part in response.candidates[0].content.parts:
+  if not part.text:
+    continue
+  if part.thought:
+    print("Thought summary:")
+    print(part.text)
+    print()
+  else:
+    print("Answer:")
+    print(part.text)
+    print()
 
 
 
@@ -107,298 +127,303 @@ print("LLMs \n",
 
 
 
-#### Simple prompt ####
-
-y_pred_simple_gemini = []
-
-client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY")
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_simple_prompt:
-    response = client.models.generate_content(
-        model = "gemini-2.5-pro-preview-05-06",
-        config = types.GenerateContentConfig(system_instruction = simple_instruction),
-        contents = prompt,
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = "gemini-2.5-pro-preview-05-06",
-            config = types.GenerateContentConfig(system_instruction = retry_instruction),
-            contents = prompt,
-        )
-
-    y_pred_simple_gemini.append(response.text)
-    print(response.text)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemini_simple_prompt = end - start
-time_gemini_simple_df = pd.DataFrame({"time": [time_gemini_simple_prompt]})
-time_gemini_simple_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_simple_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_simple_gemini = pd.Series(y_pred_simple_gemini).value_counts()
-print(counts_simple_gemini)
-
-# convert YES to 1 and NO to 0
-y_pred_simple_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_gemini]
-
-# save the array to a csv file
-simple_df_gemini = pd.DataFrame(y_pred_simple_gemini_val, columns = ["y_pred"])
-simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.csv", sep = ",", index = False)
-
-
-
-#### Class definition prompt ####
-
-y_pred_class_def_gemini = []
-
-client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY")
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_class_definitions_prompt:
-    response = client.models.generate_content(
-        model = "gemini-2.5-pro-preview-05-06",
-        config = types.GenerateContentConfig(system_instruction = class_definitions_instruction),
-        contents = prompt,
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = "gemini-2.5-pro-preview-05-06",
-            config = types.GenerateContentConfig(system_instruction = retry_instruction),
-            contents = prompt,
-        )
-
-    y_pred_class_def_gemini.append(response.text)
-    print(response.text)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemini_class_def = end - start
-time_gemini_class_def_df = pd.DataFrame({"time": [time_gemini_class_def]})
-time_gemini_class_def_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_class_definitions_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_class_def_gemini = pd.Series(y_pred_class_def_gemini).value_counts()
-print(counts_class_def_gemini)
-
-# convert YES to 1 and NO to 0
-y_pred_class_def_gemini_val = [1 if response == "YES" else 0 for response in y_pred_class_def_gemini]
-
-# save the array to a csv file
-class_def_df_gemini = pd.DataFrame(y_pred_class_def_gemini_val, columns = ["y_pred"])
-class_def_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_class_definitions_prompt.csv", sep = ",", index = False)
-
-
-
-#### Profiled simple prompt ####
-
-y_pred_profiled_simple_gemini = []
-
-client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY")
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_profiled_simple_prompt:
-    response = client.models.generate_content(
-        model = "gemini-2.5-pro-preview-05-06",
-        config = types.GenerateContentConfig(system_instruction = simple_instruction),
-        contents = prompt,
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = "gemini-2.5-pro-preview-05-06",
-            config = types.GenerateContentConfig(system_instruction = retry_instruction),
-            contents = prompt,
-        )
-
-    y_pred_profiled_simple_gemini.append(response.text)
-    print(response.text)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemini_profiled_simple = end - start
-time_gemini_profiled_simple_df = pd.DataFrame({"time": [time_gemini_profiled_simple]})
-time_gemini_profiled_simple_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_profiled_simple_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_profiled_simple_gemini = pd.Series(y_pred_profiled_simple_gemini).value_counts()
-print(counts_profiled_simple_gemini)
-
-# convert YES to 1 and NO to 0
-y_pred_profiled_simple_gemini_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_gemini]
-
-# save the array to a csv file
-profiled_simple_df_gemini = pd.DataFrame(y_pred_profiled_simple_gemini_val, columns = ["y_pred"])
-profiled_simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_profiled_simple_prompt.csv", sep = ",", index = False)
-
-
-
-#### Few shot prompt ####
-
-y_pred_few_shot_gemini = []
-
-client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY")
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_few_shot_prompt:
-    response = client.models.generate_content(
-        model = "gemini-2.5-pro-preview-05-06",
-        config = types.GenerateContentConfig(system_instruction = simple_instruction),
-        contents = prompt,
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = "gemini-2.5-pro-preview-05-06",
-            config = types.GenerateContentConfig(system_instruction = retry_instruction),
-            contents = prompt,
-        )
-
-    y_pred_few_shot_gemini.append(response.text)
-    print(response.text)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemini_few_shot = end - start
-time_gemini_few_shot_df = pd.DataFrame({"time": [time_gemini_few_shot]})
-time_gemini_few_shot_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_few_shot_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_few_shot_gemini = pd.Series(y_pred_few_shot_gemini).value_counts()
-print(counts_few_shot_gemini)
-
-# convert YES to 1 and NO to 0
-y_pred_few_shot_gemini_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_gemini]
-
-# save the array to a csv file
-few_shot_df_gemini = pd.DataFrame(y_pred_few_shot_gemini_val, columns = ["y_pred"])
-few_shot_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_few_shot_prompt.csv", sep = ",", index = False)
-
-
-
-#### Vignette prompt ####
-
-y_pred_vignette_gemini = []
-
-client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY")
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_vignette_prompt:
-    response = client.models.generate_content(
-        model = "gemini-2.5-pro-preview-05-06",
-        config = types.GenerateContentConfig(system_instruction = simple_instruction),
-        contents = prompt,
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = "gemini-2.5-pro-preview-05-06",
-            config = types.GenerateContentConfig(system_instruction = retry_instruction),
-            contents = prompt,
-        )
-
-    y_pred_vignette_gemini.append(response.text)
-    print(response.text)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemini_vignette = end - start
-time_gemini_vignette_df = pd.DataFrame({"time": [time_gemini_vignette]})
-time_gemini_vignette_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_vignette_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_vignette_gemini = pd.Series(y_pred_vignette_gemini).value_counts()
-print(counts_vignette_gemini)
-
-# convert YES to 1 and NO to 0
-y_pred_vignette_gemini_val = [1 if response == "YES" else 0 for response in y_pred_vignette_gemini]
-
-# save the array to a csv file
-vignette_df_gemini = pd.DataFrame(y_pred_vignette_gemini_val, columns = ["y_pred"])
-vignette_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_vignette_prompt.csv", sep = ",", index = False)
-
-
-
-#### Chain-of-thought prompt ####
-
-y_pred_cot_gemini = []
-explanation_cot_gemini = []
-
-client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY")
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_cot_prompt:
-    response = client.models.generate_content(
-        model = "gemini-2.5-pro-preview-05-06",
-        config = types.GenerateContentConfig(system_instruction = simple_instruction),
-        contents = prompt,
-    )
-
-    try:
-        prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
-        explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
-        y_pred_cot_gemini.append(prediction)
-        explanation_cot_gemini.append(explanation)
-        print(prediction)
-    except IndexError:
-        print("IndexError")
-        y_pred_cot_gemini.append("IndexError")
-        explanation_cot_gemini.append("IndexError")
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemini_cot = end - start
-time_gemini_cot_df = pd.DataFrame({"time": [time_gemini_cot]})
-time_gemini_cot_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_cot_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_cot_gemini = pd.Series(y_pred_cot_gemini).value_counts()
-print(counts_cot_gemini)
-
-# convert YES to 1 and NO to 0
-y_pred_cot_gemini_val = [1 if response == "YES" else 0 for response in y_pred_cot_gemini]
-
-# save the array to a csv file
-cot_df_gemini = pd.DataFrame(y_pred_cot_gemini_val, columns = ["y_pred"])
-cot_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_cot_prompt.csv", sep = ",", index = False)
-
-cot_df_explanation_gemini = pd.DataFrame(explanation_cot_gemini, columns = ["cot"])
-cot_df_explanation_gemini.to_csv("../exp/y_pred_LLMs/Gemini/explanation_gemini_cot_prompt.csv", sep = ",", index = False)
+# #### Simple prompt ####
+#
+# y_pred_simple_gemini = []
+#
+# client = genai.Client(
+#     api_key = os.environ.get("GEMINI_API_KEY")
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
+#     response = client.models.generate_content(
+#         model = "gemini-2.5-pro-preview-05-06",
+#         config = types.GenerateContentConfig(
+#             system_instruction = simple_instruction,
+#             thinking_config = types.ThinkingConfig(
+#                 include_thoughts = True
+#             )
+#         ),
+#         contents = prompt,
+#     )
+#
+#     if response.text.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         response = client.models.generate_content(
+#             model = "gemini-2.5-pro-preview-05-06",
+#             config = types.GenerateContentConfig(system_instruction = retry_instruction),
+#             contents = prompt,
+#         )
+#
+#     y_pred_simple_gemini.append(response.text)
+#     print(response.text)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_gemini_simple_prompt = end - start
+# time_gemini_simple_df = pd.DataFrame({"time": [time_gemini_simple_prompt]})
+# time_gemini_simple_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_simple_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_simple_gemini = pd.Series(y_pred_simple_gemini).value_counts()
+# print(counts_simple_gemini)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_simple_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_gemini]
+#
+# # save the array to a csv file
+# simple_df_gemini = pd.DataFrame(y_pred_simple_gemini_val, columns = ["y_pred"])
+# simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Class definition prompt ####
+#
+# y_pred_class_def_gemini = []
+#
+# client = genai.Client(
+#     api_key = os.environ.get("GEMINI_API_KEY")
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting"):
+#     response = client.models.generate_content(
+#         model = "gemini-2.5-pro-preview-05-06",
+#         config = types.GenerateContentConfig(system_instruction = class_definitions_instruction),
+#         contents = prompt,
+#     )
+#
+#     if response.text.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         response = client.models.generate_content(
+#             model = "gemini-2.5-pro-preview-05-06",
+#             config = types.GenerateContentConfig(system_instruction = retry_instruction),
+#             contents = prompt,
+#         )
+#
+#     y_pred_class_def_gemini.append(response.text)
+#     print(response.text)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_gemini_class_def = end - start
+# time_gemini_class_def_df = pd.DataFrame({"time": [time_gemini_class_def]})
+# time_gemini_class_def_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_class_definitions_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_class_def_gemini = pd.Series(y_pred_class_def_gemini).value_counts()
+# print(counts_class_def_gemini)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_class_def_gemini_val = [1 if response == "YES" else 0 for response in y_pred_class_def_gemini]
+#
+# # save the array to a csv file
+# class_def_df_gemini = pd.DataFrame(y_pred_class_def_gemini_val, columns = ["y_pred"])
+# class_def_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_class_definitions_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Profiled simple prompt ####
+#
+# y_pred_profiled_simple_gemini = []
+#
+# client = genai.Client(
+#     api_key = os.environ.get("GEMINI_API_KEY")
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
+#     response = client.models.generate_content(
+#         model = "gemini-2.5-pro-preview-05-06",
+#         config = types.GenerateContentConfig(system_instruction = simple_instruction),
+#         contents = prompt,
+#     )
+#
+#     if response.text.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         response = client.models.generate_content(
+#             model = "gemini-2.5-pro-preview-05-06",
+#             config = types.GenerateContentConfig(system_instruction = retry_instruction),
+#             contents = prompt,
+#         )
+#
+#     y_pred_profiled_simple_gemini.append(response.text)
+#     print(response.text)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_gemini_profiled_simple = end - start
+# time_gemini_profiled_simple_df = pd.DataFrame({"time": [time_gemini_profiled_simple]})
+# time_gemini_profiled_simple_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_profiled_simple_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_profiled_simple_gemini = pd.Series(y_pred_profiled_simple_gemini).value_counts()
+# print(counts_profiled_simple_gemini)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_profiled_simple_gemini_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_gemini]
+#
+# # save the array to a csv file
+# profiled_simple_df_gemini = pd.DataFrame(y_pred_profiled_simple_gemini_val, columns = ["y_pred"])
+# profiled_simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_profiled_simple_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Few shot prompt ####
+#
+# y_pred_few_shot_gemini = []
+#
+# client = genai.Client(
+#     api_key = os.environ.get("GEMINI_API_KEY")
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
+#     response = client.models.generate_content(
+#         model = "gemini-2.5-pro-preview-05-06",
+#         config = types.GenerateContentConfig(system_instruction = simple_instruction),
+#         contents = prompt,
+#     )
+#
+#     if response.text.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         response = client.models.generate_content(
+#             model = "gemini-2.5-pro-preview-05-06",
+#             config = types.GenerateContentConfig(system_instruction = retry_instruction),
+#             contents = prompt,
+#         )
+#
+#     y_pred_few_shot_gemini.append(response.text)
+#     print(response.text)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_gemini_few_shot = end - start
+# time_gemini_few_shot_df = pd.DataFrame({"time": [time_gemini_few_shot]})
+# time_gemini_few_shot_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_few_shot_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_few_shot_gemini = pd.Series(y_pred_few_shot_gemini).value_counts()
+# print(counts_few_shot_gemini)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_few_shot_gemini_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_gemini]
+#
+# # save the array to a csv file
+# few_shot_df_gemini = pd.DataFrame(y_pred_few_shot_gemini_val, columns = ["y_pred"])
+# few_shot_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_few_shot_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Vignette prompt ####
+#
+# y_pred_vignette_gemini = []
+#
+# client = genai.Client(
+#     api_key = os.environ.get("GEMINI_API_KEY")
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+#     response = client.models.generate_content(
+#         model = "gemini-2.5-pro-preview-05-06",
+#         config = types.GenerateContentConfig(system_instruction = simple_instruction),
+#         contents = prompt,
+#     )
+#
+#     if response.text.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         response = client.models.generate_content(
+#             model = "gemini-2.5-pro-preview-05-06",
+#             config = types.GenerateContentConfig(system_instruction = retry_instruction),
+#             contents = prompt,
+#         )
+#
+#     y_pred_vignette_gemini.append(response.text)
+#     print(response.text)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_gemini_vignette = end - start
+# time_gemini_vignette_df = pd.DataFrame({"time": [time_gemini_vignette]})
+# time_gemini_vignette_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_vignette_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_vignette_gemini = pd.Series(y_pred_vignette_gemini).value_counts()
+# print(counts_vignette_gemini)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_vignette_gemini_val = [1 if response == "YES" else 0 for response in y_pred_vignette_gemini]
+#
+# # save the array to a csv file
+# vignette_df_gemini = pd.DataFrame(y_pred_vignette_gemini_val, columns = ["y_pred"])
+# vignette_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_vignette_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Chain-of-thought prompt ####
+#
+# y_pred_cot_gemini = []
+# explanation_cot_gemini = []
+#
+# client = genai.Client(
+#     api_key = os.environ.get("GEMINI_API_KEY")
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
+#     response = client.models.generate_content(
+#         model = "gemini-2.5-pro-preview-05-06",
+#         config = types.GenerateContentConfig(system_instruction = simple_instruction),
+#         contents = prompt,
+#     )
+#
+#     try:
+#         prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
+#         explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
+#         y_pred_cot_gemini.append(prediction)
+#         explanation_cot_gemini.append(explanation)
+#         print(prediction)
+#     except IndexError:
+#         print("IndexError")
+#         y_pred_cot_gemini.append("IndexError")
+#         explanation_cot_gemini.append("IndexError")
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_gemini_cot = end - start
+# time_gemini_cot_df = pd.DataFrame({"time": [time_gemini_cot]})
+# time_gemini_cot_df.to_csv("../exp/times_LLMs/Gemini/time_gemini_cot_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_cot_gemini = pd.Series(y_pred_cot_gemini).value_counts()
+# print(counts_cot_gemini)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_cot_gemini_val = [1 if response == "YES" else 0 for response in y_pred_cot_gemini]
+#
+# # save the array to a csv file
+# cot_df_gemini = pd.DataFrame(y_pred_cot_gemini_val, columns = ["y_pred"])
+# cot_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_cot_prompt.csv", sep = ",", index = False)
+#
+# cot_df_explanation_gemini = pd.DataFrame(explanation_cot_gemini, columns = ["cot"])
+# cot_df_explanation_gemini.to_csv("../exp/y_pred_LLMs/Gemini/explanation_gemini_cot_prompt.csv", sep = ",", index = False)
