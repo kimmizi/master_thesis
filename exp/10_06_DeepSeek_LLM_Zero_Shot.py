@@ -80,20 +80,20 @@ print("LLMs \n",
 
 #### 1 Testing prompting ####
 
-client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
-
-response = client.chat.completions.create(
-    model = "deepseek-reasoner",
-    messages = [
-        {"role": "system", "content": simple_instruction},
-        {"role": "user", "content": X_test_simple_prompt[0]},
-    ],
-    stream = False
-)
-
-print(response.choices[0].message.content)
-
-response.choices[0].message.reasoning_content
+# client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
+#
+# response = client.chat.completions.create(
+#     model = "deepseek-reasoner",
+#     messages = [
+#         {"role": "system", "content": simple_instruction},
+#         {"role": "user", "content": X_test_simple_prompt[0]},
+#     ],
+#     stream = False
+# )
+#
+# print(response.choices[0].message.content)
+#
+# response.choices[0].message.reasoning_content
 
 
 
@@ -112,7 +112,7 @@ client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https:
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_simple_prompt:
+for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prompt"):
     response = client.chat.completions.create(
         model = "deepseek-reasoner",
         messages = [
@@ -135,7 +135,7 @@ for prompt in X_test_simple_prompt:
 
     y_pred_simple_deeps.append(response.choices[0].message.content)
     thinking_simple_deeps.append(response.choices[0].message.reasoning_content)
-    print(response.choices[0].message.content)
+    # print(response.choices[0].message.content)
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
@@ -170,7 +170,7 @@ client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https:
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_class_definitions_prompt:
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
     response = client.chat.completions.create(
         model = "deepseek-reasoner",
         messages = [
@@ -193,7 +193,7 @@ for prompt in X_test_class_definitions_prompt:
 
     y_pred_class_def_deeps.append(response.choices[0].message.content)
     thinking_class_def_deeps.append(response.choices[0].message.reasoning_content)
-    print(response.choices[0].message.content)
+    # print(response.choices[0].message.content)
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
@@ -228,7 +228,7 @@ client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https:
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_profiled_simple_prompt:
+for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
     response = client.chat.completions.create(
         model = "deepseek-reasoner",
         messages = [
@@ -251,7 +251,7 @@ for prompt in X_test_profiled_simple_prompt:
 
     y_pred_profiled_simple_deeps.append(response.choices[0].message.content)
     thinking_profiled_simple_deeps.append(response.choices[0].message.reasoning_content)
-    print(response.choices[0].message.content)
+    # print(response.choices[0].message.content)
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
@@ -286,7 +286,7 @@ client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https:
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_few_shot_prompt:
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting", unit = "prompt"):
     response = client.chat.completions.create(
         model = "deepseek-reasoner",
         messages = [
@@ -309,7 +309,7 @@ for prompt in X_test_few_shot_prompt:
 
     y_pred_few_shot_deeps.append(response.choices[0].message.content)
     thinking_few_shot_deeps.append(response.choices[0].message.reasoning_content)
-    print(response.choices[0].message.content)
+    # print(response.choices[0].message.content)
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
@@ -347,7 +347,7 @@ client = OpenAI(
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_vignette_prompt:
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
     response = client.chat.completions.create(
         model = "deepseek-reasoner",
         messages = [
@@ -370,7 +370,7 @@ for prompt in X_test_vignette_prompt:
 
     y_pred_vignette_deeps.append(response.choices[0].message.content)
     thinking_vignette_deeps.append(response.choices[0].message.reasoning_content)
-    print(response.choices[0].message.content)
+    # print(response.choices[0].message.content)
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
@@ -409,7 +409,7 @@ client = OpenAI(
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_cot_prompt:
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
     response = client.chat.completions.create(
         model = "deepseek-reasoner",
         messages = [
@@ -424,7 +424,7 @@ for prompt in X_test_cot_prompt:
         y_pred_cot_deeps.append(prediction)
         explanation_cot_deeps.append(explanation)
         thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
-        print(prediction)
+        # print(prediction)
     except IndexError:
         print("IndexError")
         y_pred_cot_deeps.append("IndexError")
