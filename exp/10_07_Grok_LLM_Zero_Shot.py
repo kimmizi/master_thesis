@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import time
 import re
+from tqdm import tqdm
 from openai import OpenAI
 from sklearn.model_selection import train_test_split
 
@@ -115,7 +116,7 @@ client = OpenAI(
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_simple_prompt:
+for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
     completion = client.chat.completions.create(
         model = "grok-3-beta",
         messages = [
@@ -134,8 +135,13 @@ for prompt in X_test_simple_prompt:
             ],
         )
 
+    if len(y_pred_simple_grok) % 50 == 0:
+        print(f"\n\nProcessed {len(y_pred_simple_grok)} prompts.\n")
+        counts_simple = pd.Series(y_pred_simple_grok).value_counts()
+        print(counts_simple, "\n")
+
     y_pred_simple_grok.append(completion.choices[0].message.content)
-    print(completion.choices[0].message.content)
+    # print(completion.choices[0].message.content)
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
@@ -156,272 +162,283 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 
 
 
-#### Class definition prompt ####
+# #### Class definition prompt ####
+#
+# y_pred_class_def_grok = []
+#
+# client = OpenAI(
+#     api_key = os.environ.get("XAI_API_KEY"),
+#     base_url = "https://api.x.ai/v1",
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+#     completion = client.chat.completions.create(
+#         model = "grok-3-beta",
+#         messages = [
+#             {"role": "system", "content": class_definitions_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#     )
+#
+#     if completion.choices[0].message.content.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         completion = client.chat.completions.create(
+#             model = "grok-3-beta",
+#             messages = [
+#                 {"role": "system", "content": retry_instruction},
+#                 {"role": "user", "content": prompt},
+#             ],
+#         )
 
-y_pred_class_def_grok = []
+#     if len(y_pred_class_def_grok) % 50 == 0:
+#         print(f"\n\nProcessed {len(y_pred_class_def_grok)} prompts.\n")
+#         counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
+#         print(counts_class_def_grok, "\n")
+#
+#     y_pred_class_def_grok.append(completion.choices[0].message.content)
+#     # print(completion.choices[0].message.content)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_grok_class_definitions = end - start
+# time_grok_class_definitions_df = pd.DataFrame({"time": [time_grok_class_definitions]})
+# time_grok_class_definitions_df.to_csv("../exp/times_LLMs/Grok/time_grok_class_definitions_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
+# print(counts_class_def_grok)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_class_def_grok = [1 if response == "YES" else 0 for response in y_pred_class_def_grok]
+#
+# # save the array to a csv file
+# class_def_df_grok = pd.DataFrame(y_pred_class_def_grok, columns = ["y_pred"])
+# class_def_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_class_definitions_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Profiled simple prompt ####
+#
+# y_pred_profiled_simple_grok = []
+#
+# client = OpenAI(
+#     api_key = os.environ.get("XAI_API_KEY"),
+#     base_url = "https://api.x.ai/v1",
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
+#     completion = client.chat.completions.create(
+#         model = "grok-3-beta",
+#         messages = [
+#             {"role": "system", "content": profiled_simple_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#     )
+#
+#     if completion.choices[0].message.content.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         completion = client.chat.completions.create(
+#             model = "grok-3-beta",
+#             messages = [
+#                 {"role": "system", "content": retry_instruction},
+#                 {"role": "user", "content": prompt},
+#             ],
+#         )
 
-client = OpenAI(
-    api_key = os.environ.get("XAI_API_KEY"),
-    base_url = "https://api.x.ai/v1",
-)
+#     if len(y_pred_profiled_simple_grok) % 50 == 0:
+#         print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
+#         counts_profiled_simple_grok = pd.Series(y_pred_profiled_simple_grok).value_counts()
+#         print(counts_profiled_simple_grok, "\n")
 
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_class_definitions_prompt:
-    completion = client.chat.completions.create(
-        model = "grok-3-beta",
-        messages = [
-            {"role": "system", "content": class_definitions_instruction},
-            {"role": "user", "content": prompt},
-        ],
-    )
-
-    if completion.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        completion = client.chat.completions.create(
-            model = "grok-3-beta",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-        )
-
-    y_pred_class_def_grok.append(completion.choices[0].message.content)
-    print(completion.choices[0].message.content)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_grok_class_definitions = end - start
-time_grok_class_definitions_df = pd.DataFrame({"time": [time_grok_class_definitions]})
-time_grok_class_definitions_df.to_csv("../exp/times_LLMs/Grok/time_grok_class_definitions_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
-print(counts_class_def_grok)
-
-# convert YES to 1 and NO to 0
-y_pred_class_def_grok = [1 if response == "YES" else 0 for response in y_pred_class_def_grok]
-
-# save the array to a csv file
-class_def_df_grok = pd.DataFrame(y_pred_class_def_grok, columns = ["y_pred"])
-class_def_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_class_definitions_prompt.csv", sep = ",", index = False)
-
-
-
-#### Profiled simple prompt ####
-
-y_pred_profiled_simple_grok = []
-
-client = OpenAI(
-    api_key = os.environ.get("XAI_API_KEY"),
-    base_url = "https://api.x.ai/v1",
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_profiled_simple_prompt:
-    completion = client.chat.completions.create(
-        model = "grok-3-beta",
-        messages = [
-            {"role": "system", "content": profiled_simple_instruction},
-            {"role": "user", "content": prompt},
-        ],
-    )
-
-    if completion.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        completion = client.chat.completions.create(
-            model = "grok-3-beta",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-        )
-
-    y_pred_profiled_simple_grok.append(completion.choices[0].message.content)
-    print(completion.choices[0].message.content)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_grok_profiled_simple = end - start
-time_grok_profiled_simple_df = pd.DataFrame({"time": [time_grok_profiled_simple]})
-time_grok_profiled_simple_df.to_csv("../exp/times_LLMs/Grok/time_grok_profiled_simple_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_profiled_simple_grok = pd.Series(y_pred_profiled_simple_grok).value_counts()
-print(counts_profiled_simple_grok)
-
-# convert YES to 1 and NO to 0
-y_pred_profiled_simple_grok_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_grok]
-
-# save the array to a csv file
-profiled_simple_df_grok = pd.DataFrame(y_pred_profiled_simple_grok_val, columns = ["y_pred"])
-profiled_simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_profiled_simple_prompt.csv", sep = ",", index = False)
-
-
-
-#### Few shot prompt ####
-
-y_pred_few_shot_grok = []
-
-client = OpenAI(
-    api_key = os.environ.get("XAI_API_KEY"),
-    base_url = "https://api.x.ai/v1",
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_few_shot_prompt:
-    completion = client.chat.completions.create(
-        model = "grok-3-beta",
-        messages = [
-            {"role": "system", "content": few_shot_instruction},
-            {"role": "user", "content": prompt},
-        ],
-    )
-
-    if completion.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        completion = client.chat.completions.create(
-            model = "grok-3-beta",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-        )
-
-    y_pred_few_shot_grok.append(completion.choices[0].message.content)
-    print(completion.choices[0].message.content)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_grok_few_shot = end - start
-time_grok_few_shot_df = pd.DataFrame({"time": [time_grok_few_shot]})
-time_grok_few_shot_df.to_csv("../exp/times_LLMs/Grok/time_grok_few_shot_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_few_shot_grok = pd.Series(y_pred_few_shot_grok).value_counts()
-print(counts_few_shot_grok)
-
-# convert YES to 1 and NO to 0
-y_pred_few_shot_grok_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_grok]
-
-# save the array to a csv file
-few_shot_df_grok = pd.DataFrame(y_pred_few_shot_grok_val, columns = ["y_pred"])
-few_shot_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_few_shot_prompt.csv", sep = ",", index = False)
-
-
-
-#### Vignette prompt ####
-
-y_pred_vignette_grok = []
-
-client = OpenAI(
-    api_key = os.environ.get("XAI_API_KEY"),
-    base_url = "https://api.x.ai/v1",
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_vignette_prompt:
-    completion = client.chat.completions.create(
-        model = "grok-3-beta",
-        messages = [
-            {"role": "system", "content": vignette_instruction},
-            {"role": "user", "content": prompt},
-        ],
-    )
-
-    if completion.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        completion = client.chat.completions.create(
-            model = "grok-3-beta",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-        )
-
-    y_pred_vignette_grok.append(completion.choices[0].message.content)
-    print(completion.choices[0].message.content)
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_grok_vignette = end - start
-time_grok_vignette_df = pd.DataFrame({"time": [time_grok_vignette]})
-time_grok_vignette_df.to_csv("../exp/times_LLMs/Grok/time_grok_vignette_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_vignette_grok = pd.Series(y_pred_vignette_grok).value_counts()
-print(counts_vignette_grok)
-
-# convert YES to 1 and NO to 0
-y_pred_vignette_grok_val = [1 if response == "YES" else 0 for response in y_pred_vignette_grok]
-
-# save the array to a csv file
-vignette_df_grok = pd.DataFrame(y_pred_vignette_grok_val, columns = ["y_pred"])
-vignette_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_vignette_prompt.csv", sep = ",", index = False)
-
-
-
-#### Chain-of-thought prompt ####
-
-y_pred_cot_grok = []
-explanation_cot_grok = []
-
-client = OpenAI(
-    api_key = os.environ.get("XAI_API_KEY"),
-    base_url = "https://api.x.ai/v1",
-)
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_cot_prompt:
-    completion = client.chat.completions.create(
-        model = "grok-3-beta",
-        messages = [
-            {"role": "system", "content": cot_instruction},
-            {"role": "user", "content": prompt},
-        ],
-    )
-    try:
-        prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
-        explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
-        y_pred_cot_grok.append(prediction)
-        explanation_cot_grok.append(explanation)
-        print(prediction)
-    except IndexError:
-        print("IndexError")
-        y_pred_cot_grok.append("IndexError")
-        explanation_cot_grok.append("IndexError")
-
-end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_grok_cot_prompt = end - start
-time_grok_cot_df = pd.DataFrame({"time": [time_grok_cot_prompt]})
-time_grok_cot_df.to_csv("../exp/times_LLMs/Grok/time_grok_cot_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_cot_grok = pd.Series(y_pred_cot_grok).value_counts()
-print(counts_cot_grok)
-
-# convert YES to 1 and NO to 0
-y_pred_cot_grok_val = [1 if response == "YES" else 0 for response in y_pred_cot_grok]
-
-# save the array to a csv file
-cot_df_grok = pd.DataFrame(y_pred_cot_grok_val, columns = ["y_pred"])
-cot_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_cot_prompt.csv", sep = ",", index = False)
-
-cot_df_explanation_grok = pd.DataFrame(explanation_cot_grok, columns = ["cot"])
-cot_df_explanation_grok.to_csv("../exp/y_pred_LLMs/Grok/explanation_grok_cot_prompt.csv", sep = ",", index = False)
+#
+#     y_pred_profiled_simple_grok.append(completion.choices[0].message.content)
+#     # print(completion.choices[0].message.content)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_grok_profiled_simple = end - start
+# time_grok_profiled_simple_df = pd.DataFrame({"time": [time_grok_profiled_simple]})
+# time_grok_profiled_simple_df.to_csv("../exp/times_LLMs/Grok/time_grok_profiled_simple_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_profiled_simple_grok = pd.Series(y_pred_profiled_simple_grok).value_counts()
+# print(counts_profiled_simple_grok)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_profiled_simple_grok_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_grok]
+#
+# # save the array to a csv file
+# profiled_simple_df_grok = pd.DataFrame(y_pred_profiled_simple_grok_val, columns = ["y_pred"])
+# profiled_simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_profiled_simple_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Few shot prompt ####
+#
+# y_pred_few_shot_grok = []
+#
+# client = OpenAI(
+#     api_key = os.environ.get("XAI_API_KEY"),
+#     base_url = "https://api.x.ai/v1",
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in X_test_few_shot_prompt:
+#     completion = client.chat.completions.create(
+#         model = "grok-3-beta",
+#         messages = [
+#             {"role": "system", "content": few_shot_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#     )
+#
+#     if completion.choices[0].message.content.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         completion = client.chat.completions.create(
+#             model = "grok-3-beta",
+#             messages = [
+#                 {"role": "system", "content": retry_instruction},
+#                 {"role": "user", "content": prompt},
+#             ],
+#         )
+#
+#     y_pred_few_shot_grok.append(completion.choices[0].message.content)
+#     print(completion.choices[0].message.content)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_grok_few_shot = end - start
+# time_grok_few_shot_df = pd.DataFrame({"time": [time_grok_few_shot]})
+# time_grok_few_shot_df.to_csv("../exp/times_LLMs/Grok/time_grok_few_shot_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_few_shot_grok = pd.Series(y_pred_few_shot_grok).value_counts()
+# print(counts_few_shot_grok)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_few_shot_grok_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_grok]
+#
+# # save the array to a csv file
+# few_shot_df_grok = pd.DataFrame(y_pred_few_shot_grok_val, columns = ["y_pred"])
+# few_shot_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_few_shot_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Vignette prompt ####
+#
+# y_pred_vignette_grok = []
+#
+# client = OpenAI(
+#     api_key = os.environ.get("XAI_API_KEY"),
+#     base_url = "https://api.x.ai/v1",
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in X_test_vignette_prompt:
+#     completion = client.chat.completions.create(
+#         model = "grok-3-beta",
+#         messages = [
+#             {"role": "system", "content": vignette_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#     )
+#
+#     if completion.choices[0].message.content.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         completion = client.chat.completions.create(
+#             model = "grok-3-beta",
+#             messages = [
+#                 {"role": "system", "content": retry_instruction},
+#                 {"role": "user", "content": prompt},
+#             ],
+#         )
+#
+#     y_pred_vignette_grok.append(completion.choices[0].message.content)
+#     print(completion.choices[0].message.content)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_grok_vignette = end - start
+# time_grok_vignette_df = pd.DataFrame({"time": [time_grok_vignette]})
+# time_grok_vignette_df.to_csv("../exp/times_LLMs/Grok/time_grok_vignette_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_vignette_grok = pd.Series(y_pred_vignette_grok).value_counts()
+# print(counts_vignette_grok)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_vignette_grok_val = [1 if response == "YES" else 0 for response in y_pred_vignette_grok]
+#
+# # save the array to a csv file
+# vignette_df_grok = pd.DataFrame(y_pred_vignette_grok_val, columns = ["y_pred"])
+# vignette_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_vignette_prompt.csv", sep = ",", index = False)
+#
+#
+#
+# #### Chain-of-thought prompt ####
+#
+# y_pred_cot_grok = []
+# explanation_cot_grok = []
+#
+# client = OpenAI(
+#     api_key = os.environ.get("XAI_API_KEY"),
+#     base_url = "https://api.x.ai/v1",
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in X_test_cot_prompt:
+#     completion = client.chat.completions.create(
+#         model = "grok-3-beta",
+#         messages = [
+#             {"role": "system", "content": cot_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#     )
+#     try:
+#         prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
+#         explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
+#         y_pred_cot_grok.append(prediction)
+#         explanation_cot_grok.append(explanation)
+#         print(prediction)
+#     except IndexError:
+#         print("IndexError")
+#         y_pred_cot_grok.append("IndexError")
+#         explanation_cot_grok.append("IndexError")
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_grok_cot_prompt = end - start
+# time_grok_cot_df = pd.DataFrame({"time": [time_grok_cot_prompt]})
+# time_grok_cot_df.to_csv("../exp/times_LLMs/Grok/time_grok_cot_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_cot_grok = pd.Series(y_pred_cot_grok).value_counts()
+# print(counts_cot_grok)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_cot_grok_val = [1 if response == "YES" else 0 for response in y_pred_cot_grok]
+#
+# # save the array to a csv file
+# cot_df_grok = pd.DataFrame(y_pred_cot_grok_val, columns = ["y_pred"])
+# cot_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_cot_prompt.csv", sep = ",", index = False)
+#
+# cot_df_explanation_grok = pd.DataFrame(explanation_cot_grok, columns = ["cot"])
+# cot_df_explanation_grok.to_csv("../exp/y_pred_LLMs/Grok/explanation_grok_cot_prompt.csv", sep = ",", index = False)
 
