@@ -81,31 +81,72 @@ print("LLMs \n",
 
 #### 1 Testing prompting ####
 
+simple_instruction = "Respond only with YES or NO."
+# simple_instruction = "You are an expert psychologist tasked with predicting whether an individual will develop a psychological disorder between two time points (T1 and T2) based on various psychological measures and demographic information. Your goal is to provide an accurate YES or NO prediction."
+
+
+from pydantic import BaseModel, Field
+
+# Step 1: Define schema using Pydantic
+class YesNoResponse(BaseModel):
+    answer: str = Field(..., description="Must be either YES or NO")
+
+
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
 )
 
 # testing
-response = client.responses.create(
-    # model = "o3-2025-04-16",
-    model = "o4-mini",
-    reasoning = {
-        "effort": "medium",
-        "summary": "detailed"
-    },
-    instructions = simple_instruction,
-    input = X_test_simple_prompt[0]
-    # max_output_tokens = 100
+# response = client.responses.create(
+#     # model = "o3-2025-04-16",
+#     model = "o4-mini",
+#     reasoning = {
+#         "effort": "medium",
+#         "summary": "auto"
+#     },
+#     instructions = simple_instruction,
+#     input = X_test_simple_prompt[0],
+#     max_output_tokens = 100
+# )
+
+response = client.beta.chat.completions.parse(
+    model="o4-mini",
+    messages=[
+        {"role": "system", "content": simple_instruction},
+        {"role": "user", "content": X_test_simple_prompt[0]}
+    ],
+    response_format=YesNoResponse
+    # max_tokens=20
 )
+
+print(response.answer.upper())
+
+
+print(json.dumps(response.to_dict(), indent = 2, ensure_ascii = False))
+
 
 # print(response.output_text)
 
-print('xxxx')
-# Dump response as pretty json
-print(json.dumps(response.to_dict(), indent=2, ensure_ascii=False))
+
+# summary_texts = [
+#     summary.text
+#     for item in response.output if hasattr(item, "summary")
+#     for summary in item.summary if hasattr(summary, "text")
+# ]
+
+summary_texts = [
+    " ".join(
+        summary.text
+        for item in response.output if hasattr(item, "summary")
+        for summary in item.summary if hasattr(summary, "text")
+    )
+]
+
+print(summary_texts[0])
 
 
-#### 2 Prompting with ChatGPT-3o ####
+
+#### 2 Prompting with ChatGPT-o3 ####
 
 
 
