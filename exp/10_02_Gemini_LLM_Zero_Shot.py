@@ -168,8 +168,7 @@ for prompt in tqdm(X_test_simple_prompt[90:], desc = "Simple prompting"):
         counts_profiled_simple_gemini = pd.Series(y_pred_simple_gemini).value_counts()
         print(counts_profiled_simple_gemini, "\n")
 
-        y_pred_simple_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in
-                                    y_pred_simple_gemini]
+        y_pred_simple_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_gemini]
 
         # save as df
         simple_df_gemini = pd.DataFrame({
@@ -199,7 +198,7 @@ counts_simple_gemini = pd.Series(y_pred_simple_gemini).value_counts()
 print(counts_simple_gemini)
 
 # convert YES to 1 and NO to 0
-y_pred_simple_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_gemini]
+y_pred_simple_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_gemini]
 
 # save as df
 simple_df_gemini = pd.DataFrame({
@@ -252,7 +251,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 #         counts_class_def_gemini = pd.Series(y_pred_class_def_gemini).value_counts()
 #         print(counts_class_def_gemini, "\n")
 #
-#         y_pred_class_def_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_class_def_gemini]
+#         y_pred_class_def_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_gemini]
 #
 #         # save as df
 #         class_def_df_gemini = pd.DataFrame({
@@ -281,7 +280,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 # print(counts_class_def_gemini)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_class_def_gemini_val = [1 if response == "YES" else 0 for response in y_pred_class_def_gemini]
+# y_pred_class_def_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_gemini]
 #
 # # save as df
 # class_def_df_gemini = pd.DataFrame({
@@ -334,7 +333,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 #         counts_profiled_simple_gemini = pd.Series(y_pred_profiled_simple_gemini).value_counts()
 #         print(counts_profiled_simple_gemini, "\n")
 #
-#         y_pred_profiled_simple_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_profiled_simple_gemini]
+#         y_pred_profiled_simple_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_gemini]
 #
 #         # save as df
 #         profiled_simple_df_gemini = pd.DataFrame({
@@ -363,7 +362,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 # print(counts_profiled_simple_gemini)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_profiled_simple_gemini_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_gemini]
+# y_pred_profiled_simple_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_gemini]
 #
 # # save as df
 # profiled_simple_df_gemini = pd.DataFrame({
@@ -416,7 +415,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 #         counts_few_shot_gemini = pd.Series(y_pred_few_shot_gemini).value_counts()
 #         print(counts_few_shot_gemini, "\n")
 #
-#         y_pred_few_shot_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_few_shot_gemini]
+#         y_pred_few_shot_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_gemini]
 #
 #         # save as df
 #         few_shot_df_gemini = pd.DataFrame({
@@ -445,7 +444,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 # print(counts_few_shot_gemini)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_few_shot_gemini_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_gemini]
+# y_pred_few_shot_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_gemini]
 #
 # # save as df
 # few_shot_df_gemini = pd.DataFrame({
@@ -498,7 +497,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 #         counts_vignette_gemini = pd.Series(y_pred_vignette_gemini).value_counts()
 #         print(counts_vignette_gemini, "\n")
 #
-#         y_pred_vignette_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_vignette_gemini]
+#         y_pred_vignette_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_gemini]
 #
 #         # save as df
 #         vignette_df_gemini = pd.DataFrame({
@@ -527,7 +526,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 # print(counts_vignette_gemini)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_vignette_gemini_val = [1 if response == "YES" else 0 for response in y_pred_vignette_gemini]
+# y_pred_vignette_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_gemini]
 #
 # # save as df
 # vignette_df_gemini = pd.DataFrame({
@@ -568,7 +567,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 #         counts_cot_gemini = pd.Series(y_pred_cot_gemini).value_counts()
 #         print(counts_cot_gemini, "\n")
 #
-#         y_pred_cot_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_cot_gemini]
+#         y_pred_cot_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_gemini]
 #
 #         # save as df
 #         cot_df_gemini = pd.DataFrame({
@@ -606,7 +605,7 @@ simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.c
 # print(counts_cot_gemini)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_cot_gemini_val = [1 if response == "YES" else 0 for response in y_pred_cot_gemini]
+# y_pred_cot_gemini_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_gemini]
 #
 # # save as df (including explanation)
 # cot_df_gemini = pd.DataFrame({
