@@ -461,8 +461,8 @@ print(counts_cot_gemma)
 y_pred_cot_gemma_val = [1 if response == "YES" else 0 for response in y_pred_cot_gemma]
 
 # save the array to a csv file
-cot_df_gemma = pd.DataFrame(y_pred_cot_gemma_val, columns = ["y_pred"])
+cot_df_gemma = pd.DataFrame({
+    "y_pred": y_pred_cot_gemma_val,
+    "explanation": explanation_cot_gemma
+})
 cot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_cot_prompt.csv", sep = ",", index = False)
-
-cot_df_explanation_gemma = pd.DataFrame(explanation_cot_gemma, columns = ["cot"])
-cot_df_explanation_gemma.to_csv("../exp/y_pred_LLMs/Gemma/explanation_gemma_cot_prompt.csv", sep = ",", index = False)
