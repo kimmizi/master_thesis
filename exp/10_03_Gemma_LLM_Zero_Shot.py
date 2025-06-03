@@ -181,7 +181,7 @@ client = genai.Client(
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in X_test_class_definitions_prompt:
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
     response = client.models.generate_content(
         model = "gemma-3-27b-it",
         contents = [simple_instruction, prompt]
@@ -261,8 +261,8 @@ for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompt
         y_pred_profiled_simple_gemma_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_profiled_simple_gemma]
 
         # save as df
-        profiled_simple_df_gemma = pd.DataFrame(y_pred_profiled_simple_gemma_val, columns=["y_pred"])
-        profiled_simple_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_profiled_simple_prompt.csv", sep=",", index=False)
+        profiled_simple_df_gemma = pd.DataFrame(y_pred_profiled_simple_gemma_val, columns = ["y_pred"])
+        profiled_simple_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_profiled_simple_prompt.csv", sep = ",", index = False)
         print("Saved df")
 
     y_pred_profiled_simple_gemma.append(response.text)
@@ -320,8 +320,8 @@ for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
         y_pred_few_shot_gemma_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_few_shot_gemma]
 
         # save as df
-        few_shot_df_gemma = pd.DataFrame(y_pred_few_shot_gemma_val, columns=["y_pred"])
-        few_shot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_few_shot_prompt.csv", sep=",", index=False)
+        few_shot_df_gemma = pd.DataFrame(y_pred_few_shot_gemma_val, columns = ["y_pred"])
+        few_shot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_few_shot_prompt.csv", sep = ",", index = False)
         print("Saved df")
 
     y_pred_few_shot_gemma.append(response.text)
@@ -379,8 +379,8 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
         y_pred_vignette_gemma_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_vignette_gemma]
 
         # save as df
-        vignette_df_gemma = pd.DataFrame(y_pred_vignette_gemma_val, columns=["y_pred"])
-        vignette_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_vignette_prompt.csv", sep=",", index=False)
+        vignette_df_gemma = pd.DataFrame(y_pred_vignette_gemma_val, columns = ["y_pred"])
+        vignette_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_vignette_prompt.csv", sep = ",", index = False)
         print("Saved df")
 
     y_pred_vignette_gemma.append(response.text)
@@ -432,7 +432,10 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
         y_pred_cot_gemma_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_cot_gemma]
 
         # save as df
-        cot_df_gemma = pd.DataFrame(y_pred_cot_gemma_val, columns=["y_pred"])
+        cot_df_gemma = pd.DataFrame({
+            "y_pred": y_pred_cot_gemma_val,
+            "explanation": explanation_cot_gemma
+        })
         cot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_cot_prompt.csv", sep=",", index=False)
         print("Saved df")
 
