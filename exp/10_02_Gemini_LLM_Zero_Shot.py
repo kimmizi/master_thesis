@@ -170,6 +170,17 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
         counts_profiled_simple_grok = pd.Series(y_pred_simple_gemini).value_counts()
         print(counts_profiled_simple_grok, "\n")
 
+        y_pred_simple_gemini_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in
+                                    y_pred_simple_gemini]
+
+        # save as df
+        simple_df_gemini = pd.DataFrame({
+            "y_pred": y_pred_simple_gemini_val,
+            "thinking": thinking_simple_gemini
+        })
+        simple_df_gemini.to_csv("../exp/y_pred_LLMs/Gemini/y_pred_gemini_simple_prompt.csv", sep=",", index=False)
+        print("Saved df")
+
     for part in response.candidates[0].content.parts:
         if not part.text:
             continue
