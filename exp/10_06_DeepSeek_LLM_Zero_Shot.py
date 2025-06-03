@@ -133,6 +133,23 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prom
             stream = False
         )
 
+    if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
+        counts_profiled_simple_deeps = pd.Series(y_pred_simple_deeps).value_counts()
+        print(counts_profiled_simple_deeps, "\n")
+
+        y_pred_simple_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in
+                                    y_pred_simple_deeps]
+
+        # save as df
+        simple_df_deeps = pd.DataFrame({
+            "y_pred": y_pred_simple_deeps_val,
+            "thinking": thinking_simple_deeps
+        })
+        simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.csv", sep = ",", index = False)
+        print("Saved df")
+
+
     y_pred_simple_deeps.append(response.choices[0].message.content)
     thinking_simple_deeps.append(response.choices[0].message.reasoning_content)
     # print(response.choices[0].message.content)
@@ -148,14 +165,14 @@ counts_simple_deeps = pd.Series(y_pred_simple_deeps).value_counts()
 print(counts_simple_deeps)
 
 # convert YES to 1 and NO to 0
-y_pred_simple_deeps = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_deeps]
+y_pred_simple_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_deeps]
 
 # save the array to a csv file
-simple_df_deeps = pd.DataFrame(y_pred_simple_deeps, columns = ["y_pred"])
+simple_df_deeps = pd.DataFrame({
+    "y_pred": y_pred_simple_deeps_val,
+    "thinking": thinking_simple_deeps
+})
 simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.csv", sep = ",", index = False)
-
-simple_df_thinking_deeps = pd.DataFrame(thinking_simple_deeps, columns = ["thinking"])
-simple_df_thinking_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/Thinking/thinking_deeps_simple_prompt.csv", sep = ",", index = False)
 
 
 
@@ -191,6 +208,21 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions pr
             stream = False
         )
 
+    if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
+        counts_class_def_deeps = pd.Series(y_pred_class_def_deeps).value_counts()
+        print(counts_class_def_deeps, "\n")
+
+        y_pred_class_def_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_class_def_deeps]
+
+        # save as df
+        class_def_df_deeps = pd.DataFrame({
+            "y_pred": y_pred_class_def_deeps_val,
+            "thinking": y_pred_class_def_deeps
+        })
+        class_def_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions_prompt.csv", sep = ",", index = False)
+        print("Saved df")
+
     y_pred_class_def_deeps.append(response.choices[0].message.content)
     thinking_class_def_deeps.append(response.choices[0].message.reasoning_content)
     # print(response.choices[0].message.content)
@@ -206,15 +238,14 @@ counts_class_def_deeps = pd.Series(y_pred_class_def_deeps).value_counts()
 print(counts_class_def_deeps)
 
 # convert YES to 1 and NO to 0
-y_pred_class_def_deeps = [1 if response == "YES" else 0 for response in y_pred_class_def_deeps]
+y_pred_class_def_deeps_val = [1 if response == "YES" else 0 for response in y_pred_class_def_deeps]
 
 # save the array to a csv file
-class_def_df_deeps = pd.DataFrame(y_pred_class_def_deeps, columns = ["y_pred"])
-class_def_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions_prompt.csv", sep = ",", index = False)
-
-class_def_df_thinking_deeps = pd.DataFrame(thinking_class_def_deeps, columns = ["thinking"])
-class_def_df_thinking_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/Thinking/thinking_deeps_class_def_prompt.csv", sep = ",", index = False)
-
+class_def_df_deeps = pd.DataFrame({
+    "y_pred": y_pred_class_def_deeps_val,
+    "thinking": thinking_class_def_deeps
+})
+class_def_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions.csv", sep = ",", index = False)
 
 
 #### Profiled simple prompt ####
@@ -249,6 +280,21 @@ for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompt
             stream = False
         )
 
+    if len(y_pred_profiled_simple_deeps) % 50 == 0 and len(y_pred_profiled_simple_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_deeps)} prompts.\n")
+        counts_profiled_simple_deeps = pd.Series(y_pred_profiled_simple_deeps).value_counts()
+        print(counts_profiled_simple_deeps, "\n")
+
+        y_pred_profiled_simple_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_profiled_simple_deeps]
+
+        # save as df
+        profiled_simple_df_deeps = pd.DataFrame({
+            "y_pred": y_pred_profiled_simple_deeps_val,
+            "thinking": y_pred_profiled_simple_deeps
+        })
+        profiled_simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_profiled_simple_prompt.csv", sep = ",", index = False)
+        print("Saved df")
+
     y_pred_profiled_simple_deeps.append(response.choices[0].message.content)
     thinking_profiled_simple_deeps.append(response.choices[0].message.reasoning_content)
     # print(response.choices[0].message.content)
@@ -267,11 +313,11 @@ print(counts_profiled_simple_deeps)
 y_pred_profiled_simple_deeps_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_deeps]
 
 # save the array to a csv file
-profiled_simple_df_deeps = pd.DataFrame(y_pred_profiled_simple_deeps_val, columns = ["y_pred"])
+profiled_simple_df_deeps = pd.DataFrame({
+    "y_pred": y_pred_profiled_simple_deeps_val,
+    "thinking": thinking_profiled_simple_deeps
+})
 profiled_simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_profiled_simple_prompt.csv", sep = ",", index = False)
-
-profiled_simple_df_thinking_deeps = pd.DataFrame(thinking_profiled_simple_deeps, columns = ["thinking"])
-profiled_simple_df_thinking_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/Thinking/thinking_deeps_profiled_simple_prompt.csv", sep = ",", index = False)
 
 
 
@@ -307,6 +353,21 @@ for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting", unit = "
             stream = False
         )
 
+    if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
+        counts_few_shot_deeps = pd.Series(y_pred_few_shot_deeps).value_counts()
+        print(counts_few_shot_deeps, "\n")
+
+        y_pred_few_shot_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_few_shot_deeps]
+
+        # save as df
+        few_shot_df_deeps = pd.DataFrame({
+            "y_pred": y_pred_few_shot_deeps_val,
+            "thinking": y_pred_few_shot_deeps
+        })
+        few_shot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prompt.csv", sep = ",", index = False)
+        print("Saved df")
+
     y_pred_few_shot_deeps.append(response.choices[0].message.content)
     thinking_few_shot_deeps.append(response.choices[0].message.reasoning_content)
     # print(response.choices[0].message.content)
@@ -325,11 +386,11 @@ print(counts_few_shot_deeps)
 y_pred_few_shot_deeps_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_deeps]
 
 # save the array to a csv file
-few_shot_df_deeps = pd.DataFrame(y_pred_few_shot_deeps_val, columns = ["y_pred"])
+few_shot_df_deeps = pd.DataFrame({
+    "y_pred": y_pred_few_shot_deeps_val,
+    "thinking": thinking_few_shot_deeps
+})
 few_shot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prompt.csv", sep = ",", index = False)
-
-few_shot_df_thinking_deeps = pd.DataFrame(thinking_few_shot_deeps, columns = ["thinking"])
-few_shot_df_thinking_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/Thinking/thinking_deeps_few_shot_prompt.csv", sep = ",", index = False)
 
 
 
@@ -368,6 +429,21 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "
             stream = False
         )
 
+    if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
+        counts_vignette_deeps = pd.Series(y_pred_vignette_deeps).value_counts()
+        print(counts_vignette_deeps, "\n")
+
+        y_pred_vignette_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_vignette_deeps]
+
+        # save as df
+        vignette_df_deeps = pd.DataFrame({
+            "y_pred": y_pred_vignette_deeps_val,
+            "thinking": y_pred_vignette_deeps
+        })
+        vignette_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prompt.csv", sep = ",", index = False)
+        print("Saved df")
+
     y_pred_vignette_deeps.append(response.choices[0].message.content)
     thinking_vignette_deeps.append(response.choices[0].message.reasoning_content)
     # print(response.choices[0].message.content)
@@ -386,11 +462,11 @@ print(counts_vignette_deeps)
 y_pred_vignette_deeps_val = [1 if response == "YES" else 0 for response in y_pred_vignette_deeps]
 
 # save the array to a csv file
-vignette_df_deeps = pd.DataFrame(y_pred_vignette_deeps_val, columns = ["y_pred"])
+vignette_df_deeps = pd.DataFrame({
+    "y_pred": y_pred_vignette_deeps_val,
+    "thinking": thinking_vignette_deeps
+})
 vignette_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prompt.csv", sep = ",", index = False)
-
-vignette_df_thinking_deeps = pd.DataFrame(thinking_vignette_deeps, columns = ["thinking"])
-vignette_df_thinking_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/Thinking/thinking_deeps_vignette_prompt.csv", sep = ",", index = False)
 
 
 
@@ -418,6 +494,23 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit 
         ],
         stream = False
     )
+
+    if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
+        counts_cot_deeps = pd.Series(y_pred_cot_deeps).value_counts()
+        print(counts_cot_deeps, "\n")
+
+        y_pred_cot_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_cot_deeps]
+
+        # save as df
+        cot_df_deeps = pd.DataFrame({
+            "y_pred": y_pred_cot_deeps_val,
+            "thinking": thinking_cot_deeps,
+            "explanation": explanation_cot_deeps
+        })
+        cot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_cot_prompt.csv", sep = ",", index = False)
+        print("Saved df")
+
     try:
         prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
         explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
@@ -445,11 +538,9 @@ print(counts_cot_deeps)
 y_pred_cot_deeps_val = [1 if response == "YES" else 0 for response in y_pred_cot_deeps]
 
 # save the array to a csv file
-cot_df_deeps = pd.DataFrame(y_pred_cot_deeps_val, columns = ["y_pred"])
+cot_df_deeps = pd.DataFrame({
+    "y_pred": y_pred_cot_deeps_val,
+    "thinking": thinking_cot_deeps,
+    "explanation": explanation_cot_deeps
+})
 cot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_cot_prompt.csv", sep = ",", index = False)
-
-cot_df_thinking_deeps = pd.DataFrame(thinking_cot_deeps, columns = ["thinking"])
-cot_df_thinking_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/Thinking/thinking_deeps_cot_prompt.csv", sep = ",", index = False)
-
-cot_df_explanation_deeps = pd.DataFrame(explanation_cot_deeps, columns = ["cot"])
-cot_df_explanation_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/explanation_deeps_cot_prompt.csv", sep = ",", index = False)
