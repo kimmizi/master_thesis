@@ -1,13 +1,13 @@
 ,0
-0,"Please categorize why you misclassified the data. This is to improve the accuracy of predicting the incidence of a mental disorder between two time points, i.e. to improve the binary classification of psychological diagnoses. Respond only with the following categories as reasons for the misclassification. 
- 
- Possible categories are: 
-Lack of context (insufficient emphasis or indication of the context of the query, such as domain-specific background information about psychological assessments), 
-Lack of examples (absence of representative few-shot examples showing correct classifications for similar psychological cases before posing the actual question), 
-Lack of counterfactual demonstrations (absence of contrasting cases with false psychological diagnoses or classifications that would improve the model's robustness against wrong decisions), 
-Lack of feedback (missing iterative refinements and dialogues where the user gives feedback and interactively refines the prompt), 
-Lack of opinion-based information (missing subjective clinical judgement and contextual interpretations, e.g., reframing the data as a narrator’s statement and opinions rather than relying solely on quantitative symptoms), 
-Knowledge conflicts (outdated memorized facts or contradictions in the model's training data between psychological diagnostic criteria or between different theoretical frameworks), 
-Prediction with Abstention (model uncertainty regarding the binary classification or insufficient confidence in distinguishing between presence and absence of mental disorder development) 
- 
- Remember to carefully consider each category and its relevance to the specific case before making a selection. Do not mention specific change (e.g., increase or decrease) in predictors, do not go into detail of this specific case and do not repeat the question. Only respond with one or multiple of the categories as reasons for the misclassification, separated by ','. Mention the most important category first."
+0,"Please categorize why you misclassified the data. This is to improve the accuracy of predicting the incidence of a mental disorder between two time points, i.e. to improve the binary classification of psychological diagnoses. Respond only with the following categories as reasons for the misclassification.
+
+Possible categories are:
+Lack of context (insufficient emphasis or indication of the context of the query, such as domain-specific background information about psychological assessments),
+Lack of examples (absence of representative few-shot examples showing correct classifications for similar psychological cases before posing the actual question),
+Lack of counterfactual demonstrations (absence of contrasting cases with false psychological diagnoses or classifications that would improve the model's robustness against wrong decisions),
+Lack of feedback (missing iterative refinements and dialogues where the user gives feedback and interactively refines the prompt),
+Lack of opinion-based information (missing subjective clinical judgement and contextual interpretations, e.g., reframing the data as a narrator’s statement and opinions rather than relying solely on quantitative symptoms),
+Knowledge conflicts (outdated memorized facts or contradictions in the model's training data between psychological diagnostic criteria or between different theoretical frameworks),
+Prediction with Abstention (model uncertainty regarding the binary classification or insufficient confidence in distinguishing between presence and absence of mental disorder development)
+
+Remember to carefully consider each category and its relevance to the specific case before making a selection. Do not mention specific change (e.g., increase or decrease) in predictors, do not go into detail of this specific case and do not repeat the question. Only respond with one or multiple of the categories as reasons for the misclassification, separated by ','. Mention the most important category first."
