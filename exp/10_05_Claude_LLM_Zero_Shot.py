@@ -80,6 +80,103 @@ print("LLMs \n",
 
 
 
+#### Helper functions ####
+
+def Claude_create_message(prompt, instruction):
+    message = client.messages.create(
+        model = model_claude,
+        max_tokens = 10000,
+        thinking = {
+            "type": "enabled",
+            "budget_tokens": 2000
+        },
+        system = instruction,
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    }
+                ]
+            }
+        ]
+    )
+
+    if message.content[1].text.strip() not in ("YES", "NO"):
+        print("\n Invalid output. Retry prompting. \n")
+        message = client.messages.create(
+            model = model_claude,
+            max_tokens = 10000,
+            thinking = {
+                "type": "enabled",
+                "budget_tokens": 2000
+            },
+            system = retry_instruction,
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
+        )
+
+    return message.content[1].text.strip(), message.content[0].thinking
+
+
+def save_prompt_to_csv(response_array, thinking_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val,
+        "thinking": thinking_array
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/Claude/y_pred_Claude_{filename}.csv", sep = ",", index = False)
+
+
+def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val,
+        "thinking": thinking_array,
+        "cot": explanation_array
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/Claude/y_pred_Claude_{filename}.csv", sep = ",", index = False)
+
+
+def calc_time(start, end, filename):
+    """
+    Calculate the time taken for the prompting and save it to a CSV file.
+    """
+    time_taken = end - start
+    print(f"Time taken: {time_taken} seconds")
+    time_df = pd.DataFrame({"time": [time_taken]})
+    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    return time_taken
+
+
+
 ### 1 Testing prompting ####
 
 # client = anthropic.Anthropic(
@@ -122,30 +219,169 @@ print("LLMs \n",
 
 ### 2 Prompting with Claude 3.7 Sonnet ####
 
+model_claude = "claude-3-7-sonnet-20250219"
+# model_claude = "claude-sonnet-4-20250514"
+
+client = anthropic.Anthropic(
+    api_key=os.environ.get("ANTHROPIC_API_KEY")
+)
+
 
 #### Simple prompt ####
 
 y_pred_simple_claude = []
 thinking_simple_claude = []
 
-client = anthropic.Anthropic(
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-)
-
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
+    response, thinking = Claude_create_message(prompt, simple_instruction)
+    y_pred_simple_claude.append(response)
+    thinking_simple_claude.append(thinking)
+    # print(response)
+
+    if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
+        save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt")
+
+end = time.time()
+calc_time(start, end, "simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt")
+
+
+
+#### Class definition prompt ####
+
+y_pred_class_def_claude = []
+thinking_class_def_claude = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class Definitions Prompting"):
+    response, thinking = Claude_create_message(prompt, class_definitions_instruction)
+    y_pred_class_def_claude.append(response)
+    thinking_class_def_claude.append(thinking)
+    # print(response)
+
+    if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_definitions_prompt")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_definitions_prompt")
+
+
+
+#### Profiled simple prompt ####
+
+y_pred_profiled_simple_claude = []
+thinking_profiled_simple_claude = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled Simple Prompting"):
+    response, thinking = Claude_create_message(prompt, profiled_simple_instruction)
+    y_pred_profiled_simple_claude.append(response)
+    thinking_profiled_simple_claude.append(thinking)
+    # print(response)
+
+    if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
+        save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claude, "profiled_simple_prompt")
+
+end = time.time()
+calc_time(start, end, "profiled_simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claude, "profiled_simple_prompt")
+
+
+
+#### Few shot prompt ####
+
+y_pred_few_shot_claude = []
+thinking_few_shot_claude = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few Shot Prompting"):
+    response, thinking = Claude_create_message(prompt, few_shot_instruction)
+    y_pred_few_shot_claude.append(response)
+    thinking_few_shot_claude.append(thinking)
+    # print(response)
+
+    if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
+
+
+
+#### Vignette prompt ####
+
+y_pred_vignette_claude = []
+thinking_vignette_claude = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
+    response, thinking = Claude_create_message(prompt, vignette_instruction)
+    y_pred_vignette_claude.append(response)
+    thinking_vignette_claude.append(thinking)
+    # print(response)
+
+    if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
+
+
+
+#### Chain-of-thought prompt ####
+
+y_pred_cot_claude = []
+explanation_cot_claude = []
+thinking_cot_claude = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
     message = client.messages.create(
-        # model = "claude-3-7-sonnet-20250219",
         model = "claude-sonnet-4-20250514",
-        max_tokens = 10000,
+        max_tokens = 20000,
+        temperature = 1,
         thinking = {
             "type": "enabled",
-            "budget_tokens": 2000
+            "budget_tokens": 16000
         },
-        system = simple_instruction,
+        system = cot_instruction,
         messages = [
             {
                 "role": "user",
@@ -159,577 +395,25 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
         ]
     )
 
-    if message.content[1].text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        message = client.messages.create(
-            # model = "claude-3-7-sonnet-20250219",
-            model = "claude-sonnet-4-20250514",
-            max_tokens = 10000,
-            thinking = {
-                "type": "enabled",
-                "budget_tokens": 2000
-            },
-            system = retry_instruction,
-            messages = [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt
-                        }
-                    ]
-                }
-            ]
-        )
+    try:
+        prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
+        y_pred_cot_claude.append(prediction)
+        explanation_cot_claude.append(explanation)
+        thinking_cot_claude.append(message.content[0].thinking)
+        # print(prediction)
+    except IndexError:
+        print("IndexError")
+        y_pred_cot_claude.append("IndexError")
+        explanation_cot_claude.append("IndexError")
+        thinking_cot_claude.append("IndexError")
 
-    y_pred_simple_claude.append(message.content[1].text)
-    thinking_simple_claude.append(message.content[0].thinking)
-    # print(message.content[1].text)
-
-    if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
-        counts_profiled_simple_claude = pd.Series(y_pred_simple_claude).value_counts()
-        print(counts_profiled_simple_claude, "\n")
-
-        y_pred_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_simple_claude]
-        y_pred_simple_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_claude]
-
-        # save as df
-        simple_df_claude = pd.DataFrame({
-            "y_pred": y_pred_simple_claude_val,
-            "thinking": y_pred_simple_claude
-        })
-        simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude4_simple_prompt.csv", sep=",", index=False)
-        print("Saved df")
+    if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_claude, thinking_cot_claude, explanation_cot_claude, "cot_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_claude_simple_prompt = end - start
-time_claude_simple_df = pd.DataFrame({"time": [time_claude_simple_prompt]})
-time_claude_simple_df.to_csv("../exp/times_LLMs/Claude/time_claude4_simple_prompt.csv", sep = ",", index = False)
+calc_time(start, end, "cot_prompt")
 
 # save the array to a csv file
-simple_df_claude_raw = pd.DataFrame({
-    "y_pred": y_pred_simple_claude,
-    "thinking": thinking_simple_claude
-})
-simple_df_claude_raw.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude4_simple_prompt_raw.csv", sep = ",", index = False)
-
-# value counts for array
-counts_simple_claude = pd.Series(y_pred_simple_claude).value_counts()
-print(counts_simple_claude)
-
-# convert YES to 1 and NO to 0
-y_pred_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_simple_claude]
-y_pred_simple_claude_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_claude]
-
-# save the array to a csv file
-simple_df_claude = pd.DataFrame({
-    "y_pred": y_pred_simple_claude_val,
-    "thinking": thinking_simple_claude
-})
-simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude4_simple_prompt.csv", sep = ",", index = False)
-
-
-
-# #### Class definition prompt ####
-#
-# y_pred_class_def_claude = []
-# thinking_class_def_claude = []
-#
-# client = anthropic.Anthropic(
-#     api_key = os.environ.get("ANTHROPIC_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class Definitions Prompting"):
-#     message = client.messages.create(
-#         model = "claude-sonnet-4-20250514",
-#         max_tokens = 20000,
-#         temperature = 1,
-#         thinking = {
-#             "type": "enabled",
-#             "budget_tokens": 16000
-#         },
-#         system = class_definitions_instruction,
-#         messages = [
-#             {
-#                 "role": "user",
-#                 "content": [
-#                     {
-#                         "type": "text",
-#                         "text": prompt
-#                     }
-#                 ]
-#             }
-#         ]
-#     )
-#
-#     if message.content[1].text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         message = client.messages.create(
-#             model = "claude-sonnet-4-20250514",
-#             max_tokens = 20000,
-#             temperature = 1,
-#             thinking = {
-#                 "type": "enabled",
-#                 "budget_tokens": 16000
-#             },
-#             system = retry_instruction,
-#             messages = [
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {
-#                             "type": "text",
-#                             "text": prompt
-#                         }
-#                     ]
-#                 }
-#             ]
-#         )
-#
-#     if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
-#         counts_class_def_claude = pd.Series(y_pred_class_def_claude).value_counts()
-#         print(counts_class_def_claude, "\n")
-#
-#         y_pred_class_def_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_class_def_claude]
-#         y_pred_class_def_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_claude]
-#
-#         # save as df
-#         class_def_df_claude = pd.DataFrame({
-#             "y_pred": y_pred_class_def_claude_val,
-#             "thinking": thinking_class_def_claude
-#         })
-#         class_def_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_class_definitions_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     y_pred_class_def_claude.append(message.content[1].text)
-#     thinking_class_def_claude.append(message.content[0].thinking)
-#     # print(message.content[1].text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_claude_class_definitions = end - start
-# time_claude_class_definitions_df = pd.DataFrame({"time": [time_claude_class_definitions]})
-# time_claude_class_definitions_df.to_csv("../exp/times_LLMs/Claude/time_claude_class_definitions_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_class_def_claude = pd.Series(y_pred_class_def_claude).value_counts()
-# print(counts_class_def_claude)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_class_def_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_class_def_claude]
-# y_pred_class_def_claude_val = [1 if response == "YES" else 0 for response in y_pred_class_def_claude]
-#
-# # save the array to a csv file
-# class_def_df_claude = pd.DataFrame({
-#     "y_pred": y_pred_class_def_claude_val,
-#     "thinking": thinking_class_def_claude
-# })
-# class_def_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_class_definitions_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Profiled simple prompt ####
-#
-# y_pred_profiled_simple_claude = []
-# thinking_profiled_simple_claude = []
-#
-# client = anthropic.Anthropic(
-#     api_key = os.environ.get("ANTHROPIC_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled Simple Prompting"):
-#     message = client.messages.create(
-#         model = "claude-sonnet-4-20250514",
-#         max_tokens = 20000,
-#         temperature = 1,
-#         thinking = {
-#             "type": "enabled",
-#             "budget_tokens": 16000
-#         },
-#         system = profiled_simple_instruction,
-#         messages = [
-#             {
-#                 "role": "user",
-#                 "content": [
-#                     {
-#                         "type": "text",
-#                         "text": prompt
-#                     }
-#                 ]
-#             }
-#         ]
-#     )
-#
-#     if message.content[1].text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         message = client.messages.create(
-#             model = "claude-sonnet-4-20250514",
-#             max_tokens = 20000,
-#             temperature = 1,
-#             thinking = {
-#                 "type": "enabled",
-#                 "budget_tokens": 16000
-#             },
-#             system = retry_instruction,
-#             messages = [
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {
-#                             "type": "text",
-#                             "text": prompt
-#                         }
-#                     ]
-#                 }
-#             ]
-#         )
-#
-#     if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
-#         counts_profiled_simple_claude = pd.Series(y_pred_profiled_simple_claude).value_counts()
-#         print(counts_profiled_simple_claude, "\n")
-#
-#         y_pred_profiled_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_profiled_simple_claude]
-#         y_pred_profiled_simple_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_claude]
-#
-#         # save as df
-#         profiled_simple_df_claude = pd.DataFrame({
-#             "y_pred": y_pred_profiled_simple_claude_val,
-#             "thinking": thinking_profiled_simple_claude
-#         })
-#         profiled_simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_profiled_simple_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     y_pred_profiled_simple_claude.append(message.content[1].text)
-#     thinking_profiled_simple_claude.append(message.content[0].thinking)
-#     # print(message.content[1].text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_claude_profiled_simple = end - start
-# time_claude_profiled_simple_df = pd.DataFrame({"time": [time_claude_profiled_simple]})
-# time_claude_profiled_simple_df.to_csv("../exp/times_LLMs/Claude/time_claude_profiled_simple_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_profiled_simple_claude = pd.Series(y_pred_profiled_simple_claude).value_counts()
-# print(counts_profiled_simple_claude)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_profiled_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_profiled_simple_claude]
-# y_pred_profiled_simple_claude_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_claude]
-#
-# # save the array to a csv file
-# profiled_simple_df_claude = pd.DataFrame({
-#     "y_pred": y_pred_profiled_simple_claude_val,
-#     "thinking": thinking_profiled_simple_claude
-# })
-# profiled_simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_profiled_simple_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Few shot prompt ####
-#
-# y_pred_few_shot_claude = []
-# thinking_few_shot_claude = []
-#
-# client = anthropic.Anthropic(
-#     api_key = os.environ.get("ANTHROPIC_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few Shot Prompting"):
-#     message = client.messages.create(
-#         model = "claude-sonnet-4-20250514",
-#         max_tokens = 20000,
-#         temperature = 1,
-#         thinking = {
-#             "type": "enabled",
-#             "budget_tokens": 16000
-#         },
-#         system = few_shot_instruction,
-#         messages = [
-#             {
-#                 "role": "user",
-#                 "content": [
-#                     {
-#                         "type": "text",
-#                         "text": prompt
-#                     }
-#                 ]
-#             }
-#         ]
-#     )
-#
-#     if message.content[1].text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         message = client.messages.create(
-#             model = "claude-sonnet-4-20250514",
-#             max_tokens = 20000,
-#             temperature = 1,
-#             thinking = {
-#                 "type": "enabled",
-#                 "budget_tokens": 16000
-#             },
-#             system = retry_instruction,
-#             messages = [
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {
-#                             "type": "text",
-#                             "text": prompt
-#                         }
-#                     ]
-#                 }
-#             ]
-#         )
-#
-#     if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
-#         counts_few_shot_claude = pd.Series(y_pred_few_shot_claude).value_counts()
-#         print(counts_few_shot_claude, "\n")
-#
-#         y_pred_few_shot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_few_shot_claude]
-#         y_pred_few_shot_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_claude]
-#
-#         # save as df
-#         few_shot_df_claude = pd.DataFrame({
-#             "y_pred": y_pred_few_shot_claude_val,
-#             "thinking": thinking_few_shot_claude
-#         })
-#         few_shot_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_few_shot_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     y_pred_few_shot_claude.append(message.content[1].text)
-#     thinking_few_shot_claude.append(message.content[0].thinking)
-#     # print(message.content[1].text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_claude_few_shot = end - start
-# time_claude_few_shot_df = pd.DataFrame({"time": [time_claude_few_shot]})
-# time_claude_few_shot_df.to_csv("../exp/times_LLMs/Claude/time_claude_few_shot_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_few_shot_claude = pd.Series(y_pred_few_shot_claude).value_counts()
-# print(counts_few_shot_claude)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_few_shot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_few_shot_claude]
-# y_pred_few_shot_claude_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_claude]
-#
-# # save the array to a csv file
-# few_shot_df_claude = pd.DataFrame({
-#     "y_pred": y_pred_few_shot_claude_val,
-#     "thinking": thinking_few_shot_claude
-# })
-# few_shot_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_few_shot_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_claude = []
-# thinking_vignette_claude = []
-#
-# client = anthropic.Anthropic(
-#     api_key = os.environ.get("ANTHROPIC_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
-#     message = client.messages.create(
-#         model = "claude-sonnet-4-20250514",
-#         max_tokens = 20000,
-#         temperature = 1,
-#         thinking = {
-#             "type": "enabled",
-#             "budget_tokens": 16000
-#         },
-#         system = vignette_instruction,
-#         messages = [
-#             {
-#                 "role": "user",
-#                 "content": [
-#                     {
-#                         "type": "text",
-#                         "text": prompt
-#                     }
-#                 ]
-#             }
-#         ]
-#     )
-#
-#     if message.content[1].text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         message = client.messages.create(
-#             model = "claude-sonnet-4-20250514",
-#             max_tokens = 20000,
-#             temperature = 1,
-#             thinking = {
-#                 "type": "enabled",
-#                 "budget_tokens": 16000
-#             },
-#             system = retry_instruction,
-#             messages = [
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {
-#                             "type": "text",
-#                             "text": prompt
-#                         }
-#                     ]
-#                 }
-#             ]
-#         )
-#
-#     if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
-#         counts_vignette_claude = pd.Series(y_pred_vignette_claude).value_counts()
-#         print(counts_vignette_claude, "\n")
-#
-#         y_pred_vignette_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_vignette_claude]
-#         y_pred_vignette_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_claude]
-#
-#         # save as df
-#         vignette_df_claude = pd.DataFrame({
-#             "y_pred": y_pred_vignette_claude_val,
-#             "thinking": thinking_vignette_claude
-#         })
-#         vignette_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_vignette_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     y_pred_vignette_claude.append(message.content[1].text)
-#     thinking_vignette_claude.append(message.content[0].thinking)
-#     # print(message.content[1].text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_claude_vignette = end - start
-# time_claude_vignette_df = pd.DataFrame({"time": [time_claude_vignette]})
-# time_claude_vignette_df.to_csv("../exp/times_LLMs/Claude/time_claude_vignette_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_vignette_claude = pd.Series(y_pred_vignette_claude).value_counts()
-# print(counts_vignette_claude)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_vignette_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_vignette_claude]
-# y_pred_vignette_claude_val = [1 if response == "YES" else 0 for response in y_pred_vignette_claude]
-#
-# # save the array to a csv file
-# vignette_df_claude = pd.DataFrame({
-#     "y_pred": y_pred_vignette_claude_val,
-#     "thinking": thinking_vignette_claude
-# })
-# vignette_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_vignette_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Chain-of-thought prompt ####
-#
-# y_pred_cot_claude = []
-# explanation_cot_claude = []
-# thinking_cot_claude = []
-#
-# client = anthropic.Anthropic(
-#     api_key = os.environ.get("ANTHROPIC_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
-#     message = client.messages.create(
-#         model = "claude-sonnet-4-20250514",
-#         max_tokens = 20000,
-#         temperature = 1,
-#         thinking = {
-#             "type": "enabled",
-#             "budget_tokens": 16000
-#         },
-#         system = cot_instruction,
-#         messages = [
-#             {
-#                 "role": "user",
-#                 "content": [
-#                     {
-#                         "type": "text",
-#                         "text": prompt
-#                     }
-#                 ]
-#             }
-#         ]
-#     )
-#
-#     if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
-#         counts_cot_claude = pd.Series(y_pred_cot_claude).value_counts()
-#         print(counts_cot_claude, "\n")
-#
-#         y_pred_cot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_cot_claude]
-#         y_pred_cot_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_claude]
-#
-#         # save as df
-#         cot_df_claude = pd.DataFrame({
-#             "y_pred": y_pred_cot_claude_val,
-#             "thinking": thinking_cot_claude,
-#             "cot": explanation_cot_claude
-#         })
-#         cot_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_cot_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
-#         y_pred_cot_claude.append(prediction)
-#         explanation_cot_claude.append(explanation)
-#         thinking_cot_claude.append(message.content[0].thinking)
-#         # print(prediction)
-#     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_claude.append("IndexError")
-#         explanation_cot_claude.append("IndexError")
-#         thinking_cot_claude.append("IndexError")
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_claude_cot_prompt = end - start
-# time_claude_cot_df = pd.DataFrame({"time": [time_claude_cot_prompt]})
-# time_claude_cot_df.to_csv("../exp/times_LLMs/Claude/time_claude_cot_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_cot_claude = pd.Series(y_pred_cot_claude).value_counts()
-# print(counts_cot_claude)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_cot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_cot_claude]
-# y_pred_cot_claude_val = [1 if response == "YES" else 0 for response in y_pred_cot_claude]
-#
-# # save the array to a csv file
-# cot_df_claude = pd.DataFrame({
-#     "y_pred": y_pred_cot_claude_val,
-#     "thinking": thinking_cot_claude,
-#     "cot": explanation_cot_claude
-# })
-# cot_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_cot_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv_cot(y_pred_cot_claude, thinking_cot_claude, explanation_cot_claude, "cot_prompt")
