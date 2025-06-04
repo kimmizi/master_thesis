@@ -81,52 +81,6 @@ print("LLMs \n",
 
 #### Helper functions ####
 
-def save_prompt_to_csv(prompt_array, filename):
-    # value counts for array
-    counts_GPT = pd.Series(prompt_array).value_counts()
-    print(counts_GPT)
-
-    # convert YES to 1 and NO to 0
-    prompt_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in prompt_array]
-    prompt_array_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response
-                             in prompt_array]
-
-    # save the array to a csv file
-    df_GPT = pd.DataFrame({
-        "y_pred": prompt_array_val
-    })
-    df_GPT.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
-
-
-def save_prompt_to_csv_cot(prompt_array, explanation_array, filename):
-    # value counts for array
-    counts_GPT = pd.Series(prompt_array).value_counts()
-    print(counts_GPT)
-
-    # convert YES to 1 and NO to 0
-    prompt_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in prompt_array]
-    prompt_array_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response
-                             in prompt_array]
-
-    # save the array to a csv file
-    df_GPT = pd.DataFrame({
-        "y_pred": prompt_array_val,
-        "explanation": explanation_array
-    })
-    df_GPT.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
-
-
-def calc_time(start, end, filename):
-    """
-    Calculate the time taken for the prompting and save it to a CSV file.
-    """
-    time_taken = end - start
-    print(f"Time taken: {time_taken} seconds")
-    time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
-    return time_taken
-
-
 def GPT_create_response(prompt, instruction):
     response = client.responses.create(
         model = model_gpt,
@@ -143,6 +97,52 @@ def GPT_create_response(prompt, instruction):
         )
 
     return response.output_text.strip()
+
+
+def save_prompt_to_csv(response_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+
+
+def save_prompt_to_csv_cot(response_array, explanation_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response
+                             in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val,
+        "explanation": explanation_array
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+
+
+def calc_time(start, end, filename):
+    """
+    Calculate the time taken for the prompting and save it to a CSV file.
+    """
+    time_taken = end - start
+    print(f"Time taken: {time_taken} seconds")
+    time_df = pd.DataFrame({"time": [time_taken]})
+    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    return time_taken
+
 
 
 # #### 1 Testing prompting ####
@@ -213,12 +213,10 @@ for prompt in tqdm(X_test_simple_prompt[:10], desc = "Simple prompting"):
     y_pred_simple_GPT.append(response)
     # print(response)
 
-    # save responses to csv after every 50th prompt
-    if len(y_pred_simple_GPT) % 50 == 0:
+    if len(y_pred_simple_GPT) % 50 == 0 and len(y_pred_simple_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_GPT)} prompts.\n")
         save_prompt_to_csv(y_pred_simple_GPT, "simple_prompt")
 
-# calculate time taken for prompting
 end = time.time()
 calc_time(start, end, "simple_prompt")
 
