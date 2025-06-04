@@ -103,9 +103,68 @@ print("LLMs \n",
 
 
 
-#### Simple prompt ####
+# #### Simple prompt ####
+#
+# y_pred_simple_grok = []
+#
+# client = OpenAI(
+#     api_key = os.environ.get("XAI_API_KEY"),
+#     base_url = "https://api.x.ai/v1",
+# )
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
+#     completion = client.chat.completions.create(
+#         model = "grok-3-beta",
+#         messages = [
+#             {"role": "system", "content": simple_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#     )
+#
+#     if completion.choices[0].message.content.strip() not in ("YES", "NO"):
+#         print("\n Invalid output. Retry prompting. \n")
+#         completion = client.chat.completions.create(
+#             model = "grok-3-beta",
+#             messages = [
+#                 {"role": "system", "content": retry_instruction},
+#                 {"role": "user", "content": prompt},
+#             ],
+#         )
+#
+#     if len(y_pred_simple_grok) % 50 == 0 and len(y_pred_simple_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_simple_grok)} prompts.\n")
+#         counts_simple = pd.Series(y_pred_simple_grok).value_counts()
+#         print(counts_simple, "\n")
+#
+#     y_pred_simple_grok.append(completion.choices[0].message.content)
+#     # print(completion.choices[0].message.content)
+#
+# end = time.time()
+# print(f"Time taken: {end - start} seconds")
+# time_grok_simple_prompt = end - start
+# time_grok_simple_df = pd.DataFrame({"time": [time_grok_simple_prompt]})
+# time_grok_simple_df.to_csv("../exp/times_LLMs/Grok/time_grok_simple_prompt.csv", sep = ",", index = False)
+#
+# # value counts for array
+# counts_simple_grok = pd.Series(y_pred_simple_grok).value_counts()
+# print(counts_simple_grok)
+#
+# # convert YES to 1 and NO to 0
+# y_pred_simple_grok = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_simple_grok]
+# y_pred_simple_grok = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_grok]
+#
+# # save the array to a csv file
+# simple_df_grok = pd.DataFrame(y_pred_simple_grok, columns = ["y_pred"])
+# simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", sep = ",", index = False)
 
-y_pred_simple_grok = []
+
+#### Class definition prompt ####
+
+y_pred_class_def_grok = []
 
 client = OpenAI(
     api_key = os.environ.get("XAI_API_KEY"),
@@ -116,11 +175,11 @@ client = OpenAI(
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
     completion = client.chat.completions.create(
         model = "grok-3-beta",
         messages = [
-            {"role": "system", "content": simple_instruction},
+            {"role": "system", "content": class_definitions_instruction},
             {"role": "user", "content": prompt},
         ],
     )
@@ -135,92 +194,35 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
             ],
         )
 
-    if len(y_pred_simple_grok) % 50 == 0:
-        print(f"\n\nProcessed {len(y_pred_simple_grok)} prompts.\n")
-        counts_simple = pd.Series(y_pred_simple_grok).value_counts()
-        print(counts_simple, "\n")
-
-    y_pred_simple_grok.append(completion.choices[0].message.content)
+    y_pred_class_def_grok.append(completion.choices[0].message.content)
     # print(completion.choices[0].message.content)
+
+    if len(y_pred_class_def_grok) % 50 == 0 and len(y_pred_class_def_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_grok)} prompts.\n")
+        counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
+        print(counts_class_def_grok, "\n")
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
-time_grok_simple_prompt = end - start
-time_grok_simple_df = pd.DataFrame({"time": [time_grok_simple_prompt]})
-time_grok_simple_df.to_csv("../exp/times_LLMs/Grok/time_grok_simple_prompt.csv", sep = ",", index = False)
+time_grok_class_definitions = end - start
+time_grok_class_definitions_df = pd.DataFrame({"time": [time_grok_class_definitions]})
+time_grok_class_definitions_df.to_csv("../exp/times_LLMs/Grok/time_grok_class_definitions_prompt.csv", sep = ",", index = False)
 
 # value counts for array
-counts_simple_grok = pd.Series(y_pred_simple_grok).value_counts()
-print(counts_simple_grok)
+counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
+print(counts_class_def_grok)
+
 
 # convert YES to 1 and NO to 0
-y_pred_simple_grok = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_grok]
+y_pred_class_def_grok = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_class_def_grok]
+y_pred_class_def_grok = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_grok]
 
 # save the array to a csv file
-simple_df_grok = pd.DataFrame(y_pred_simple_grok, columns = ["y_pred"])
-simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", sep = ",", index = False)
+class_def_df_grok = pd.DataFrame(y_pred_class_def_grok, columns = ["y_pred"])
+class_def_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_class_definitions_prompt.csv", sep = ",", index = False)
 
 
 
-# #### Class definition prompt ####
-#
-# y_pred_class_def_grok = []
-#
-# client = OpenAI(
-#     api_key = os.environ.get("XAI_API_KEY"),
-#     base_url = "https://api.x.ai/v1",
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
-#     completion = client.chat.completions.create(
-#         model = "grok-3-beta",
-#         messages = [
-#             {"role": "system", "content": class_definitions_instruction},
-#             {"role": "user", "content": prompt},
-#         ],
-#     )
-#
-#     if completion.choices[0].message.content.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         completion = client.chat.completions.create(
-#             model = "grok-3-beta",
-#             messages = [
-#                 {"role": "system", "content": retry_instruction},
-#                 {"role": "user", "content": prompt},
-#             ],
-#         )
-
-#     if len(y_pred_class_def_grok) % 50 == 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_grok)} prompts.\n")
-#         counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
-#         print(counts_class_def_grok, "\n")
-#
-#     y_pred_class_def_grok.append(completion.choices[0].message.content)
-#     # print(completion.choices[0].message.content)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_grok_class_definitions = end - start
-# time_grok_class_definitions_df = pd.DataFrame({"time": [time_grok_class_definitions]})
-# time_grok_class_definitions_df.to_csv("../exp/times_LLMs/Grok/time_grok_class_definitions_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_class_def_grok = pd.Series(y_pred_class_def_grok).value_counts()
-# print(counts_class_def_grok)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_class_def_grok = [1 if response == "YES" else 0 for response in y_pred_class_def_grok]
-#
-# # save the array to a csv file
-# class_def_df_grok = pd.DataFrame(y_pred_class_def_grok, columns = ["y_pred"])
-# class_def_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_class_definitions_prompt.csv", sep = ",", index = False)
-#
-#
-#
 # #### Profiled simple prompt ####
 #
 # y_pred_profiled_simple_grok = []
@@ -252,15 +254,14 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 #                 {"role": "user", "content": prompt},
 #             ],
 #         )
-
-#     if len(y_pred_profiled_simple_grok) % 50 == 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
-#         counts_profiled_simple_grok = pd.Series(y_pred_profiled_simple_grok).value_counts()
-#         print(counts_profiled_simple_grok, "\n")
-
 #
 #     y_pred_profiled_simple_grok.append(completion.choices[0].message.content)
 #     # print(completion.choices[0].message.content)
+#
+#     if len(y_pred_profiled_simple_grok) % 50 == 0 and len(y_pred_profiled_simple_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
+#         counts_profiled_simple_grok = pd.Series(y_pred_profiled_simple_grok).value_counts()
+#         print(counts_profiled_simple_grok, "\n")
 #
 # end = time.time()
 # print(f"Time taken: {end - start} seconds")
@@ -273,7 +274,8 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 # print(counts_profiled_simple_grok)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_profiled_simple_grok_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_grok]
+# y_pred_profiled_simple_grok = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_profiled_simple_grok]
+# y_pred_profiled_simple_grok_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_grok]
 #
 # # save the array to a csv file
 # profiled_simple_df_grok = pd.DataFrame(y_pred_profiled_simple_grok_val, columns = ["y_pred"])
@@ -314,7 +316,12 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 #         )
 #
 #     y_pred_few_shot_grok.append(completion.choices[0].message.content)
-#     print(completion.choices[0].message.content)
+#     # print(completion.choices[0].message.content)
+#
+#     if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
+#         counts_few_shot_grok = pd.Series(y_pred_few_shot_grok).value_counts()
+#         print(counts_few_shot_grok, "\n")
 #
 # end = time.time()
 # print(f"Time taken: {end - start} seconds")
@@ -327,7 +334,8 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 # print(counts_few_shot_grok)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_few_shot_grok_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_grok]
+# y_pred_few_shot_grok = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_few_shot_grok]
+# y_pred_few_shot_grok_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_grok]
 #
 # # save the array to a csv file
 # few_shot_df_grok = pd.DataFrame(y_pred_few_shot_grok_val, columns = ["y_pred"])
@@ -368,7 +376,12 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 #         )
 #
 #     y_pred_vignette_grok.append(completion.choices[0].message.content)
-#     print(completion.choices[0].message.content)
+#     # print(completion.choices[0].message.content)
+#
+#     if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
+#         counts_vignette_grok = pd.Series(y_pred_vignette_grok).value_counts()
+#         print(counts_vignette_grok, "\n")
 #
 # end = time.time()
 # print(f"Time taken: {end - start} seconds")
@@ -381,7 +394,8 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 # print(counts_vignette_grok)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_vignette_grok_val = [1 if response == "YES" else 0 for response in y_pred_vignette_grok]
+# y_pred_vignette_grok = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_vignette_grok]
+# y_pred_vignette_grok_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_grok]
 #
 # # save the array to a csv file
 # vignette_df_grok = pd.DataFrame(y_pred_vignette_grok_val, columns = ["y_pred"])
@@ -416,11 +430,16 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 #         explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
 #         y_pred_cot_grok.append(prediction)
 #         explanation_cot_grok.append(explanation)
-#         print(prediction)
+#         # print(prediction)
 #     except IndexError:
 #         print("IndexError")
 #         y_pred_cot_grok.append("IndexError")
 #         explanation_cot_grok.append("IndexError")
+#
+#     if len(y_pred_cot_grok) % 50 == 0 and len(y_pred_cot_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_cot_grok)} prompts.\n")
+#         counts_cot_grok = pd.Series(y_pred_cot_grok).value_counts()
+#         print(counts_cot_grok, "\n")
 #
 # end = time.time()
 # print(f"Time taken: {end - start} seconds")
@@ -433,12 +452,13 @@ simple_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_simple_prompt.csv", s
 # print(counts_cot_grok)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_cot_grok_val = [1 if response == "YES" else 0 for response in y_pred_cot_grok]
+# y_pred_cot_grok = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_cot_grok]
+# y_pred_cot_grok_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_grok]
 #
 # # save the array to a csv file
-# cot_df_grok = pd.DataFrame(y_pred_cot_grok_val, columns = ["y_pred"])
+# cot_df_grok = pd.DataFrame({
+#     "y_pred": y_pred_cot_grok_val,
+#     "explanation": explanation_cot_grok
+# })
 # cot_df_grok.to_csv("../exp/y_pred_LLMs/Grok/y_pred_grok_cot_prompt.csv", sep = ",", index = False)
 #
-# cot_df_explanation_grok = pd.DataFrame(explanation_cot_grok, columns = ["cot"])
-# cot_df_explanation_grok.to_csv("../exp/y_pred_LLMs/Grok/explanation_grok_cot_prompt.csv", sep = ",", index = False)
-
