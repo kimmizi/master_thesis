@@ -78,6 +78,7 @@ print("LLMs \n",
       "y_test shape: ", y_test.shape, round(y_test.shape[0]/len(y), 2), "\n")
 
 
+
 #### Helper functions ####
 
 def Gemini_create_response(prompt, instruction):
@@ -130,12 +131,14 @@ def save_prompt_to_csv(response_array, thinking_array, filename):
     })
     df.to_csv(f"../exp/y_pred_LLMs/Gemini/y_pred_Gemini_{filename}.csv", sep = ",", index = False)
 
+
 def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
     print(counts)
 
     # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
     response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
 
     # save the array to a csv file
@@ -154,8 +157,9 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"../exp/times_LLMs/Gemini/time_Gemini_{filename}.csv", sep = ",", index = False)
     return time_taken
+
 
 
 ### 1 Testing prompting ####

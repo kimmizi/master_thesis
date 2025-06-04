@@ -172,7 +172,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"../exp/times_LLMs/Claude/time_Claude_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 

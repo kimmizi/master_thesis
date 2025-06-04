@@ -76,6 +76,83 @@ print("LLMs \n",
       "y_test shape: ", y_test.shape, round(y_test.shape[0]/len(y), 2), "\n")
 
 
+
+#### Helper functions ####
+
+def DeepSeek_create_response(prompt, instruction):
+    response = client.chat.completions.create(
+        model = model_deeps,
+        messages = [
+            {"role": "system", "content": instruction},
+            {"role": "user", "content": prompt},
+        ],
+        stream = False
+    )
+
+    if response.choices[0].message.content.strip() not in ("YES", "NO"):
+        print("\n Invalid output. Retry prompting. \n")
+        response = client.chat.completions.create(
+            model = model_deeps,
+            messages = [
+                {"role": "system", "content": retry_instruction},
+                {"role": "user", "content": prompt},
+            ],
+            stream = False
+        )
+
+    response = response.choices[0].message.content.strip()
+    thinking = response.choices[0].message.reasoning_content
+
+    return response, thinking
+
+
+def save_prompt_to_csv(response_array, thinking_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val,
+        "thinking": thinking_array
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
+
+
+def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val,
+        "thinking": thinking_array,
+        "explanation": explanation_array
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
+
+
+def calc_time(start, end, filename):
+    """
+    Calculate the time taken for the prompting and save it to a CSV file.
+    """
+    time_taken = end - start
+    print(f"Time taken: {time_taken} seconds")
+    time_df = pd.DataFrame({"time": [time_taken]})
+    time_df.to_csv(f"../exp/times_LLMs/DeepSeek/time_deeps_{filename}.csv", sep = ",", index = False)
+    return time_taken
+
+
+
 # **Off-Peak Discounts**：DeepSeek-R1 with 75% off at off-peak hours (16:30-00:30 UTC daily)
 
 #### 1 Testing prompting ####
@@ -99,6 +176,12 @@ print("LLMs \n",
 
 #### 2 Prompting with DeepSeek Reasoning R1 ####
 
+model_deeps = "deepseek-reasoner"
+
+client = OpenAI(
+    api_key = os.environ.get("DeepSeek_API_Key"),
+    base_url = "https://api.deepseek.com"
+)
 
 
 #### Simple prompt ####
@@ -106,73 +189,25 @@ print("LLMs \n",
 y_pred_simple_deeps = []
 thinking_simple_deeps = []
 
-client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
-
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prompt"):
-    response = client.chat.completions.create(
-        model = "deepseek-reasoner",
-        messages = [
-            {"role": "system", "content": simple_instruction},
-            {"role": "user", "content": prompt},
-        ],
-        stream = False
-    )
-
-    if response.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.chat.completions.create(
-            model = "deepseek-reasoner",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-            stream = False
-        )
+    response, thinking = DeepSeek_create_response(prompt, simple_instruction)
+    y_pred_simple_deeps.append(response)
+    thinking_simple_deeps.append(thinking)
+    # print(response)
 
     if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
-        counts_profiled_simple_deeps = pd.Series(y_pred_simple_deeps).value_counts()
-        print(counts_profiled_simple_deeps, "\n")
-
-        y_pred_simple_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in
-                                    y_pred_simple_deeps]
-
-        # save as df
-        simple_df_deeps = pd.DataFrame({
-            "y_pred": y_pred_simple_deeps_val,
-            "thinking": thinking_simple_deeps
-        })
-        simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.csv", sep = ",", index = False)
-        print("Saved df")
-
-
-    y_pred_simple_deeps.append(response.choices[0].message.content)
-    thinking_simple_deeps.append(response.choices[0].message.reasoning_content)
-    # print(response.choices[0].message.content)
+        save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_deeps_simple_prompt = end - start
-time_deeps_simple_df = pd.DataFrame({"time": [time_deeps_simple_prompt]})
-time_deeps_simple_df.to_csv("../exp/times_LLMs/DeepSeek/time_deeps_simple_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_simple_deeps = pd.Series(y_pred_simple_deeps).value_counts()
-print(counts_simple_deeps)
-
-# convert YES to 1 and NO to 0
-y_pred_simple_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_deeps]
+calc_time(start, end, "simple_prompt")
 
 # save the array to a csv file
-simple_df_deeps = pd.DataFrame({
-    "y_pred": y_pred_simple_deeps_val,
-    "thinking": thinking_simple_deeps
-})
-simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
 
 
 
@@ -181,71 +216,26 @@ simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.c
 y_pred_class_def_deeps = []
 thinking_class_def_deeps = []
 
-client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
-
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
-    response = client.chat.completions.create(
-        model = "deepseek-reasoner",
-        messages = [
-            {"role": "system", "content": class_definitions_instruction},
-            {"role": "user", "content": prompt},
-        ],
-        stream = False
-    )
-
-    if response.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.chat.completions.create(
-            model = "deepseek-reasoner",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-            stream = False
-        )
+    response, thinking = DeepSeek_create_response(prompt, class_definitions_instruction)
+    y_pred_class_def_deeps.append(response)
+    thinking_class_def_deeps.append(thinking)
+    # print(response)
 
     if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
-        counts_class_def_deeps = pd.Series(y_pred_class_def_deeps).value_counts()
-        print(counts_class_def_deeps, "\n")
-
-        y_pred_class_def_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_class_def_deeps]
-
-        # save as df
-        class_def_df_deeps = pd.DataFrame({
-            "y_pred": y_pred_class_def_deeps_val,
-            "thinking": y_pred_class_def_deeps
-        })
-        class_def_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions_prompt.csv", sep = ",", index = False)
-        print("Saved df")
-
-    y_pred_class_def_deeps.append(response.choices[0].message.content)
-    thinking_class_def_deeps.append(response.choices[0].message.reasoning_content)
-    # print(response.choices[0].message.content)
+        save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_definitions_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_deeps_class_definitions = end - start
-time_deeps_class_definitions_df = pd.DataFrame({"time": [time_deeps_class_definitions]})
-time_deeps_class_definitions_df.to_csv("../exp/times_LLMs/DeepSeek/time_deeps_class_definitions_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_class_def_deeps = pd.Series(y_pred_class_def_deeps).value_counts()
-print(counts_class_def_deeps)
-
-# convert YES to 1 and NO to 0
-y_pred_class_def_deeps_val = [1 if response == "YES" else 0 for response in y_pred_class_def_deeps]
+calc_time(start, end, "class_definitions_prompt")
 
 # save the array to a csv file
-class_def_df_deeps = pd.DataFrame({
-    "y_pred": y_pred_class_def_deeps_val,
-    "thinking": thinking_class_def_deeps
-})
-class_def_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions.csv", sep = ",", index = False)
+save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_definitions_prompt")
+
 
 
 #### Profiled simple prompt ####
@@ -253,71 +243,25 @@ class_def_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_class_defini
 y_pred_profiled_simple_deeps = []
 thinking_profiled_simple_deeps = []
 
-client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
-
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
-    response = client.chat.completions.create(
-        model = "deepseek-reasoner",
-        messages = [
-            {"role": "system", "content": profiled_simple_instruction},
-            {"role": "user", "content": prompt},
-        ],
-        stream = False
-    )
-
-    if response.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.chat.completions.create(
-            model = "deepseek-reasoner",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-            stream = False
-        )
+    response, thinking = DeepSeek_create_response(prompt, profiled_simple_instruction)
+    y_pred_profiled_simple_deeps.append(response)
+    thinking_profiled_simple_deeps.append(thinking)
+    # print(response)
 
     if len(y_pred_profiled_simple_deeps) % 50 == 0 and len(y_pred_profiled_simple_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_deeps)} prompts.\n")
-        counts_profiled_simple_deeps = pd.Series(y_pred_profiled_simple_deeps).value_counts()
-        print(counts_profiled_simple_deeps, "\n")
-
-        y_pred_profiled_simple_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_profiled_simple_deeps]
-
-        # save as df
-        profiled_simple_df_deeps = pd.DataFrame({
-            "y_pred": y_pred_profiled_simple_deeps_val,
-            "thinking": y_pred_profiled_simple_deeps
-        })
-        profiled_simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_profiled_simple_prompt.csv", sep = ",", index = False)
-        print("Saved df")
-
-    y_pred_profiled_simple_deeps.append(response.choices[0].message.content)
-    thinking_profiled_simple_deeps.append(response.choices[0].message.reasoning_content)
-    # print(response.choices[0].message.content)
+        save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps, "profiled_simple_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_deeps_profiled_simple = end - start
-time_deeps_profiled_simple_df = pd.DataFrame({"time": [time_deeps_profiled_simple]})
-time_deeps_profiled_simple_df.to_csv("../exp/times_LLMs/DeepSeek/time_deeps_profiled_simple_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_profiled_simple_deeps = pd.Series(y_pred_profiled_simple_deeps).value_counts()
-print(counts_profiled_simple_deeps)
-
-# convert YES to 1 and NO to 0
-y_pred_profiled_simple_deeps_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_deeps]
+calc_time(start, end, "profiled_simple_prompt")
 
 # save the array to a csv file
-profiled_simple_df_deeps = pd.DataFrame({
-    "y_pred": y_pred_profiled_simple_deeps_val,
-    "thinking": thinking_profiled_simple_deeps
-})
-profiled_simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_profiled_simple_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps, "profiled_simple_prompt")
 
 
 
@@ -326,71 +270,25 @@ profiled_simple_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_profil
 y_pred_few_shot_deeps = []
 thinking_few_shot_deeps = []
 
-client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
-
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting", unit = "prompt"):
-    response = client.chat.completions.create(
-        model = "deepseek-reasoner",
-        messages = [
-            {"role": "system", "content": few_shot_instruction},
-            {"role": "user", "content": prompt},
-        ],
-        stream = False
-    )
-
-    if response.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.chat.completions.create(
-            model = "deepseek-reasoner",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-            stream = False
-        )
+    response, thinking = DeepSeek_create_response(prompt, few_shot_instruction)
+    y_pred_few_shot_deeps.append(response)
+    thinking_few_shot_deeps.append(thinking)
+    # print(response)
 
     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
-        counts_few_shot_deeps = pd.Series(y_pred_few_shot_deeps).value_counts()
-        print(counts_few_shot_deeps, "\n")
-
-        y_pred_few_shot_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_few_shot_deeps]
-
-        # save as df
-        few_shot_df_deeps = pd.DataFrame({
-            "y_pred": y_pred_few_shot_deeps_val,
-            "thinking": y_pred_few_shot_deeps
-        })
-        few_shot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prompt.csv", sep = ",", index = False)
-        print("Saved df")
-
-    y_pred_few_shot_deeps.append(response.choices[0].message.content)
-    thinking_few_shot_deeps.append(response.choices[0].message.reasoning_content)
-    # print(response.choices[0].message.content)
+        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_deeps_few_shot = end - start
-time_deeps_few_shot_df = pd.DataFrame({"time": [time_deeps_few_shot]})
-time_deeps_few_shot_df.to_csv("../exp/times_LLMs/DeepSeek/time_deeps_few_shot_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_few_shot_deeps = pd.Series(y_pred_few_shot_deeps).value_counts()
-print(counts_few_shot_deeps)
-
-# convert YES to 1 and NO to 0
-y_pred_few_shot_deeps_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_deeps]
+calc_time(start, end, "few_shot_prompt")
 
 # save the array to a csv file
-few_shot_df_deeps = pd.DataFrame({
-    "y_pred": y_pred_few_shot_deeps_val,
-    "thinking": thinking_few_shot_deeps
-})
-few_shot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 
 
 
@@ -399,74 +297,25 @@ few_shot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prom
 y_pred_vignette_deeps = []
 thinking_vignette_deeps = []
 
-client = OpenAI(
-    api_key = os.environ.get("DeepSeek_API_Key"),
-    base_url = "https://api.deepseek.com"
-)
-
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
-    response = client.chat.completions.create(
-        model = "deepseek-reasoner",
-        messages = [
-            {"role": "system", "content": vignette_instruction},
-            {"role": "user", "content": prompt},
-        ],
-        stream = False
-    )
-
-    if response.choices[0].message.content.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.chat.completions.create(
-            model = "deepseek-reasoner",
-            messages = [
-                {"role": "system", "content": retry_instruction},
-                {"role": "user", "content": prompt},
-            ],
-            stream = False
-        )
+    response, thinking = DeepSeek_create_response(prompt, vignette_instruction)
+    y_pred_vignette_deeps.append(response)
+    thinking_vignette_deeps.append(thinking)
+    # print(response)
 
     if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
-        counts_vignette_deeps = pd.Series(y_pred_vignette_deeps).value_counts()
-        print(counts_vignette_deeps, "\n")
-
-        y_pred_vignette_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_vignette_deeps]
-
-        # save as df
-        vignette_df_deeps = pd.DataFrame({
-            "y_pred": y_pred_vignette_deeps_val,
-            "thinking": y_pred_vignette_deeps
-        })
-        vignette_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prompt.csv", sep = ",", index = False)
-        print("Saved df")
-
-    y_pred_vignette_deeps.append(response.choices[0].message.content)
-    thinking_vignette_deeps.append(response.choices[0].message.reasoning_content)
-    # print(response.choices[0].message.content)
+        save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_deeps_vignette = end - start
-time_deeps_vignette_df = pd.DataFrame({"time": [time_deeps_vignette]})
-time_deeps_vignette_df.to_csv("../exp/times_LLMs/DeepSeek/time_deeps_vignette_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_vignette_deeps = pd.Series(y_pred_vignette_deeps).value_counts()
-print(counts_vignette_deeps)
-
-# convert YES to 1 and NO to 0
-y_pred_vignette_deeps_val = [1 if response == "YES" else 0 for response in y_pred_vignette_deeps]
+calc_time(start, end, "vignette_prompt")
 
 # save the array to a csv file
-vignette_df_deeps = pd.DataFrame({
-    "y_pred": y_pred_vignette_deeps_val,
-    "thinking": thinking_vignette_deeps
-})
-vignette_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt")
 
 
 
@@ -475,11 +324,6 @@ vignette_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prom
 y_pred_cot_deeps = []
 explanation_cot_deeps = []
 thinking_cot_deeps = []
-
-client = OpenAI(
-    api_key = os.environ.get("DeepSeek_API_Key"),
-    base_url = "https://api.deepseek.com"
-)
 
 # measure time in seconds
 start = time.time()
@@ -495,22 +339,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit 
         stream = False
     )
 
-    if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
-        print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
-        counts_cot_deeps = pd.Series(y_pred_cot_deeps).value_counts()
-        print(counts_cot_deeps, "\n")
-
-        y_pred_cot_deeps_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_cot_deeps]
-
-        # save as df
-        cot_df_deeps = pd.DataFrame({
-            "y_pred": y_pred_cot_deeps_val,
-            "thinking": thinking_cot_deeps,
-            "explanation": explanation_cot_deeps
-        })
-        cot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_cot_prompt.csv", sep = ",", index = False)
-        print("Saved df")
-
     try:
         prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
         explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
@@ -524,23 +352,12 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit 
         explanation_cot_deeps.append("IndexError")
         thinking_cot_deeps.append("IndexError")
 
+    if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
+
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_deeps_cot_prompt = end - start
-time_deeps_cot_df = pd.DataFrame({"time": [time_deeps_cot_prompt]})
-time_deeps_cot_df.to_csv("../exp/times_LLMs/DeepSeek/time_deeps_cot_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_cot_deeps = pd.Series(y_pred_cot_deeps).value_counts()
-print(counts_cot_deeps)
-
-# convert YES to 1 and NO to 0
-y_pred_cot_deeps_val = [1 if response == "YES" else 0 for response in y_pred_cot_deeps]
+calc_time(start, end, "cot_prompt")
 
 # save the array to a csv file
-cot_df_deeps = pd.DataFrame({
-    "y_pred": y_pred_cot_deeps_val,
-    "thinking": thinking_cot_deeps,
-    "explanation": explanation_cot_deeps
-})
-cot_df_deeps.to_csv("../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_cot_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
