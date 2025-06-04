@@ -138,7 +138,8 @@ start = time.time()
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
     message = client.messages.create(
-        model = "claude-3-7-sonnet-20250219",
+        # model = "claude-3-7-sonnet-20250219",
+        model = "claude-sonnet-4-20250514",
         max_tokens = 10000,
         thinking = {
             "type": "enabled",
@@ -161,7 +162,8 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
     if message.content[1].text.strip() not in ("YES", "NO"):
         print("\n Invalid output. Retry prompting. \n")
         message = client.messages.create(
-            model = "claude-3-7-sonnet-20250219",
+            # model = "claude-3-7-sonnet-20250219",
+            model = "claude-sonnet-4-20250514",
             max_tokens = 10000,
             thinking = {
                 "type": "enabled",
@@ -190,6 +192,7 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
         counts_profiled_simple_claude = pd.Series(y_pred_simple_claude).value_counts()
         print(counts_profiled_simple_claude, "\n")
 
+        y_pred_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_simple_claude]
         y_pred_simple_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_claude]
 
         # save as df
@@ -197,28 +200,36 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
             "y_pred": y_pred_simple_claude_val,
             "thinking": y_pred_simple_claude
         })
-        simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.csv", sep=",", index=False)
+        simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude4_simple_prompt.csv", sep=",", index=False)
         print("Saved df")
 
 end = time.time()
 print(f"Time taken: {end - start} seconds")
 time_claude_simple_prompt = end - start
 time_claude_simple_df = pd.DataFrame({"time": [time_claude_simple_prompt]})
-time_claude_simple_df.to_csv("../exp/times_LLMs/Claude/time_claude_simple_prompt.csv", sep = ",", index = False)
+time_claude_simple_df.to_csv("../exp/times_LLMs/Claude/time_claude4_simple_prompt.csv", sep = ",", index = False)
+
+# save the array to a csv file
+simple_df_claude_raw = pd.DataFrame({
+    "y_pred": y_pred_simple_claude,
+    "thinking": thinking_simple_claude
+})
+simple_df_claude_raw.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude4_simple_prompt_raw.csv", sep = ",", index = False)
 
 # value counts for array
 counts_simple_claude = pd.Series(y_pred_simple_claude).value_counts()
 print(counts_simple_claude)
 
 # convert YES to 1 and NO to 0
-y_pred_simple_claude = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_claude]
+y_pred_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_simple_claude]
+y_pred_simple_claude_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in y_pred_simple_claude]
 
 # save the array to a csv file
 simple_df_claude = pd.DataFrame({
-    "y_pred": y_pred_simple_claude,
+    "y_pred": y_pred_simple_claude_val,
     "thinking": thinking_simple_claude
 })
-simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.csv", sep = ",", index = False)
+simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude4_simple_prompt.csv", sep = ",", index = False)
 
 
 
@@ -287,6 +298,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 #         counts_class_def_claude = pd.Series(y_pred_class_def_claude).value_counts()
 #         print(counts_class_def_claude, "\n")
 #
+#         y_pred_class_def_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_class_def_claude]
 #         y_pred_class_def_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_claude]
 #
 #         # save as df
@@ -312,11 +324,12 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 # print(counts_class_def_claude)
 #
 # # convert YES to 1 and NO to 0
-# y_pred_class_def_claude = [1 if response == "YES" else 0 for response in y_pred_class_def_claude]
+# y_pred_class_def_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_class_def_claude]
+# y_pred_class_def_claude_val = [1 if response == "YES" else 0 for response in y_pred_class_def_claude]
 #
 # # save the array to a csv file
 # class_def_df_claude = pd.DataFrame({
-#     "y_pred": y_pred_class_def_claude,
+#     "y_pred": y_pred_class_def_claude_val,
 #     "thinking": thinking_class_def_claude
 # })
 # class_def_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_class_definitions_prompt.csv", sep = ",", index = False)
@@ -388,6 +401,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 #         counts_profiled_simple_claude = pd.Series(y_pred_profiled_simple_claude).value_counts()
 #         print(counts_profiled_simple_claude, "\n")
 #
+#         y_pred_profiled_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_profiled_simple_claude]
 #         y_pred_profiled_simple_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_claude]
 #
 #         # save as df
@@ -413,6 +427,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 # print(counts_profiled_simple_claude)
 #
 # # convert YES to 1 and NO to 0
+# y_pred_profiled_simple_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_profiled_simple_claude]
 # y_pred_profiled_simple_claude_val = [1 if response == "YES" else 0 for response in y_pred_profiled_simple_claude]
 #
 # # save the array to a csv file
@@ -489,6 +504,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 #         counts_few_shot_claude = pd.Series(y_pred_few_shot_claude).value_counts()
 #         print(counts_few_shot_claude, "\n")
 #
+#         y_pred_few_shot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_few_shot_claude]
 #         y_pred_few_shot_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_claude]
 #
 #         # save as df
@@ -514,6 +530,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 # print(counts_few_shot_claude)
 #
 # # convert YES to 1 and NO to 0
+# y_pred_few_shot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_few_shot_claude]
 # y_pred_few_shot_claude_val = [1 if response == "YES" else 0 for response in y_pred_few_shot_claude]
 #
 # # save the array to a csv file
@@ -590,6 +607,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 #         counts_vignette_claude = pd.Series(y_pred_vignette_claude).value_counts()
 #         print(counts_vignette_claude, "\n")
 #
+#         y_pred_vignette_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_vignette_claude]
 #         y_pred_vignette_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_claude]
 #
 #         # save as df
@@ -615,6 +633,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 # print(counts_vignette_claude)
 #
 # # convert YES to 1 and NO to 0
+# y_pred_vignette_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_vignette_claude]
 # y_pred_vignette_claude_val = [1 if response == "YES" else 0 for response in y_pred_vignette_claude]
 #
 # # save the array to a csv file
@@ -668,6 +687,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 #         counts_cot_claude = pd.Series(y_pred_cot_claude).value_counts()
 #         print(counts_cot_claude, "\n")
 #
+#         y_pred_cot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_cot_claude]
 #         y_pred_cot_claude_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_claude]
 #
 #         # save as df
@@ -703,6 +723,7 @@ simple_df_claude.to_csv("../exp/y_pred_LLMs/Claude/y_pred_claude_simple_prompt.c
 # print(counts_cot_claude)
 #
 # # convert YES to 1 and NO to 0
+# y_pred_cot_claude = [re.sub(r'^\[|\]$', '', response.strip()) for response in y_pred_cot_claude]
 # y_pred_cot_claude_val = [1 if response == "YES" else 0 for response in y_pred_cot_claude]
 #
 # # save the array to a csv file
