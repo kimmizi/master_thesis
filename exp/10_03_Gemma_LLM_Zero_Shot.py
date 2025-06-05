@@ -80,6 +80,70 @@ print("LLMs \n",
 
 
 
+#### Helper functions ####
+
+def Gemma_create_response(prompt, instruction):
+    time.sleep(2)  # sleep for 2 seconds to avoid rate limiting
+    response = client.models.generate_content(
+        model = model_gemma,
+        contents = [instruction, prompt]
+    )
+
+    if response.text.strip() not in ("YES", "NO"):
+        print("\n Invalid output. Retry prompting. \n")
+        response = client.models.generate_content(
+            model = model_gemma,
+            contents = [retry_instruction, prompt]
+        )
+
+    return response.text
+
+
+def save_prompt_to_csv(response_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/Gemma/y_pred_gemma_{filename}.csv", sep = ",", index = False)
+
+
+def save_prompt_to_csv_cot(response_array, explanation_array, filename):
+    # value counts for array
+    counts = pd.Series(response_array).value_counts()
+    print(counts)
+
+    # convert YES to 1 and NO to 0
+    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
+    response_array_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response
+                             in response_array]
+
+    # save the array to a csv file
+    df = pd.DataFrame({
+        "y_pred": response_array_val,
+        "explanation": explanation_array
+    })
+    df.to_csv(f"../exp/y_pred_LLMs/Gemma/y_pred_gemma_{filename}.csv", sep = ",", index = False)
+
+
+def calc_time(start, end, filename):
+    """
+    Calculate the time taken for the prompting and save it to a CSV file.
+    """
+    time_taken = end - start
+    print(f"Time taken: {time_taken} seconds")
+    time_df = pd.DataFrame({"time": [time_taken]})
+    time_df.to_csv(f"../exp/times_LLMs/Gemma/time_gemma_{filename}.csv", sep = ",", index = False)
+    return time_taken
+
+
 ### 1 Testing prompting ####
 
 # client = genai.Client(
@@ -109,364 +173,170 @@ print("LLMs \n",
 ### 2 Prompting with Gemma 3 ####
 
 
-
-#### Simple prompt ####
-
-y_pred_simple_gemma = []
+model_gemma = "gemma-3-27b-it"
 
 client = genai.Client(
     api_key = os.environ.get("GEMINI_API_KEY")
 )
+
+
+#### Simple prompt ####
+
+y_pred_simple_gemma = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
-    time.sleep(2) # sleep for 2 seconds to avoid rate limiting
-    response = client.models.generate_content(
-        model = "gemma-3-27b-it",
-        contents = [simple_instruction, prompt]
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = "gemma-3-27b-it",
-            contents = [retry_instruction, prompt]
-        )
+    response = Gemma_create_response(prompt, simple_instruction)
+    y_pred_simple_gemma.append(response)
+    # print(response)
 
     if len(y_pred_simple_gemma) % 50 == 0 and len(y_pred_simple_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_gemma)} prompts.\n")
-        counts_profiled_simple_gemma = pd.Series(y_pred_simple_gemma).value_counts()
-        print(counts_profiled_simple_gemma, "\n")
-
-        y_pred_simple_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_gemma]
-
-        # save as df
-        simple_df_gemma = pd.DataFrame(y_pred_simple_gemma_val, columns=["y_pred"])
-        simple_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_simple_prompt.csv", sep=",", index=False)
-        print("Saved df")
-
-    y_pred_simple_gemma.append(response.text)
-    # print(response.text)
+        save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
 
 end = time.time()
-print(f"Time taken: {end - start} seconds")
-time_gemma_simple_prompt = end - start - (2 * len(X_test_simple_prompt))
-time_gemma_simple_df = pd.DataFrame({"time": [time_gemma_simple_prompt]})
-time_gemma_simple_df.to_csv("../exp/times_LLMs/Gemma/time_gemma_simple_prompt.csv", sep = ",", index = False)
-
-# value counts for array
-counts_simple_gemma = pd.Series(y_pred_simple_gemma).value_counts()
-print(counts_simple_gemma)
-
-# convert YES to 1 and NO to 0
-y_pred_simple_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_simple_gemma]
+calc_time(start, end, "simple_prompt")
 
 # save the array to a csv file
-simple_df_gemma = pd.DataFrame(y_pred_simple_gemma_val, columns = ["y_pred"])
-simple_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_simple_prompt.csv", sep = ",", index = False)
+save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
 
 
 
-# #### Class definition prompt ####
-#
-# y_pred_class_def_gemma = []
-#
-# client = genai.Client(
-#     api_key = os.environ.get("GEMINI_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
-#     response = client.models.generate_content(
-#         model = "gemma-3-27b-it",
-#         contents = [simple_instruction, prompt]
-#     )
-#
-#     if response.text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         response = client.models.generate_content(
-#             model = "gemma-3-27b-it",
-#             contents = [retry_instruction, prompt]
-#         )
-#
-#     if len(y_pred_class_def_gemma) % 50 == 0 and len(y_pred_class_def_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_gemma)} prompts.\n")
-#         counts_class_def_gemma = pd.Series(y_pred_class_def_gemma).value_counts()
-#         print(counts_class_def_gemma, "\n")
-#
-#         y_pred_class_def_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_gemma]
-#
-#         # save as df
-#         class_def_df_gemma = pd.DataFrame(y_pred_class_def_gemma_val, columns=["y_pred"])
-#         class_def_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_class_definitions_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     y_pred_class_def_gemma.append(response.text)
-#     # print(response.text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_gemma_class_def = end - start
-# time_gemma_class_def_df = pd.DataFrame({"time": [time_gemma_class_def]})
-# time_gemma_class_def_df.to_csv("../exp/times_LLMs/Gemma/time_gemma_class_definitions_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_class_def_gemma = pd.Series(y_pred_class_def_gemma).value_counts()
-# print(counts_class_def_gemma)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_class_def_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_class_def_gemma]
-#
-# # save the array to a csv file
-# class_def_df_gemma = pd.DataFrame(y_pred_class_def_gemma_val, columns = ["y_pred"])
-# class_def_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_class_definitions_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Profiled simple prompt ####
-#
-# y_pred_profiled_simple_gemma = []
-#
-# client = genai.Client(
-#     api_key = os.environ.get("GEMINI_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
-#     response = client.models.generate_content(
-#         model = "gemma-3-27b-it",
-#         contents = [simple_instruction, prompt]
-#     )
-#
-#     if response.text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         response = client.models.generate_content(
-#             model = "gemma-3-27b-it",
-#             contents = [retry_instruction, prompt]
-#         )
-#
-#     if len(y_pred_profiled_simple_gemma) % 50 == 0 and len(y_pred_profiled_simple_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_gemma)} prompts.\n")
-#         counts_profiled_simple_gemma = pd.Series(y_pred_profiled_simple_gemma).value_counts()
-#         print(counts_profiled_simple_gemma, "\n")
-#
-#         y_pred_profiled_simple_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_gemma]
-#
-#         # save as df
-#         profiled_simple_df_gemma = pd.DataFrame(y_pred_profiled_simple_gemma_val, columns = ["y_pred"])
-#         profiled_simple_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_profiled_simple_prompt.csv", sep = ",", index = False)
-#         print("Saved df")
-#
-#     y_pred_profiled_simple_gemma.append(response.text)
-#     # print(response.text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_gemma_profiled_simple = end - start
-# time_gemma_profiled_simple_df = pd.DataFrame({"time": [time_gemma_profiled_simple]})
-# time_gemma_profiled_simple_df.to_csv("../exp/times_LLMs/Gemma/time_gemma_profiled_simple_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_profiled_simple_gemma = pd.Series(y_pred_profiled_simple_gemma).value_counts()
-# print(counts_profiled_simple_gemma)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_profiled_simple_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_profiled_simple_gemma]
-#
-# # save the array to a csv file
-# profiled_simple_df_gemma = pd.DataFrame(y_pred_profiled_simple_gemma_val, columns = ["y_pred"])
-# profiled_simple_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_profiled_simple_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Few shot prompt ####
-#
-# y_pred_few_shot_gemma = []
-#
-# client = genai.Client(
-#     api_key = os.environ.get("GEMINI_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
-#     response = client.models.generate_content(
-#         model = "gemma-3-27b-it",
-#         contents = [simple_instruction, prompt]
-#     )
-#
-#     if response.text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         response = client.models.generate_content(
-#             model = "gemma-3-27b-it",
-#             contents = [retry_instruction, prompt]
-#         )
-#
-#     if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
-#         counts_few_shot_gemma = pd.Series(y_pred_few_shot_gemma).value_counts()
-#         print(counts_few_shot_gemma, "\n")
-#
-#         y_pred_few_shot_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_gemma]
-#
-#         # save as df
-#         few_shot_df_gemma = pd.DataFrame(y_pred_few_shot_gemma_val, columns = ["y_pred"])
-#         few_shot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_few_shot_prompt.csv", sep = ",", index = False)
-#         print("Saved df")
-#
-#     y_pred_few_shot_gemma.append(response.text)
-#     # print(response.text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_gemma_few_shot = end - start
-# time_gemma_few_shot_df = pd.DataFrame({"time": [time_gemma_few_shot]})
-# time_gemma_few_shot_df.to_csv("../exp/times_LLMs/Gemma/time_gemma_few_shot_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_few_shot_gemma = pd.Series(y_pred_few_shot_gemma).value_counts()
-# print(counts_few_shot_gemma)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_few_shot_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_few_shot_gemma]
-#
-# # save the array to a csv file
-# few_shot_df_gemma = pd.DataFrame(y_pred_few_shot_gemma_val, columns = ["y_pred"])
-# few_shot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_few_shot_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_gemma = []
-#
-# client = genai.Client(
-#     api_key = os.environ.get("GEMINI_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-#     response = client.models.generate_content(
-#         model = "gemma-3-27b-it",
-#         contents = [simple_instruction, prompt]
-#     )
-#
-#     if response.text.strip() not in ("YES", "NO"):
-#         print("\n Invalid output. Retry prompting. \n")
-#         response = client.models.generate_content(
-#             model = "gemma-3-27b-it",
-#             contents = [retry_instruction, prompt]
-#         )
-#
-#     if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
-#         counts_vignette_gemma = pd.Series(y_pred_vignette_gemma).value_counts()
-#         print(counts_vignette_gemma, "\n")
-#
-#         y_pred_vignette_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_gemma]
-#
-#         # save as df
-#         vignette_df_gemma = pd.DataFrame(y_pred_vignette_gemma_val, columns = ["y_pred"])
-#         vignette_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_vignette_prompt.csv", sep = ",", index = False)
-#         print("Saved df")
-#
-#     y_pred_vignette_gemma.append(response.text)
-#     # print(response.text)
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_gemma_vignette = end - start
-# time_gemma_vignette_df = pd.DataFrame({"time": [time_gemma_vignette]})
-# time_gemma_vignette_df.to_csv("../exp/times_LLMs/Gemma/time_gemma_vignette_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_vignette_gemma = pd.Series(y_pred_vignette_gemma).value_counts()
-# print(counts_vignette_gemma)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_vignette_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_vignette_gemma]
-#
-# # save the array to a csv file
-# vignette_df_gemma = pd.DataFrame(y_pred_vignette_gemma_val, columns = ["y_pred"])
-# vignette_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_vignette_prompt.csv", sep = ",", index = False)
-#
-#
-#
-# #### Chain-of-thought prompt ####
-#
-# y_pred_cot_gemma = []
-# explanation_cot_gemma = []
-#
-# client = genai.Client(
-#     api_key = os.environ.get("GEMINI_API_KEY")
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
-#     response = client.models.generate_content(
-#         model = "gemma-3-27b-it",
-#         contents = [simple_instruction, prompt]
-#     )
-#
-#     if len(y_pred_cot_gemma) % 50 == 0 and len(y_pred_cot_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_gemma)} prompts.\n")
-#         counts_cot_gemma = pd.Series(y_pred_cot_gemma).value_counts()
-#         print(counts_cot_gemma, "\n")
-#
-#         y_pred_cot_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_gemma]
-#
-#         # save as df
-#         cot_df_gemma = pd.DataFrame({
-#             "y_pred": y_pred_cot_gemma_val,
-#             "explanation": explanation_cot_gemma
-#         })
-#         cot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_cot_prompt.csv", sep=",", index=False)
-#         print("Saved df")
-#
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
-#         y_pred_cot_gemma.append(prediction)
-#         explanation_cot_gemma.append(explanation)
-#         # print(prediction)
-#     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_gemma.append("IndexError")
-#         explanation_cot_gemma.append("IndexError")
-#
-# end = time.time()
-# print(f"Time taken: {end - start} seconds")
-# time_gemma_cot = end - start
-# time_gemma_cot_df = pd.DataFrame({"time": [time_gemma_cot]})
-# time_gemma_cot_df.to_csv("../exp/times_LLMs/Gemma/time_gemma_cot_prompt.csv", sep = ",", index = False)
-#
-# # value counts for array
-# counts_cot_gemma = pd.Series(y_pred_cot_gemma).value_counts()
-# print(counts_cot_gemma)
-#
-# # convert YES to 1 and NO to 0
-# y_pred_cot_gemma_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response in y_pred_cot_gemma]
-#
-# # save the array to a csv file
-# cot_df_gemma = pd.DataFrame({
-#     "y_pred": y_pred_cot_gemma_val,
-#     "explanation": explanation_cot_gemma
-# })
-# cot_df_gemma.to_csv("../exp/y_pred_LLMs/Gemma/y_pred_gemma_cot_prompt.csv", sep = ",", index = False)
+#### Class definition prompt ####
+
+y_pred_class_def_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+    response = Gemma_create_response(prompt, class_definitions_instruction)
+    y_pred_class_def_gemma.append(response)
+    # print(response)
+
+    if len(y_pred_class_def_gemma) % 50 == 0 and len(y_pred_class_def_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt")
+
+
+
+#### Profiled simple prompt ####
+
+y_pred_profiled_simple_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
+    response = Gemma_create_response(prompt, profiled_simple_instruction)
+    y_pred_profiled_simple_gemma.append(response)
+    # print(response)
+
+    if len(y_pred_profiled_simple_gemma) % 50 == 0 and len(y_pred_profiled_simple_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
+
+end = time.time()
+calc_time(start, end, "profiled_simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
+
+
+
+#### Few shot prompt ####
+
+y_pred_few_shot_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
+    response = Gemma_create_response(prompt, few_shot_instruction)
+    y_pred_few_shot_gemma.append(response)
+    # print(response)
+
+    if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
+
+
+
+#### Vignette prompt ####
+
+y_pred_vignette_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+    response = Gemma_create_response(prompt, vignette_instruction)
+    y_pred_vignette_gemma.append(response)
+    # print(response)
+
+    if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+
+
+
+#### Chain-of-thought prompt ####
+
+y_pred_cot_gemma = []
+explanation_cot_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
+    response = client.models.generate_content(
+        model = model_gemma,
+        contents = [cot_instruction, prompt]
+    )
+
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
+        y_pred_cot_gemma.append(prediction)
+        explanation_cot_gemma.append(explanation)
+        # print(prediction)
+    except IndexError:
+        print("IndexError")
+        y_pred_cot_gemma.append("IndexError")
+        explanation_cot_gemma.append("IndexError")
+
+    if len(y_pred_cot_gemma) % 50 == 0 and len(y_pred_cot_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_gemma)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
+
+end = time.time()
+calc_time(start, end, "cot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
