@@ -144,7 +144,7 @@ def save_prompt_to_csv(response_array, thinking_array, filename):
         "y_pred": response_array_val,
         "thinking": thinking_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/Claude/y_pred_Claude_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/Claude/y_pred_claude_{filename}.csv", sep = ",", index = False)
 
 
 def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
@@ -162,7 +162,7 @@ def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, fi
         "thinking": thinking_array,
         "cot": explanation_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/Claude/y_pred_Claude_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/Claude/y_pred_claude_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -172,7 +172,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/Claude/time_Claude_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"../exp/times_LLMs/Claude/time_claude_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
@@ -219,38 +219,38 @@ def calc_time(start, end, filename):
 
 ### 2 Prompting with Claude 3.7 Sonnet ####
 
-model_claude = "claude-3-7-sonnet-20250219"
-# model_claude = "claude-sonnet-4-20250514"
+# model_claude = "claude-3-7-sonnet-20250219"
+model_claude = "claude-sonnet-4-20250514"
 
 client = anthropic.Anthropic(
     api_key=os.environ.get("ANTHROPIC_API_KEY")
 )
 
 
-#### Simple prompt ####
-
-y_pred_simple_claude = []
-thinking_simple_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
-    response, thinking = Claude_create_message(prompt, simple_instruction)
-    y_pred_simple_claude.append(response)
-    thinking_simple_claude.append(thinking)
-    # print(response)
-
-    if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt")
-
-end = time.time()
-calc_time(start, end, "simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt")
+# #### Simple prompt ####
+#
+# y_pred_simple_claude = []
+# thinking_simple_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
+#     response, thinking = Claude_create_message(prompt, simple_instruction)
+#     y_pred_simple_claude.append(response)
+#     thinking_simple_claude.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "simple_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt")
 
 
 
@@ -271,149 +271,149 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class Definitions Pr
 
     if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_definitions_prompt")
+        save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "4_class_definitions_prompt")
 
 end = time.time()
-calc_time(start, end, "class_definitions_prompt")
+calc_time(start, end, "4_class_definitions_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_definitions_prompt")
+save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "4_class_definitions_prompt")
 
 
 
-#### Profiled simple prompt ####
-
-y_pred_profiled_simple_claude = []
-thinking_profiled_simple_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled Simple Prompting"):
-    response, thinking = Claude_create_message(prompt, profiled_simple_instruction)
-    y_pred_profiled_simple_claude.append(response)
-    thinking_profiled_simple_claude.append(thinking)
-    # print(response)
-
-    if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claude, "profiled_simple_prompt")
-
-end = time.time()
-calc_time(start, end, "profiled_simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claude, "profiled_simple_prompt")
-
-
-
-#### Few shot prompt ####
-
-y_pred_few_shot_claude = []
-thinking_few_shot_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt, desc = "Few Shot Prompting"):
-    response, thinking = Claude_create_message(prompt, few_shot_instruction)
-    y_pred_few_shot_claude.append(response)
-    thinking_few_shot_claude.append(thinking)
-    # print(response)
-
-    if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
-
-end = time.time()
-calc_time(start, end, "few_shot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
-
-
-
-#### Vignette prompt ####
-
-y_pred_vignette_claude = []
-thinking_vignette_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
-    response, thinking = Claude_create_message(prompt, vignette_instruction)
-    y_pred_vignette_claude.append(response)
-    thinking_vignette_claude.append(thinking)
-    # print(response)
-
-    if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
-
-
-
-#### Chain-of-thought prompt ####
-
-y_pred_cot_claude = []
-explanation_cot_claude = []
-thinking_cot_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
-    message = client.messages.create(
-        model = "claude-sonnet-4-20250514",
-        max_tokens = 20000,
-        temperature = 1,
-        thinking = {
-            "type": "enabled",
-            "budget_tokens": 16000
-        },
-        system = cot_instruction,
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": prompt
-                    }
-                ]
-            }
-        ]
-    )
-
-    try:
-        prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
-        explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
-        y_pred_cot_claude.append(prediction)
-        explanation_cot_claude.append(explanation)
-        thinking_cot_claude.append(message.content[0].thinking)
-        # print(prediction)
-    except IndexError:
-        print("IndexError")
-        y_pred_cot_claude.append("IndexError")
-        explanation_cot_claude.append("IndexError")
-        thinking_cot_claude.append("IndexError")
-
-    if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
-        save_prompt_to_csv_cot(y_pred_cot_claude, thinking_cot_claude, explanation_cot_claude, "cot_prompt")
-
-end = time.time()
-calc_time(start, end, "cot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv_cot(y_pred_cot_claude, thinking_cot_claude, explanation_cot_claude, "cot_prompt")
+# #### Profiled simple prompt ####
+#
+# y_pred_profiled_simple_claude = []
+# thinking_profiled_simple_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled Simple Prompting"):
+#     response, thinking = Claude_create_message(prompt, profiled_simple_instruction)
+#     y_pred_profiled_simple_claude.append(response)
+#     thinking_profiled_simple_claude.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claude, "profiled_simple_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "profiled_simple_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claude, "profiled_simple_prompt")
+#
+#
+#
+# #### Few shot prompt ####
+#
+# y_pred_few_shot_claude = []
+# thinking_few_shot_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few Shot Prompting"):
+#     response, thinking = Claude_create_message(prompt, few_shot_instruction)
+#     y_pred_few_shot_claude.append(response)
+#     thinking_few_shot_claude.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "few_shot_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
+#
+#
+#
+# #### Vignette prompt ####
+#
+# y_pred_vignette_claude = []
+# thinking_vignette_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
+#     response, thinking = Claude_create_message(prompt, vignette_instruction)
+#     y_pred_vignette_claude.append(response)
+#     thinking_vignette_claude.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "vignette_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
+#
+#
+#
+# #### Chain-of-thought prompt ####
+#
+# y_pred_cot_claude = []
+# explanation_cot_claude = []
+# thinking_cot_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
+#     message = client.messages.create(
+#         model = "claude-sonnet-4-20250514",
+#         max_tokens = 20000,
+#         temperature = 1,
+#         thinking = {
+#             "type": "enabled",
+#             "budget_tokens": 16000
+#         },
+#         system = cot_instruction,
+#         messages = [
+#             {
+#                 "role": "user",
+#                 "content": [
+#                     {
+#                         "type": "text",
+#                         "text": prompt
+#                     }
+#                 ]
+#             }
+#         ]
+#     )
+#
+#     try:
+#         prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
+#         explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
+#         y_pred_cot_claude.append(prediction)
+#         explanation_cot_claude.append(explanation)
+#         thinking_cot_claude.append(message.content[0].thinking)
+#         # print(prediction)
+#     except IndexError:
+#         print("IndexError")
+#         y_pred_cot_claude.append("IndexError")
+#         explanation_cot_claude.append("IndexError")
+#         thinking_cot_claude.append("IndexError")
+#
+#     if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
+#         save_prompt_to_csv_cot(y_pred_cot_claude, thinking_cot_claude, explanation_cot_claude, "cot_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "cot_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv_cot(y_pred_cot_claude, thinking_cot_claude, explanation_cot_claude, "cot_prompt")
