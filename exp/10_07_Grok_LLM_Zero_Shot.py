@@ -224,56 +224,56 @@ client = OpenAI(
 #
 # # save the array to a csv file
 # save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
-
-
-#### Profiled simple prompt ####
-
-y_pred_profiled_simple_grok = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
-    completion = Grok_create_completion(prompt, profiled_simple_instruction)
-    y_pred_profiled_simple_grok.append(completion)
-    # print(completion)
-
-    if len(y_pred_profiled_simple_grok) % 50 == 0 and len(y_pred_profiled_simple_grok) > 0:
-        print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
-        save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
-
-end = time.time()
-calc_time(start, end, "profiled_simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
-
-
-# #### Few shot prompt ####
 #
-# y_pred_few_shot_grok = []
+#
+# #### Profiled simple prompt ####
+#
+# y_pred_profiled_simple_grok = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in X_test_few_shot_prompt:
-#     completion = Grok_create_completion(prompt, few_shot_instruction)
-#     y_pred_few_shot_grok.append(completion)
+# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
+#     completion = Grok_create_completion(prompt, profiled_simple_instruction)
+#     y_pred_profiled_simple_grok.append(completion)
 #     # print(completion)
 #
-#     if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+#     if len(y_pred_profiled_simple_grok) % 50 == 0 and len(y_pred_profiled_simple_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
+#         save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "few_shot_prompt")
+# calc_time(start, end, "profiled_simple_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+# save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 #
-#
+
+#### Few shot prompt ####
+
+y_pred_few_shot_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
+    completion = Grok_create_completion(prompt, few_shot_instruction)
+    y_pred_few_shot_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+
+
 #
 # #### Vignette prompt ####
 #
@@ -283,7 +283,7 @@ save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in X_test_vignette_prompt:
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
 #     completion = Grok_create_completion(prompt, vignette_instruction)
 #     y_pred_vignette_grok.append(completion)
 #     # print(completion)
@@ -309,7 +309,7 @@ save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in X_test_cot_prompt:
+# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
 #     completion = client.chat.completions.create(
 #         model = "grok-3-beta",
 #         messages = [
