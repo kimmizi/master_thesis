@@ -307,19 +307,19 @@ y_pred_vignette_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt[200:], desc = "Vignette prompting"):
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
     response = GPT_create_response(prompt, vignette_instruction)
     y_pred_vignette_GPT.append(response)
     # print(response)
 
     if len(y_pred_vignette_GPT) % 50 == 0 and len(y_pred_vignette_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt_2")
+        save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
 
 end = time.time()
-calc_time(start, end, "vignette_prompt_2")
+calc_time(start, end, "vignette_prompt")
 
-save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt_2")
+save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
 #
 #
 #
