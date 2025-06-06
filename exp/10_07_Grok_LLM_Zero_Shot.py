@@ -249,54 +249,54 @@ client = OpenAI(
 # # save the array to a csv file
 # save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 #
-
-#### Few shot prompt ####
-
-y_pred_few_shot_grok = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
-    completion = Grok_create_completion(prompt, few_shot_instruction)
-    y_pred_few_shot_grok.append(completion)
-    # print(completion)
-
-    if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
-        print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
-
-end = time.time()
-calc_time(start, end, "few_shot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
-
-
 #
-# #### Vignette prompt ####
+# #### Few shot prompt ####
 #
-# y_pred_vignette_grok = []
+# y_pred_few_shot_grok = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-#     completion = Grok_create_completion(prompt, vignette_instruction)
-#     y_pred_vignette_grok.append(completion)
+# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
+#     completion = Grok_create_completion(prompt, few_shot_instruction)
+#     y_pred_few_shot_grok.append(completion)
 #     # print(completion)
 #
-#     if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+#     if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
+#         save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "vignette_prompt")
+# calc_time(start, end, "few_shot_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+# save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+#
+#
+#
+#### Vignette prompt ####
+
+y_pred_vignette_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+    completion = Grok_create_completion(prompt, vignette_instruction)
+    y_pred_vignette_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
 #
 #
 #
