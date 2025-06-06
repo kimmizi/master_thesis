@@ -83,7 +83,7 @@ print("LLMs \n",
 #### Helper functions ####
 
 def Gemma_create_response(prompt, instruction):
-    time.sleep(20)  # sleep for few seconds to avoid rate limiting
+    time.sleep(2)  # sleep for few seconds to avoid rate limiting
     response = client.models.generate_content(
         model = model_gemma,
         contents = [instruction, prompt]
@@ -255,53 +255,53 @@ client = genai.Client(
 #
 #
 #
-#### Few shot prompt ####
-
-y_pred_few_shot_gemma = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
-    response = Gemma_create_response(prompt, few_shot_instruction)
-    y_pred_few_shot_gemma.append(response)
-    # print(response)
-
-    if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
-        print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
-
-end = time.time()
-calc_time(start, end, "few_shot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
-
+# #### Few shot prompt ####
 #
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_gemma = []
+# y_pred_few_shot_gemma = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-#     response = Gemma_create_response(prompt, vignette_instruction)
-#     y_pred_vignette_gemma.append(response)
+# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
+#     response = Gemma_create_response(prompt, few_shot_instruction)
+#     y_pred_few_shot_gemma.append(response)
 #     # print(response)
 #
-#     if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+#     if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
+#         save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "vignette_prompt")
+# calc_time(start, end, "few_shot_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+# save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
+#
+#
+#
+#### Vignette prompt ####
+
+y_pred_vignette_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+    response = Gemma_create_response(prompt, vignette_instruction)
+    y_pred_vignette_gemma.append(response)
+    # print(response)
+
+    if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
 #
 #
 #
