@@ -282,13 +282,13 @@ for prompt in tqdm(X_test_few_shot_prompt[100:], desc = "Few shot prompting", un
 
     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_2")
+        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 
 end = time.time()
-calc_time(start, end, "few_shot_prompt_2")
+calc_time(start, end, "few_shot_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_2")
+save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 #
 #
 #
