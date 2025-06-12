@@ -265,57 +265,57 @@ client = OpenAI(
 #
 #
 #
-#### Few shot prompt ####
-
-y_pred_few_shot_deeps = []
-thinking_few_shot_deeps = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt[100:], desc = "Few shot prompting", unit = "prompt"):
-    response, thinking = DeepSeek_create_response(prompt, few_shot_instruction)
-    y_pred_few_shot_deeps.append(response)
-    thinking_few_shot_deeps.append(thinking)
-    # print(response)
-
-    if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
-        print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
-
-end = time.time()
-calc_time(start, end, "few_shot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
+# #### Few shot prompt ####
 #
-#
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_deeps = []
-# thinking_vignette_deeps = []
+# y_pred_few_shot_deeps = []
+# thinking_few_shot_deeps = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
-#     response, thinking = DeepSeek_create_response(prompt, vignette_instruction)
-#     y_pred_vignette_deeps.append(response)
-#     thinking_vignette_deeps.append(thinking)
+# for prompt in tqdm(X_test_few_shot_prompt[100:], desc = "Few shot prompting", unit = "prompt"):
+#     response, thinking = DeepSeek_create_response(prompt, few_shot_instruction)
+#     y_pred_few_shot_deeps.append(response)
+#     thinking_few_shot_deeps.append(thinking)
 #     # print(response)
 #
-#     if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt")
+#     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
+#         save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "vignette_prompt")
+# calc_time(start, end, "few_shot_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt")
+# save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
+#
+#
+#
+#### Vignette prompt ####
+
+y_pred_vignette_deeps = []
+thinking_vignette_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
+    response, thinking = DeepSeek_create_response(prompt, vignette_instruction)
+    y_pred_vignette_deeps.append(response)
+    thinking_vignette_deeps.append(thinking)
+    # print(response)
+
+    if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt_new")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt_new")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt_new")
 #
 #
 #
