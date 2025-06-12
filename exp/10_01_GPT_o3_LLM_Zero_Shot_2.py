@@ -86,9 +86,24 @@ def GPT_create_response(prompt, instruction):
         prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
         explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
     except IndexError:
-        prediction = "IndexError"
-        explanation = "IndexError"
+        print("\n Invalid output. Retry prompting. \n")
         print("IndexError")
+        response = client.responses.create(
+            model = model_gpt,
+            instructions = retry_cot_instruction,
+            input = prompt,
+            reasoning = {
+                "effort": "medium",
+                "summary": "auto"
+            },
+        )
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
+        except IndexError:
+            print("STILL IndexError")
+            prediction = "IndexError"
+            explanation = "IndexError"
 
     summary_texts = [
         " ".join(
@@ -225,32 +240,32 @@ client = OpenAI(
 #
 #
 #
-#### Class definition prompt ####
-
-y_pred_class_def_GPT = []
-explanation_class_def_GPT = []
-thinking_class_def_GPT = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
-    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
-    y_pred_class_def_GPT.append(response)
-    explanation_class_def_GPT.append(explanation)
-    thinking_class_def_GPT.append(thinking)
-    # print(response)
-
-    if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
-        print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
-
-end = time.time()
-calc_time(start, end, "class_definitions_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+# #### Class definition prompt ####
+#
+# y_pred_class_def_GPT = []
+# explanation_class_def_GPT = []
+# thinking_class_def_GPT = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+#     response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
+#     y_pred_class_def_GPT.append(response)
+#     explanation_class_def_GPT.append(explanation)
+#     thinking_class_def_GPT.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
+#         print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
+#         save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "class_definitions_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
 #
 #
 #
@@ -262,18 +277,17 @@ save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_cla
 #
 # # measure time in seconds
 # start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
+
+# iterate over the test set and save the response for each prompt in an array
 # for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
 #     response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
 #     y_pred_profiled_simple_GPT.append(response)
 #     explanation_profiled_simple_GPT.append(explanation)
 #     thinking_profiled_simple_GPT.append(thinking)
-#     # print(response)
 #
-#     if len(y_pred_profiled_simple_GPT) % 50 == 0 and len(y_pred_profiled_simple_GPT) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_GPT)} prompts.\n")
-#         save_prompt_to_csv(y_pred_profiled_simple_GPT, explanation_profiled_simple_GPT, thinking_profiled_simple_GPT, "profiled_simple_prompt")
+    # if len(y_pred_profiled_simple_GPT) % 50 == 0 and len(y_pred_profiled_simple_GPT) > 0:
+    #     print(f"\n\nProcessed {len(y_pred_profiled_simple_GPT)} prompts.\n")
+    #     save_prompt_to_csv(y_pred_profiled_simple_GPT, explanation_profiled_simple_GPT, thinking_profiled_simple_GPT, "profiled_simple_prompt")
 #
 # end = time.time()
 # calc_time(start, end, "profiled_simple_prompt")
