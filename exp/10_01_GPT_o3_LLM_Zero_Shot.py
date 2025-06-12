@@ -240,31 +240,31 @@ client = OpenAI(
 #
 #
 #### Class definition prompt ####
-
-y_pred_class_def_GPT = []
-explanation_class_def_GPT = []
-thinking_class_def_GPT = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
-    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
-    y_pred_class_def_GPT.append(response)
-    explanation_class_def_GPT.append(explanation)
-    thinking_class_def_GPT.append(thinking)
-    # print(response)
-
-    if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
-        print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
-
-end = time.time()
-calc_time(start, end, "class_definitions_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+#
+# y_pred_class_def_GPT = []
+# explanation_class_def_GPT = []
+# thinking_class_def_GPT = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+#     response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
+#     y_pred_class_def_GPT.append(response)
+#     explanation_class_def_GPT.append(explanation)
+#     thinking_class_def_GPT.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
+#         print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
+#         save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "class_definitions_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
 #
 #
 #
