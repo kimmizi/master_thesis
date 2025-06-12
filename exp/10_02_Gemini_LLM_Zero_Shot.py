@@ -331,7 +331,7 @@ thinking_vignette_gemini = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt[60:], desc = "Vignette prompting"):
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
     response, thinking = Gemini_create_response(prompt, vignette_instruction)
     y_pred_vignette_gemini.append(response)
     thinking_vignette_gemini.append(thinking)
@@ -339,13 +339,13 @@ for prompt in tqdm(X_test_vignette_prompt[60:], desc = "Vignette prompting"):
 
     if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_2")
+        save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
 
 end = time.time()
-calc_time(start, end, "vignette_prompt_2")
+calc_time(start, end, "vignette_prompt_new")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_2")
+save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
 #
 #
 #
