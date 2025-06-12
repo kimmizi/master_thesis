@@ -196,61 +196,61 @@ client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
 )
 
-#### Simple prompt ####
-
-y_pred_simple_GPT = []
-explanation_simple_GPT = []
-thinking_simple_GPT = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
-    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
-    y_pred_simple_GPT.append(response)
-    explanation_simple_GPT.append(explanation)
-    thinking_simple_GPT.append(thinking)
-    # print(response)
-
-    if len(y_pred_simple_GPT) % 50 == 0 and len(y_pred_simple_GPT) > 0:
-        print(f"\n\nProcessed {len(y_pred_simple_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GPT, "simple_prompt")
-
-end = time.time()
-calc_time(start, end, "simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GPT, "simple_prompt")
+# #### Simple prompt ####
 #
-#
-#
-# #### Class definition prompt ####
-#
-# y_pred_class_def_GPT = []
-# explanation_class_def_GPT = []
-# thinking_class_def_GPT = []
+# y_pred_simple_GPT = []
+# explanation_simple_GPT = []
+# thinking_simple_GPT = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+# for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
 #     response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
-#     y_pred_class_def_GPT.append(response)
-#     explanation_class_def_GPT.append(explanation)
-#     thinking_class_def_GPT.append(thinking)
+#     y_pred_simple_GPT.append(response)
+#     explanation_simple_GPT.append(explanation)
+#     thinking_simple_GPT.append(thinking)
 #     # print(response)
 #
-#     if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
-#         save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+#     if len(y_pred_simple_GPT) % 50 == 0 and len(y_pred_simple_GPT) > 0:
+#         print(f"\n\nProcessed {len(y_pred_simple_GPT)} prompts.\n")
+#         save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GPT, "simple_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "class_definitions_prompt")
+# calc_time(start, end, "simple_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+# save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GPT, "simple_prompt")
+#
+#
+#
+#### Class definition prompt ####
+
+y_pred_class_def_GPT = []
+explanation_class_def_GPT = []
+thinking_class_def_GPT = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
+    y_pred_class_def_GPT.append(response)
+    explanation_class_def_GPT.append(explanation)
+    thinking_class_def_GPT.append(thinking)
+    # print(response)
+
+    if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
 #
 #
 #
