@@ -112,7 +112,7 @@ def save_prompt_to_csv(response_array, filename):
     df = pd.DataFrame({
         "y_pred": response_array_val
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
 
 
 def save_prompt_to_csv_cot(response_array, explanation_array, filename):
@@ -130,7 +130,7 @@ def save_prompt_to_csv_cot(response_array, explanation_array, filename):
         "y_pred": response_array_val,
         "explanation": explanation_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -140,7 +140,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
@@ -194,7 +194,6 @@ def calc_time(start, end, filename):
 #### 2 Prompting with ChatGPT ####
 
 model_gpt = "gpt-4.1"
-# model_gpt = "o3-2025-04-16"
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -208,7 +207,7 @@ client = OpenAI(
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_simple_prompt[:10], desc = "Simple prompting"):
+# for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
 #     response = GPT_create_response(prompt, simple_instruction)
 #     y_pred_simple_GPT.append(response)
 #     # print(response)
@@ -299,27 +298,27 @@ client = OpenAI(
 #
 #
 #
-#### Vignette prompt ####
-
-y_pred_vignette_GPT = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-    response = GPT_create_response(prompt, vignette_instruction)
-    y_pred_vignette_GPT.append(response)
-    # print(response)
-
-    if len(y_pred_vignette_GPT) % 50 == 0 and len(y_pred_vignette_GPT) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
+# #### Vignette prompt ####
+#
+# y_pred_vignette_GPT = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+#     response = GPT_create_response(prompt, vignette_instruction)
+#     y_pred_vignette_GPT.append(response)
+#     # print(response)
+#
+#     if len(y_pred_vignette_GPT) % 50 == 0 and len(y_pred_vignette_GPT) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_GPT)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "vignette_prompt")
+#
+# save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
 #
 #
 #
