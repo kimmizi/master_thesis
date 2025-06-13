@@ -275,33 +275,53 @@ client = OpenAI(
 #
 #
 #
-#### Vignette prompt ####
-
-y_pred_vignette_grok = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-    completion = Grok_create_completion(prompt, vignette_instruction)
-    y_pred_vignette_grok.append(completion)
-    # print(completion)
-
-    if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+# #### Vignette prompt ####
+#
+# y_pred_vignette_grok = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+#     completion = Grok_create_completion(prompt, vignette_instruction)
+#     y_pred_vignette_grok.append(completion)
+#     # print(completion)
+#
+#     if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "vignette_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
 #
 #
 #
-# #### Chain-of-thought prompt ####
-#
+#### Chain-of-thought prompt ####
+
+
+completion = client.chat.completions.create(
+    model = "grok-3-beta",
+    messages = [
+        {"role": "system", "content": cot_instruction},
+        {"role": "user", "content": X_test_cot_prompt[22]},
+    ],
+)
+try:
+    prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
+    explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
+    # y_pred_cot_grok.append(prediction)
+    # explanation_cot_grok.append(explanation)
+    print(prediction)
+    print(explanation)
+except IndexError:
+    print("IndexError")
+    # y_pred_cot_grok.append("IndexError")
+    # explanation_cot_grok.append("IndexError")
+
 # y_pred_cot_grok = []
 # explanation_cot_grok = []
 #
