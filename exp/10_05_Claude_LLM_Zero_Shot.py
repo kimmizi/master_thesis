@@ -333,36 +333,69 @@ client = anthropic.Anthropic(
 # # save the array to a csv file
 # save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_prompt")
 #
-
-
-#### Vignette prompt ####
-
-y_pred_vignette_claude = []
-thinking_vignette_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
-    response, thinking = Claude_create_message(prompt, vignette_instruction)
-    y_pred_vignette_claude.append(response)
-    thinking_vignette_claude.append(thinking)
-    # print(response)
-
-    if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
-
-
 #
-# #### Chain-of-thought prompt ####
+#
+# #### Vignette prompt ####
+#
+# y_pred_vignette_claude = []
+# thinking_vignette_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
+#     response, thinking = Claude_create_message(prompt, vignette_instruction)
+#     y_pred_vignette_claude.append(response)
+#     thinking_vignette_claude.append(thinking)
+#     # print(response)
+#
+#     if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "vignette_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_prompt")
+#
+#
+#
+#### Chain-of-thought prompt ####
+
+message = client.messages.create(
+    model = "claude-sonnet-4-20250514",
+    max_tokens = 20000,
+    temperature = 1,
+    thinking = {
+        "type": "enabled",
+        "budget_tokens": 16000
+    },
+    system = cot_instruction,
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": X_test_cot_prompt[110]
+                }
+            ]
+        }
+    ]
+)
+
+try:
+    prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
+    explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
+    print(prediction)
+    print(explanation)
+    print(message.content[0].thinking)
+except IndexError:
+    print("\n IndexError. Retry prompting. \n")
+
+
 #
 # y_pred_cot_claude = []
 # explanation_cot_claude = []
@@ -402,11 +435,43 @@ save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_p
 #         explanation_cot_claude.append(explanation)
 #         thinking_cot_claude.append(message.content[0].thinking)
 #         # print(prediction)
+#
 #     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_claude.append("IndexError")
-#         explanation_cot_claude.append("IndexError")
-#         thinking_cot_claude.append("IndexError")
+#         print("\n IndexError. Retry prompting. \n")
+#         message = client.messages.create(
+#             model = model_claude,
+#             max_tokens = 20000,
+#             temperature = 1,
+#             thinking = {
+#                 "type": "enabled",
+#                 "budget_tokens": 16000
+#             },
+#             system = cot_instruction,
+#             messages = [
+#                 {
+#                     "role": "user",
+#                     "content": [
+#                         {
+#                             "type": "text",
+#                             "text": prompt
+#                         }
+#                     ]
+#                 }
+#             ]
+#         )
+#
+#         try:
+#             prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
+#             explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
+#             y_pred_cot_claude.append(prediction)
+#             explanation_cot_claude.append(explanation)
+#             thinking_cot_claude.append(message.content[0].thinking)
+#
+#         except IndexError:
+#             print("\n Still IndexError. Don't retry prompting. \n")
+#             y_pred_cot_claude.append("IndexError")
+#             explanation_cot_claude.append("IndexError")
+#             thinking_cot_claude.append("IndexError")
 #
 #     if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
 #         print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
