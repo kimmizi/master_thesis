@@ -280,63 +280,78 @@ client = genai.Client(
 #
 #
 #
-#### Vignette prompt ####
-
-y_pred_vignette_gemma = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-    response = Gemma_create_response(prompt, vignette_instruction)
-    y_pred_vignette_gemma.append(response)
-    # print(response)
-
-    if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+# #### Vignette prompt ####
 #
-#
-#
-# #### Chain-of-thought prompt ####
-#
-# y_pred_cot_gemma = []
-# explanation_cot_gemma = []
+# y_pred_vignette_gemma = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
-#     response = client.models.generate_content(
-#         model = model_gemma,
-#         contents = [cot_instruction, prompt]
-#     )
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+#     response = Gemma_create_response(prompt, vignette_instruction)
+#     y_pred_vignette_gemma.append(response)
+#     # print(response)
 #
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
-#         y_pred_cot_gemma.append(prediction)
-#         explanation_cot_gemma.append(explanation)
-#         # print(prediction)
-#     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_gemma.append("IndexError")
-#         explanation_cot_gemma.append("IndexError")
-#
-#     if len(y_pred_cot_gemma) % 50 == 0 and len(y_pred_cot_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_gemma)} prompts.\n")
-#         save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
+#     if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "cot_prompt")
+# calc_time(start, end, "vignette_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
+# save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+#
+#
+#
+#### Chain-of-thought prompt ####
+
+y_pred_cot_gemma = []
+explanation_cot_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
+    time.sleep(10)  # sleep for few seconds to avoid rate limiting
+    response = client.models.generate_content(
+        model = model_gemma,
+        contents = [cot_instruction, prompt]
+    )
+
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
+        y_pred_cot_gemma.append(prediction)
+        explanation_cot_gemma.append(explanation)
+        # print(prediction)
+
+    except IndexError:
+        print("\n IndexError. Retry prompting. \n")
+        response = client.models.generate_content(
+            model = model_gemma,
+            contents = [cot_instruction, prompt]
+        )
+
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
+            y_pred_cot_gemma.append(prediction)
+            explanation_cot_gemma.append(explanation)
+
+        except IndexError:
+            print("\n Still IndexError. Don't retry prompting. \n")
+            y_pred_cot_gemma.append("IndexError")
+            explanation_cot_gemma.append("IndexError")
+
+    if len(y_pred_cot_gemma) % 50 == 0 and len(y_pred_cot_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_gemma)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
+
+end = time.time()
+calc_time(start, end, "cot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
