@@ -112,7 +112,7 @@ def save_prompt_to_csv(response_array, filename):
     df = pd.DataFrame({
         "y_pred": response_array_val
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
 
 
 def save_prompt_to_csv_cot(response_array, explanation_array, filename):
@@ -130,7 +130,7 @@ def save_prompt_to_csv_cot(response_array, explanation_array, filename):
         "y_pred": response_array_val,
         "explanation": explanation_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -140,7 +140,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
@@ -322,43 +322,39 @@ client = OpenAI(
 #
 #
 #
-# #### Chain-of-thought prompt ####
-#
-# y_pred_cot_GPT = []
-# explanation_cot_GPT = []
-#
-# client = OpenAI(
-#     api_key = os.environ.get("OPENAI_API_KEY"),
-# )
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
-#     response = client.responses.create(
-#         model = model_gpt,
-#         instructions = cot_instruction,
-#         input = prompt
-#     )
-#
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
-#         y_pred_cot_GPT.append(prediction)
-#         explanation_cot_GPT.append(explanation)
-#         print(prediction)
-#     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_GPT.append("IndexError")
-#         explanation_cot_GPT.append("IndexError")
-#
-#     if len(y_pred_cot_GPT) % 50 == 0 and len(y_pred_cot_GPT) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_GPT)} prompts.\n")
-#         save_prompt_to_csv_cot(y_pred_cot_GPT, explanation_cot_GPT, "cot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "cot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv_cot(y_pred_cot_GPT, explanation_cot_GPT, "cot_prompt")
+#### Chain-of-thought prompt ####
+
+y_pred_cot_GPT = []
+explanation_cot_GPT = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
+    response = client.responses.create(
+        model = model_gpt,
+        instructions = cot_instruction,
+        input = prompt
+    )
+
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
+        y_pred_cot_GPT.append(prediction)
+        explanation_cot_GPT.append(explanation)
+        # print(prediction)
+    except IndexError:
+        print("IndexError")
+        y_pred_cot_GPT.append("IndexError")
+        explanation_cot_GPT.append("IndexError")
+
+    if len(y_pred_cot_GPT) % 50 == 0 and len(y_pred_cot_GPT) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_GPT)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_GPT, explanation_cot_GPT, "cot_prompt")
+
+end = time.time()
+calc_time(start, end, "cot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv_cot(y_pred_cot_GPT, explanation_cot_GPT, "cot_prompt")
