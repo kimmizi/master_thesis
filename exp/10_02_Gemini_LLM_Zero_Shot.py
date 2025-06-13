@@ -322,77 +322,102 @@ client = genai.Client(
 #
 #
 #
-#### Vignette prompt ####
-
-y_pred_vignette_gemini = []
-thinking_vignette_gemini = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-    response, thinking = Gemini_create_response(prompt, vignette_instruction)
-    y_pred_vignette_gemini.append(response)
-    thinking_vignette_gemini.append(thinking)
-    # print(response)
-
-    if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt_new")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
+# #### Vignette prompt ####
 #
-#
-#
-# #### Chain-of-thought prompt ####
-#
-# y_pred_cot_gemini = []
-# thinking_cot_gemini = []
-# explanation_cot_gemini = []
+# y_pred_vignette_gemini = []
+# thinking_vignette_gemini = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
-#     response = client.models.generate_content(
-#         model = "gemini-2.5-pro-preview-05-06",
-#         config = types.GenerateContentConfig(
-#             system_instruction = cot_instruction,
-#             thinking_config = types.ThinkingConfig(
-#                 include_thoughts = True
-#             )
-#         ),
-#         contents = prompt,
-#     )
+# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+#     response, thinking = Gemini_create_response(prompt, vignette_instruction)
+#     y_pred_vignette_gemini.append(response)
+#     thinking_vignette_gemini.append(thinking)
+#     # print(response)
 #
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
-#         for part in response.candidates[0].content.parts:
-#             if not part.text:
-#                 continue
-#             if part.thought:
-#                 thinking_cot_gemini.append(part.text)
-#         y_pred_cot_gemini.append(prediction)
-#         explanation_cot_gemini.append(explanation)
-#         # print(prediction)
-#     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_gemini.append("IndexError")
-#         explanation_cot_gemini.append("IndexError")
-#
-#     if len(y_pred_cot_gemini) % 10 == 0 and len(y_pred_cot_gemini) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_gemini)} prompts.\n")
-#         save_prompt_to_csv_cot(y_pred_cot_gemini, thinking_cot_gemini, explanation_cot_gemini, "cot_prompt")
+#     if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
 #
 # end = time.time()
-# calc_time(start, end, "cot_prompt")
+# calc_time(start, end, "vignette_prompt_new")
 #
 # # save the array to a csv file
-# save_prompt_to_csv_cot(y_pred_cot_gemini, thinking_cot_gemini, explanation_cot_gemini, "cot_prompt")
+# save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
+#
+#
+#
+#### Chain-of-thought prompt ####
+
+y_pred_cot_gemini = []
+thinking_cot_gemini = []
+explanation_cot_gemini = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
+    response = client.models.generate_content(
+        model = "gemini-2.5-pro-preview-05-06",
+        config = types.GenerateContentConfig(
+            system_instruction = cot_instruction,
+            thinking_config = types.ThinkingConfig(
+                include_thoughts = True
+            )
+        ),
+        contents = prompt,
+    )
+
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
+        for part in response.candidates[0].content.parts:
+            if not part.text:
+                continue
+            if part.thought:
+                thinking_cot_gemini.append(part.text)
+        y_pred_cot_gemini.append(prediction)
+        explanation_cot_gemini.append(explanation)
+        # print(prediction)
+
+    except IndexError:
+        print("\n IndexError. Retry prompting. \n")
+        response = client.models.generate_content(
+            model = "gemini-2.5-pro-preview-05-06",
+            config = types.GenerateContentConfig(
+                system_instruction = cot_instruction,
+                thinking_config = types.ThinkingConfig(
+                    include_thoughts = True
+                )
+            ),
+            contents = prompt,
+        )
+
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response.text)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
+            for part in response.candidates[0].content.parts:
+                if not part.text:
+                    continue
+                if part.thought:
+                    thinking_cot_gemini.append(part.text)
+            y_pred_cot_gemini.append(prediction)
+            explanation_cot_gemini.append(explanation)
+
+        except IndexError:
+            print("\n Still IndexError. Don't retry prompting. \n")
+            y_pred_cot_gemini.append("IndexError")
+            explanation_cot_gemini.append("IndexError")
+
+    if len(y_pred_cot_gemini) % 10 == 0 and len(y_pred_cot_gemini) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_gemini)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_gemini, thinking_cot_gemini, explanation_cot_gemini, "cot_prompt")
+
+end = time.time()
+calc_time(start, end, "cot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv_cot(y_pred_cot_gemini, thinking_cot_gemini, explanation_cot_gemini, "cot_prompt")
