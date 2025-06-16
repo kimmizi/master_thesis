@@ -321,60 +321,78 @@ client = OpenAI(
 #
 #### Chain-of-thought prompt ####
 
-y_pred_cot_deeps = []
-explanation_cot_deeps = []
-thinking_cot_deeps = []
+response = client.chat.completions.create(
+    model = "deepseek-reasoner",
+    messages = [
+        {"role": "system", "content": cot_instruction},
+        {"role": "user", "content": X_test_cot_prompt[65]},
+    ],
+    stream = False
+)
 
-# measure time in seconds
-start = time.time()
+try:
+    prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
+    explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
+    print("prediction:", prediction)
+    print("explanation:", explanation)
+    print("thinking:", response.choices[0].message.reasoning_content)
+except IndexError:
+    print("\n IndexError. Retry prompting. \n")
 
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
-    response = client.chat.completions.create(
-        model = "deepseek-reasoner",
-        messages = [
-            {"role": "system", "content": cot_instruction},
-            {"role": "user", "content": prompt},
-        ],
-        stream = False
-    )
-
-    try:
-        prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
-        explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
-        y_pred_cot_deeps.append(prediction)
-        explanation_cot_deeps.append(explanation)
-        thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
-        # print(prediction)
-    except IndexError:
-        print("\n IndexError. Retry prompting. \n")
-        response = client.chat.completions.create(
-            model = "deepseek-reasoner",
-            messages = [
-                {"role": "system", "content": retry_cot_instruction},
-                {"role": "user", "content": prompt},
-            ],
-            stream = False
-        )
-        try:
-            prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
-            explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
-            y_pred_cot_deeps.append(prediction)
-            explanation_cot_deeps.append(explanation)
-            thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
-            # print(prediction)
-        except IndexError:
-            print("\n IndexError again. Skipping prompt. \n")
-            y_pred_cot_deeps.append("IndexError")
-            explanation_cot_deeps.append("IndexError")
-            thinking_cot_deeps.append("IndexError")
-
-    if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
-        print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
-        save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
-
-end = time.time()
-calc_time(start, end, "cot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
+# y_pred_cot_deeps = []
+# explanation_cot_deeps = []
+# thinking_cot_deeps = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
+#     response = client.chat.completions.create(
+#         model = "deepseek-reasoner",
+#         messages = [
+#             {"role": "system", "content": cot_instruction},
+#             {"role": "user", "content": prompt},
+#         ],
+#         stream = False
+#     )
+#
+#     try:
+#         prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
+#         explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
+#         y_pred_cot_deeps.append(prediction)
+#         explanation_cot_deeps.append(explanation)
+#         thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
+#         # print(prediction)
+#     except IndexError:
+#         print("\n IndexError. Retry prompting. \n")
+#         response = client.chat.completions.create(
+#             model = "deepseek-reasoner",
+#             messages = [
+#                 {"role": "system", "content": retry_cot_instruction},
+#                 {"role": "user", "content": prompt},
+#             ],
+#             stream = False
+#         )
+#         try:
+#             prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
+#             explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
+#             y_pred_cot_deeps.append(prediction)
+#             explanation_cot_deeps.append(explanation)
+#             thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
+#             # print(prediction)
+#         except IndexError:
+#             print("\n IndexError again. Skipping prompt. \n")
+#             y_pred_cot_deeps.append("IndexError")
+#             explanation_cot_deeps.append("IndexError")
+#             thinking_cot_deeps.append("IndexError")
+#
+#     if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
+#         print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
+#         save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "cot_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
