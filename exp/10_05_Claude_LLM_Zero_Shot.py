@@ -363,39 +363,6 @@ client = anthropic.Anthropic(
 #
 #
 #### Chain-of-thought prompt ####
-
-message = client.messages.create(
-    model = "claude-sonnet-4-20250514",
-    max_tokens = 20000,
-    temperature = 1,
-    thinking = {
-        "type": "enabled",
-        "budget_tokens": 16000
-    },
-    system = cot_instruction,
-    messages = [
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": X_test_cot_prompt[110]
-                }
-            ]
-        }
-    ]
-)
-
-try:
-    prediction = re.findall(r'Prediction: (.*)', message.content[1].text)[0].strip()
-    explanation = re.findall(r'Explanation: (.*)', message.content[1].text)[0].strip()
-    print(prediction)
-    print(explanation)
-    print(message.content[0].thinking)
-except IndexError:
-    print("\n IndexError. Retry prompting. \n")
-
-
 #
 # y_pred_cot_claude = []
 # explanation_cot_claude = []
