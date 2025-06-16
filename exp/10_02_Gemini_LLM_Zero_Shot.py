@@ -214,141 +214,142 @@ client = genai.Client(
     api_key = os.environ.get("GEMINI_API_KEY")
 )
 
-# #### Simple prompt ####
-#
-# y_pred_simple_gemini = []
-# thinking_simple_gemini = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_simple_prompt[90:], desc = "Simple prompting"):
-#     response, thinking = Gemini_create_response(prompt, simple_instruction)
-#     y_pred_simple_gemini.append(response)
-#     thinking_simple_gemini.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_simple_gemini) % 10 == 0 and len(y_pred_simple_gemini) > 0:
-#         print(f"\n\nProcessed {len(y_pred_simple_gemini)} prompts.\n")
-#         save_prompt_to_csv(y_pred_simple_gemini, thinking_simple_gemini, "simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_simple_gemini, thinking_simple_gemini, "simple_prompt")
-#
-#
-#
-# #### Class definition prompt ####
-#
-# y_pred_class_def_gemini = []
-# thinking_class_def_gemini = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting"):
-#     response, thinking = Gemini_create_response(prompt, class_definitions_instruction)
-#     y_pred_class_def_gemini.append(response)
-#     thinking_class_def_gemini.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_class_def_gemini) % 10 == 0 and len(y_pred_class_def_gemini) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_gemini)} prompts.\n")
-#         save_prompt_to_csv(y_pred_class_def_gemini, thinking_class_def_gemini, "class_definitions_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "class_definitions_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_class_def_gemini, thinking_class_def_gemini, "class_definitions_prompt")
-#
-#
-#
-# #### Profiled simple prompt ####
-#
-# y_pred_profiled_simple_gemini = []
-# thinking_profiled_simple_gemini = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_profiled_simple_prompt[90:], desc = "Profiled simple prompting"):
-#     response, thinking = Gemini_create_response(prompt, simple_instruction)
-#     y_pred_profiled_simple_gemini.append(response)
-#     thinking_profiled_simple_gemini.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_profiled_simple_gemini) % 10 == 0 and len(y_pred_profiled_simple_gemini) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_gemini)} prompts.\n")
-#         save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt_2")
-#
-# end = time.time()
-# calc_time(start, end, "profiled_simple_prompt_2")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt_2")
-#
-#
-#
-# #### Few shot prompt ####
-#
-# y_pred_few_shot_gemini = []
-# thinking_few_shot_gemini = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
-#     response, thinking = Gemini_create_response(prompt, few_shot_instruction)
-#     y_pred_few_shot_gemini.append(response)
-#     thinking_few_shot_gemini.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_few_shot_gemini) % 10 == 0 and len(y_pred_few_shot_gemini) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_gemini)} prompts.\n")
-#         save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "few_shot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt")
-#
-#
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_gemini = []
-# thinking_vignette_gemini = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-#     response, thinking = Gemini_create_response(prompt, vignette_instruction)
-#     y_pred_vignette_gemini.append(response)
-#     thinking_vignette_gemini.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
-#
-# end = time.time()
-# calc_time(start, end, "vignette_prompt_new")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
-#
-#
-#
+
+#### Simple prompt ####
+
+y_pred_simple_gemini = []
+thinking_simple_gemini = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_simple_prompt[90:], desc = "Simple prompting"):
+    response, thinking = Gemini_create_response(prompt, simple_instruction)
+    y_pred_simple_gemini.append(response)
+    thinking_simple_gemini.append(thinking)
+    # print(response)
+
+    if len(y_pred_simple_gemini) % 10 == 0 and len(y_pred_simple_gemini) > 0:
+        print(f"\n\nProcessed {len(y_pred_simple_gemini)} prompts.\n")
+        save_prompt_to_csv(y_pred_simple_gemini, thinking_simple_gemini, "simple_prompt")
+
+end = time.time()
+calc_time(start, end, "simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_simple_gemini, thinking_simple_gemini, "simple_prompt")
+
+
+
+#### Class definition prompt ####
+
+y_pred_class_def_gemini = []
+thinking_class_def_gemini = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting"):
+    response, thinking = Gemini_create_response(prompt, class_definitions_instruction)
+    y_pred_class_def_gemini.append(response)
+    thinking_class_def_gemini.append(thinking)
+    # print(response)
+
+    if len(y_pred_class_def_gemini) % 10 == 0 and len(y_pred_class_def_gemini) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_gemini)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_gemini, thinking_class_def_gemini, "class_definitions_prompt")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_gemini, thinking_class_def_gemini, "class_definitions_prompt")
+
+
+
+#### Profiled simple prompt ####
+
+y_pred_profiled_simple_gemini = []
+thinking_profiled_simple_gemini = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_profiled_simple_prompt[90:], desc = "Profiled simple prompting"):
+    response, thinking = Gemini_create_response(prompt, simple_instruction)
+    y_pred_profiled_simple_gemini.append(response)
+    thinking_profiled_simple_gemini.append(thinking)
+    # print(response)
+
+    if len(y_pred_profiled_simple_gemini) % 10 == 0 and len(y_pred_profiled_simple_gemini) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_gemini)} prompts.\n")
+        save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt_2")
+
+end = time.time()
+calc_time(start, end, "profiled_simple_prompt_2")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt_2")
+
+
+
+#### Few shot prompt ####
+
+y_pred_few_shot_gemini = []
+thinking_few_shot_gemini = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
+    response, thinking = Gemini_create_response(prompt, few_shot_instruction)
+    y_pred_few_shot_gemini.append(response)
+    thinking_few_shot_gemini.append(thinking)
+    # print(response)
+
+    if len(y_pred_few_shot_gemini) % 10 == 0 and len(y_pred_few_shot_gemini) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_gemini)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt")
+
+
+
+#### Vignette prompt ####
+
+y_pred_vignette_gemini = []
+thinking_vignette_gemini = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+    response, thinking = Gemini_create_response(prompt, vignette_instruction)
+    y_pred_vignette_gemini.append(response)
+    thinking_vignette_gemini.append(thinking)
+    # print(response)
+
+    if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt_new")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
+
+
+
 #### Chain-of-thought prompt ####
 
 y_pred_cot_gemini = []
