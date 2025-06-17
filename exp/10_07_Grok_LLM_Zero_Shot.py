@@ -324,9 +324,23 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
         explanation_cot_grok.append(explanation)
         # print(prediction)
     except IndexError:
-        print("IndexError")
-        y_pred_cot_grok.append("IndexError")
-        explanation_cot_grok.append("IndexError")
+        print("\n IndexError. Retry prompting. \n")
+        completion = client.chat.completions.create(
+            model = "grok-3-beta",
+            messages = [
+                {"role": "system", "content": retry_cot_instruction},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        try:
+            prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
+            y_pred_cot_grok.append(prediction)
+            explanation_cot_grok.append(explanation)
+        except IndexError:
+            print("\n Still IndexError. \n")
+            y_pred_cot_grok.append("IndexError")
+            explanation_cot_grok.append("IndexError")
 
     if len(y_pred_cot_grok) % 50 == 0 and len(y_pred_cot_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_grok)} prompts.\n")

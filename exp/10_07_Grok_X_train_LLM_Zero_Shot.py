@@ -275,65 +275,79 @@ client = OpenAI(
 #
 #
 #
-#### Vignette prompt ####
-
-y_pred_vignette_grok = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
-    completion = Grok_create_completion(prompt, vignette_instruction)
-    y_pred_vignette_grok.append(completion)
-    # print(completion)
-
-    if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+# #### Vignette prompt ####
 #
-#
-#
-# ### Chain-of-thought prompt ####
-#
-# y_pred_cot_grok = []
-# explanation_cot_grok = []
+# y_pred_vignette_grok = []
 #
 # # measure time in seconds
 # start = time.time()
 #
 # # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting"):
-#     completion = client.chat.completions.create(
-#         model = "grok-3-beta",
-#         messages = [
-#             {"role": "system", "content": cot_instruction},
-#             {"role": "user", "content": prompt},
-#         ],
-#     )
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
-#         y_pred_cot_grok.append(prediction)
-#         explanation_cot_grok.append(explanation)
-#         # print(prediction)
-#     except IndexError:
-#         print("IndexError")
-#         y_pred_cot_grok.append("IndexError")
-#         explanation_cot_grok.append("IndexError")
+# for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
+#     completion = Grok_create_completion(prompt, vignette_instruction)
+#     y_pred_vignette_grok.append(completion)
+#     # print(completion)
 #
-#     if len(y_pred_cot_grok) % 50 == 0 and len(y_pred_cot_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_grok)} prompts.\n")
-#         save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt")
+#     if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
 #
 # end = time.time()
-# calc_time(start, end, "cot_prompt")
+# calc_time(start, end, "vignette_prompt")
 #
 # # save the array to a csv file
-# save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt")
+# save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+#
+#
+#
+### Chain-of-thought prompt ####
+
+y_pred_cot_grok = []
+explanation_cot_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_cot_prompt[50:], desc = "Chain-of-thought prompting"):
+    completion = client.chat.completions.create(
+        model = "grok-3-beta",
+        messages = [
+            {"role": "system", "content": cot_instruction},
+            {"role": "user", "content": prompt},
+        ],
+    )
+    try:
+        prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
+        y_pred_cot_grok.append(prediction)
+        explanation_cot_grok.append(explanation)
+        # print(prediction)
+    except IndexError:
+        print("\n IndexError. Retry prompting. \n")
+        completion = client.chat.completions.create(
+            model = "grok-3-beta",
+            messages = [
+                {"role": "system", "content": retry_cot_instruction},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        try:
+            prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
+            y_pred_cot_grok.append(prediction)
+            explanation_cot_grok.append(explanation)
+        except IndexError:
+            print("\n Still IndexError. \n")
+            y_pred_cot_grok.append("IndexError")
+            explanation_cot_grok.append("IndexError")
+
+    if len(y_pred_cot_grok) % 50 == 0 and len(y_pred_cot_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_grok)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt_2")
+
+end = time.time()
+calc_time(start, end, "cot_prompt_2")
+
+# save the array to a csv file
+save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt_2")
