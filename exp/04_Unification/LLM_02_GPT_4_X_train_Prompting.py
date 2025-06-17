@@ -17,20 +17,20 @@ from sklearn.model_selection import train_test_split
 data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep =",", low_memory = False)
 
 # import prompts for all test data
-X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
-X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
-X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
-X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
-X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
-X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
+X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep =",", index_col = 0)
+X_train_class_definitions_prompt = pd.read_csv("X_train_pred/prompts/X_train_class_definitions_prompt.csv", sep =",", index_col = 0)
+X_train_profiled_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_profiled_simple_prompt.csv", sep =",", index_col = 0)
+X_train_few_shot_prompt = pd.read_csv("X_train_pred/prompts/X_train_few_shot_prompt.csv", sep =",", index_col = 0)
+X_train_vignette_prompt = pd.read_csv("X_train_pred/prompts/X_train_vignette_prompt.csv", sep =",", index_col = 0)
+X_train_cot_prompt = pd.read_csv("X_train_pred/prompts/X_train_cot_prompt.csv", sep =",", index_col = 0)
 
 # convert to arrays
-X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
-X_test_class_definitions_prompt = X_test_class_definitions_prompt_df.values.flatten()
-X_test_profiled_simple_prompt = X_test_profiled_simple_prompt_df.values.flatten()
-X_test_few_shot_prompt = X_test_few_shot_prompt_df.values.flatten()
-X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
-X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
+X_train_simple_prompt = X_train_simple_prompt.values.flatten()
+X_train_class_definitions_prompt = X_train_class_definitions_prompt.values.flatten()
+X_train_profiled_simple_prompt = X_train_profiled_simple_prompt.values.flatten()
+X_train_few_shot_prompt = X_train_few_shot_prompt.values.flatten()
+X_train_vignette_prompt = X_train_vignette_prompt.values.flatten()
+X_train_cot_prompt = X_train_cot_prompt.values.flatten()
 
 # import instructions
 simple_instruction_df = pd.read_csv("../../dat/instructions/simple_instruction.csv", sep =",", index_col = 0)
@@ -112,7 +112,7 @@ def save_prompt_to_csv(response_array, filename):
     df = pd.DataFrame({
         "y_pred": response_array_val
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"X_train_pred/GPT/X_train_GPT_{filename}.csv", sep = ",", index = False)
 
 
 def save_prompt_to_csv_cot(response_array, explanation_array, filename):
@@ -130,7 +130,7 @@ def save_prompt_to_csv_cot(response_array, explanation_array, filename):
         "y_pred": response_array_val,
         "explanation": explanation_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"X_train_pred/GPT/X_train_GPT_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -139,9 +139,9 @@ def calc_time(start, end, filename):
     """
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
-    time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
-    return time_taken
+    # time_df = pd.DataFrame({"time": [time_taken]})
+    # time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    # return time_taken
 
 
 
@@ -207,7 +207,7 @@ y_pred_simple_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
+for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting"):
     response = GPT_create_response(prompt, simple_instruction)
     y_pred_simple_GPT.append(response)
     # print(response)
@@ -232,7 +232,7 @@ y_pred_class_def_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
+for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definition prompting"):
     response = GPT_create_response(prompt, class_definitions_instruction)
     y_pred_class_def_GPT.append(response)
     # print(response)
@@ -257,7 +257,7 @@ y_pred_profiled_simple_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
+for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting"):
     response = GPT_create_response(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_GPT.append(response)
     # print(response)
@@ -281,7 +281,7 @@ y_pred_few_shot_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
+for prompt in tqdm(X_train_few_shot_prompt, desc = "Few-shot prompting"):
     response = GPT_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_GPT.append(response)
     # print(response)
@@ -306,7 +306,7 @@ y_pred_vignette_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
+for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
     response = GPT_create_response(prompt, vignette_instruction)
     y_pred_vignette_GPT.append(response)
     # print(response)
@@ -331,7 +331,7 @@ explanation_cot_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
+for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting"):
     response = client.responses.create(
         model = model_gpt,
         instructions = cot_instruction,
@@ -345,9 +345,22 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
         explanation_cot_GPT.append(explanation)
         # print(prediction)
     except IndexError:
-        print("IndexError")
-        y_pred_cot_GPT.append("IndexError")
-        explanation_cot_GPT.append("IndexError")
+        print("\n IndexError. Retry prompting. \n")
+        response = client.responses.create(
+            model = model_gpt,
+            instructions = cot_instruction,
+            input = prompt
+        )
+
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
+            y_pred_cot_GPT.append(prediction)
+            explanation_cot_GPT.append(explanation)
+        except IndexError:
+            print("\n Still IndexError. \n")
+            y_pred_cot_GPT.append("IndexError")
+            explanation_cot_GPT.append("IndexError")
 
     if len(y_pred_cot_GPT) % 50 == 0 and len(y_pred_cot_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_GPT)} prompts.\n")

@@ -10,9 +10,6 @@ import numpy as np
 import time
 import re
 from tqdm import tqdm
-from openai import OpenAI
-from google import genai
-from google.genai import types
 from sklearn.model_selection import train_test_split
 
 data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep =",", low_memory = False)

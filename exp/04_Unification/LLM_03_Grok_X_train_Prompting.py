@@ -114,7 +114,7 @@ def save_prompt_to_csv(response_array, filename):
     df = pd.DataFrame({
         "y_pred": response_array_val
     })
-    df.to_csv(f"../exp/X_train_pred/Grok/X_train_grok_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"X_train_pred/Grok/X_train_grok_{filename}.csv", sep = ",", index = False)
 
 
 def save_prompt_to_csv_cot(response_array, explanation_array, filename):
@@ -131,7 +131,7 @@ def save_prompt_to_csv_cot(response_array, explanation_array, filename):
         "y_pred": response_array_val,
         "explanation": explanation_array
     })
-    df.to_csv(f"../exp/X_train_pred/Grok/X_train_grok_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"X_train_pred/Grok/X_train_grok_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -177,129 +177,129 @@ client = OpenAI(
 )
 
 
-# #### Simple prompt ####
-#
-# y_pred_simple_grok = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting"):
-#     completion = Grok_create_completion(prompt, simple_instruction)
-#     y_pred_simple_grok.append(completion)
-#     # print(completion)
-#
-#     if len(y_pred_simple_grok) % 50 == 0 and len(y_pred_simple_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_simple_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_simple_grok, "simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_simple_grok, "simple_prompt")
-#
-#
-#
-# #### Class definition prompt ####
-#
-# y_pred_class_def_grok = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definition prompting"):
-#     completion = Grok_create_completion(prompt, class_definitions_instruction)
-#     y_pred_class_def_grok.append(completion)
-#     # print(completion)
-#
-#     if len(y_pred_class_def_grok) % 50 == 0 and len(y_pred_class_def_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "class_definitions_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
-#
-#
-# #### Profiled simple prompt ####
-#
-# y_pred_profiled_simple_grok = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting"):
-#     completion = Grok_create_completion(prompt, profiled_simple_instruction)
-#     y_pred_profiled_simple_grok.append(completion)
-#     # print(completion)
-#
-#     if len(y_pred_profiled_simple_grok) % 50 == 0 and len(y_pred_profiled_simple_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "profiled_simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
-#
-#
-# #### Few shot prompt ####
-#
-# y_pred_few_shot_grok = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_few_shot_prompt, desc = "Few shot prompting"):
-#     completion = Grok_create_completion(prompt, few_shot_instruction)
-#     y_pred_few_shot_grok.append(completion)
-#     # print(completion)
-#
-#     if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "few_shot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
-#
-#
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_grok = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
-#     completion = Grok_create_completion(prompt, vignette_instruction)
-#     y_pred_vignette_grok.append(completion)
-#     # print(completion)
-#
-#     if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "vignette_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
-#
-#
-#
+#### Simple prompt ####
+
+y_pred_simple_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting"):
+    completion = Grok_create_completion(prompt, simple_instruction)
+    y_pred_simple_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_simple_grok) % 50 == 0 and len(y_pred_simple_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_simple_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_simple_grok, "simple_prompt")
+
+end = time.time()
+calc_time(start, end, "simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_simple_grok, "simple_prompt")
+
+
+
+#### Class definition prompt ####
+
+y_pred_class_def_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definition prompting"):
+    completion = Grok_create_completion(prompt, class_definitions_instruction)
+    y_pred_class_def_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_class_def_grok) % 50 == 0 and len(y_pred_class_def_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
+
+
+#### Profiled simple prompt ####
+
+y_pred_profiled_simple_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting"):
+    completion = Grok_create_completion(prompt, profiled_simple_instruction)
+    y_pred_profiled_simple_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_profiled_simple_grok) % 50 == 0 and len(y_pred_profiled_simple_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
+
+end = time.time()
+calc_time(start, end, "profiled_simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
+
+
+#### Few shot prompt ####
+
+y_pred_few_shot_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_few_shot_prompt, desc = "Few shot prompting"):
+    completion = Grok_create_completion(prompt, few_shot_instruction)
+    y_pred_few_shot_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
+
+
+
+#### Vignette prompt ####
+
+y_pred_vignette_grok = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
+    completion = Grok_create_completion(prompt, vignette_instruction)
+    y_pred_vignette_grok.append(completion)
+    # print(completion)
+
+    if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
+
+
+
 ### Chain-of-thought prompt ####
 
 y_pred_cot_grok = []
@@ -309,7 +309,7 @@ explanation_cot_grok = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_cot_prompt[50:], desc = "Chain-of-thought prompting"):
+for prompt in tqdm(X_train_cot_prompt[450:], desc = "Chain-of-thought prompting"):
     completion = client.chat.completions.create(
         model = "grok-3-beta",
         messages = [
@@ -344,10 +344,10 @@ for prompt in tqdm(X_train_cot_prompt[50:], desc = "Chain-of-thought prompting")
 
     if len(y_pred_cot_grok) % 50 == 0 and len(y_pred_cot_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_grok)} prompts.\n")
-        save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt_2")
+        save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt_3")
 
 end = time.time()
-calc_time(start, end, "cot_prompt_2")
+calc_time(start, end, "cot_prompt_3")
 
 # save the array to a csv file
-save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt_2")
+save_prompt_to_csv_cot(y_pred_cot_grok, explanation_cot_grok, "cot_prompt_3")
