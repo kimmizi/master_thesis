@@ -14,15 +14,15 @@ from tqdm import tqdm
 from openai import OpenAI
 from sklearn.model_selection import train_test_split
 
-data_change = pd.read_csv("../dat/dips/DIPS_Data_cleaned_change.csv", sep = ",", low_memory = False)
+data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep =",", low_memory = False)
 
 # import prompts for all test data
-X_test_simple_prompt_df = pd.read_csv("../dat/prompts/X_test_simple_prompt.csv", sep = ",", index_col = 0)
-X_test_class_definitions_prompt_df = pd.read_csv("../dat/prompts/X_test_class_definitions_prompt.csv", sep = ",", index_col = 0)
-X_test_profiled_simple_prompt_df = pd.read_csv("../dat/prompts/X_test_profiled_simple_prompt.csv", sep = ",", index_col = 0)
-X_test_few_shot_prompt_df = pd.read_csv("../dat/prompts/X_test_few_shot_prompt.csv", sep = ",", index_col = 0)
-X_test_vignette_prompt_df = pd.read_csv("../dat/prompts/X_test_vignette_prompt.csv", sep = ",", index_col = 0)
-X_test_cot_prompt_df = pd.read_csv("../dat/prompts/X_test_cot_prompt.csv", sep = ",", index_col = 0)
+X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
+X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
+X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
+X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
+X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
+X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
 
 # convert to arrays
 X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
@@ -33,27 +33,17 @@ X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
 X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
 
 # import instructions
-simple_instruction_df = pd.read_csv("../dat/instructions/simple_instruction.csv", sep = ",", index_col = 0)
-class_definitions_instruction_df = pd.read_csv("../dat/instructions/class_definitions_instruction.csv", sep = ",", index_col = 0)
-profiled_simple_instruction_df = pd.read_csv("../dat/instructions/profiled_simple_instruction.csv", sep = ",", index_col = 0)
-few_shot_instruction_df = pd.read_csv("../dat/instructions/few_shot_instruction.csv", sep = ",", index_col = 0)
-vignette_instruction_df = pd.read_csv("../dat/instructions/vignette_instruction.csv", sep = ",", index_col = 0)
-cot_instruction_df = pd.read_csv("../dat/instructions/cot_instruction.csv", sep = ",", index_col = 0)
+cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
 
 # convert to string
-simple_instruction = simple_instruction_df["0"].iloc[0]
-class_definitions_instruction = class_definitions_instruction_df["0"].iloc[0]
-profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
-few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
-vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
 
 # import retry instructions when output format was wrong
-retry_instruction_df = pd.read_csv("../dat/instructions/retry_instruction.csv", sep = ",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../dat/instructions/retry_cot_instruction.csv", sep = ",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
 # import instruction for reason of misclassification
-instruction_reason_df = pd.read_csv("../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
+instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
 
 # convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
@@ -85,21 +75,50 @@ def GPT_create_response(prompt, instruction):
     response = client.responses.create(
         model = model_gpt,
         instructions = instruction,
-        input = prompt
+        input = prompt,
+        reasoning = {
+            "effort": "medium",
+            "summary": "auto"
+        },
     )
 
-    if response.output_text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
+    except IndexError:
+        print("\n IndexError. Retry prompting. \n")
         response = client.responses.create(
             model = model_gpt,
-            instructions = retry_instruction,
-            input = prompt
+            instructions = retry_cot_instruction,
+            input = prompt,
+            reasoning = {
+                "effort": "medium",
+                "summary": "auto"
+            },
         )
 
-    return response.output_text.strip()
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
+
+        except IndexError:
+            print("\n Still IndexError. Don't retry prompting. \n")
+            prediction = "IndexError"
+            explanation = "IndexError"
+
+    summary_texts = [
+        " ".join(
+            summary.text
+            for item in response.output if hasattr(item, "summary")
+            for summary in item.summary if hasattr(summary, "text")
+        )
+    ]
+    thinking = summary_texts[0]
+
+    return prediction, explanation, thinking
 
 
-def save_prompt_to_csv(response_array, filename):
+def save_prompt_to_csv(response_array, explanation_array, thinking_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
     print(counts)
@@ -110,27 +129,11 @@ def save_prompt_to_csv(response_array, filename):
 
     # save the array to a csv file
     df = pd.DataFrame({
-        "y_pred": response_array_val
-    })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
-
-
-def save_prompt_to_csv_cot(response_array, explanation_array, filename):
-    # value counts for array
-    counts = pd.Series(response_array).value_counts()
-    print(counts)
-
-    # convert YES to 1 and NO to 0
-    response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
-    response_array_val = [1 if response.strip() == "YES" else 0 if response.strip() == "NO" else np.nan for response
-                             in response_array]
-
-    # save the array to a csv file
-    df = pd.DataFrame({
         "y_pred": response_array_val,
-        "explanation": explanation_array
+        "explanation": explanation_array,
+        "thinking": thinking_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -140,7 +143,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
@@ -151,26 +154,27 @@ def calc_time(start, end, filename):
 #     api_key = os.environ.get("OPENAI_API_KEY"),
 # )
 #
+# model_gpt = "o3-2025-04-16"
+#
 # # testing
 # response = client.responses.create(
-#     # model = "o3-2025-04-16",
-#     model = "o4-mini",
+#     model = "o3-2025-04-16",
+#     # model = "o4-mini",
 #     reasoning = {
 #         "effort": "medium",
 #         "summary": "auto"
 #     },
-#     instructions = simple_instruction,
-#     input = X_test_simple_prompt[0],
-#     max_output_tokens = 100
+#     instructions = cot_instruction,
+#     input = X_test_simple_prompt[0]
 # )
 #
-# print(response.answer.upper())
+# # print(response.answer.upper())
 #
 #
 # print(json.dumps(response.to_dict(), indent = 2, ensure_ascii = False))
 #
 #
-# # print(response.output_text)
+# print("Output text:", response.output_text)
 #
 #
 # # summary_texts = [
@@ -187,13 +191,22 @@ def calc_time(start, end, filename):
 #     )
 # ]
 #
-# print(summary_texts[0])
+# print("Summary text:", summary_texts[0])
+#
+#
+# print("\n ----------- \n")
+#
+# prediction, explanation, thinking = GPT_create_response(X_test_simple_prompt[0], cot_instruction)
+#
+# print("Prediction:", prediction)
+# print("Explanation:", explanation)
+# print("Thinking:", thinking)
 
 
 
 #### 2 Prompting with ChatGPT ####
 
-model_gpt = "gpt-4.1"
+model_gpt = "o3-2025-04-16"
 
 client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
@@ -202,123 +215,144 @@ client = OpenAI(
 #### Simple prompt ####
 
 y_pred_simple_GPT = []
+explanation_simple_GPT = []
+thinking_simple_GPT = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
-    response = GPT_create_response(prompt, simple_instruction)
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
     y_pred_simple_GPT.append(response)
+    explanation_simple_GPT.append(explanation)
+    thinking_simple_GPT.append(thinking)
     # print(response)
 
     if len(y_pred_simple_GPT) % 50 == 0 and len(y_pred_simple_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_GPT, "simple_prompt")
+        save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GPT, "simple_prompt")
 
 end = time.time()
 calc_time(start, end, "simple_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_simple_GPT, "simple_prompt")
+save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GPT, "simple_prompt")
 
 
 
-#### Class definition prompt ####
+### Class definition prompt ####
 
 y_pred_class_def_GPT = []
+explanation_class_def_GPT = []
+thinking_class_def_GPT = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
-    response = GPT_create_response(prompt, class_definitions_instruction)
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
     y_pred_class_def_GPT.append(response)
+    explanation_class_def_GPT.append(explanation)
+    thinking_class_def_GPT.append(thinking)
     # print(response)
 
     if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_GPT, "class_definitions_prompt")
+        save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
 
 end = time.time()
 calc_time(start, end, "class_definitions_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_GPT, "class_definitions_prompt")
+save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_class_def_GPT, "class_definitions_prompt")
 
 
 
 #### Profiled simple prompt ####
 
 y_pred_profiled_simple_GPT = []
+explanation_profiled_simple_GPT = []
+thinking_profiled_simple_GPT = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
-    response = GPT_create_response(prompt, profiled_simple_instruction)
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
     y_pred_profiled_simple_GPT.append(response)
+    explanation_profiled_simple_GPT.append(explanation)
+    thinking_profiled_simple_GPT.append(thinking)
     # print(response)
 
     if len(y_pred_profiled_simple_GPT) % 50 == 0 and len(y_pred_profiled_simple_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_profiled_simple_GPT, "profiled_simple_prompt")
+        save_prompt_to_csv(y_pred_profiled_simple_GPT, explanation_profiled_simple_GPT, thinking_profiled_simple_GPT, "profiled_simple_prompt")
 
 end = time.time()
 calc_time(start, end, "profiled_simple_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_profiled_simple_GPT, "profiled_simple_prompt")
+save_prompt_to_csv(y_pred_profiled_simple_GPT, explanation_profiled_simple_GPT, thinking_profiled_simple_GPT, "profiled_simple_prompt")
+
 
 
 #### Few shot prompt ####
 
 y_pred_few_shot_GPT = []
+explanation_few_shot_GPT = []
+thinking_few_shot_GPT = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
-    response = GPT_create_response(prompt, few_shot_instruction)
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
     y_pred_few_shot_GPT.append(response)
+    explanation_few_shot_GPT.append(explanation)
+    thinking_few_shot_GPT.append(thinking)
     # print(response)
 
     if len(y_pred_few_shot_GPT) % 50 == 0 and len(y_pred_few_shot_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_GPT, "few_shot_prompt")
+        save_prompt_to_csv(y_pred_few_shot_GPT, explanation_few_shot_GPT, thinking_few_shot_GPT, "few_shot_prompt")
 
 end = time.time()
 calc_time(start, end, "few_shot_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_GPT, "few_shot_prompt")
+save_prompt_to_csv(y_pred_few_shot_GPT, explanation_few_shot_GPT, thinking_few_shot_GPT, "few_shot_prompt")
 
 
 
 #### Vignette prompt ####
 
 y_pred_vignette_GPT = []
+explanation_vignette_GPT = []
+thinking_vignette_GPT = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
-    response = GPT_create_response(prompt, vignette_instruction)
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
     y_pred_vignette_GPT.append(response)
+    explanation_vignette_GPT.append(explanation)
+    thinking_vignette_GPT.append(thinking)
     # print(response)
 
     if len(y_pred_vignette_GPT) % 50 == 0 and len(y_pred_vignette_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_GPT)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
+        save_prompt_to_csv(y_pred_vignette_GPT, explanation_vignette_GPT, thinking_vignette_GPT, "vignette_prompt")
 
 end = time.time()
 calc_time(start, end, "vignette_prompt")
 
-save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
+save_prompt_to_csv(y_pred_vignette_GPT, explanation_vignette_GPT, thinking_vignette_GPT, "vignette_prompt")
 
 
 
@@ -326,35 +360,25 @@ save_prompt_to_csv(y_pred_vignette_GPT, "vignette_prompt")
 
 y_pred_cot_GPT = []
 explanation_cot_GPT = []
+thinking_cot_GPT = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
-    response = client.responses.create(
-        model = model_gpt,
-        instructions = cot_instruction,
-        input = prompt
-    )
-
-    try:
-        prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
-        explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
-        y_pred_cot_GPT.append(prediction)
-        explanation_cot_GPT.append(explanation)
-        # print(prediction)
-    except IndexError:
-        print("IndexError")
-        y_pred_cot_GPT.append("IndexError")
-        explanation_cot_GPT.append("IndexError")
+    response, explanation, thinking = GPT_create_response(prompt, cot_instruction)
+    y_pred_cot_GPT.append(response)
+    explanation_cot_GPT.append(explanation)
+    thinking_cot_GPT.append(thinking)
+    # print(response)
 
     if len(y_pred_cot_GPT) % 50 == 0 and len(y_pred_cot_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_GPT)} prompts.\n")
-        save_prompt_to_csv_cot(y_pred_cot_GPT, explanation_cot_GPT, "cot_prompt")
+        save_prompt_to_csv(y_pred_cot_GPT, explanation_cot_GPT, thinking_cot_GPT, "cot_prompt")
 
 end = time.time()
 calc_time(start, end, "cot_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv_cot(y_pred_cot_GPT, explanation_cot_GPT, "cot_prompt")
+save_prompt_to_csv(y_pred_cot_GPT, explanation_cot_GPT, thinking_cot_GPT, "cot_prompt")
