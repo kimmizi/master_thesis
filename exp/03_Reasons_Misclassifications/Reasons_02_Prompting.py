@@ -152,10 +152,10 @@ def Gemini_create_response(prompt):
 
 def Gemma_create_response(prompt):
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY")
+        api_key = os.environ.get("GEMINI_API_KEY")
     )
 
-    time.sleep(2)  # sleep for few seconds to avoid rate limiting
+    time.sleep(5)  # sleep for few seconds to avoid rate limiting
     response = client.models.generate_content(
         model = model_gemma,
         contents = [instruction_reason, prompt]
@@ -188,7 +188,7 @@ def Claude_create_response(prompt):
         ]
     )
 
-    response = message.content[1].text.strip()
+    response = message.content
 
     return response
 
@@ -208,7 +208,7 @@ def DeepSeek_create_response(prompt):
         stream = False
     )
 
-    response = response.choices[0].message.content.strip()
+    response = response.choices[0].message.content
 
     return response
 
@@ -317,19 +317,19 @@ misclassified_indices_Grok = np.where(y_pred_Grok_simple != y_test)[0]
 
 ### 2 Get reasons for misclassifications ###
 
-GPT_4_simple_cases_df, GPT_4_simple_all_reasons_df, GPT_4_simple_main_reasons_df = extract_reasons("GPT_4", X_test_simple_prompt, y_pred_GPT_4_simple, y_test, "simple")
-GPT_o3_simple_cases_df, GPT_o3_simple_all_reasons_df, GPT_o3_simple_main_reasons_df = extract_reasons("GPT_O3", X_test_simple_prompt, y_pred_GPT_o3_simple, y_test, "simple")
-Gemini_simple_cases_df, Gemini_simple_all_reasons_df, Gemini_simple_main_reasons_df = extract_reasons("Gemini", X_test_simple_prompt, y_pred_Gemini_simple, y_test, "simple")
-Gemma_simple_cases_df, Gemma_simple_all_reasons_df, Gemma_simple_main_reasons_df = extract_reasons("Gemma", X_test_simple_prompt, y_pred_Gemma_simple, y_test, "simple")
-Claude_simple_cases_df, Claude_simple_all_reasons_df, Claude_simple_main_reasons_df = extract_reasons("Claude", X_test_simple_prompt, y_pred_Claude_simple, y_test, "simple")
+# GPT_4_simple_cases_df, GPT_4_simple_all_reasons_df, GPT_4_simple_main_reasons_df = extract_reasons("GPT_4", X_test_simple_prompt, y_pred_GPT_4_simple, y_test, "simple")
+# GPT_o3_simple_cases_df, GPT_o3_simple_all_reasons_df, GPT_o3_simple_main_reasons_df = extract_reasons("GPT_O3", X_test_simple_prompt, y_pred_GPT_o3_simple, y_test, "simple")
+# Gemini_simple_cases_df, Gemini_simple_all_reasons_df, Gemini_simple_main_reasons_df = extract_reasons("Gemini", X_test_simple_prompt, y_pred_Gemini_simple, y_test, "simple")
+# Gemma_simple_cases_df, Gemma_simple_all_reasons_df, Gemma_simple_main_reasons_df = extract_reasons("Gemma", X_test_simple_prompt, y_pred_Gemma_simple, y_test, "simple")
+# Claude_simple_cases_df, Claude_simple_all_reasons_df, Claude_simple_main_reasons_df = extract_reasons("Claude", X_test_simple_prompt, y_pred_Claude_simple, y_test, "simple")
 DeepSeek_simple_cases_df, DeepSeek_simple_all_reasons_df, DeepSeek_simple_main_reasons_df = extract_reasons("DeepSeek", X_test_simple_prompt, y_pred_DeepSeek_simple, y_test, "simple")
 Grok_simple_cases_df, Grok_simple_all_reasons_df, Grok_simple_main_reasons_df = extract_reasons("Grok", X_test_simple_prompt, y_pred_Grok_simple, y_test, "simple")
-
-print("\n\n GPT 4 cases: \n",GPT_4_simple_cases_df, "\n\n GPT 4 simple all reasons: \n", GPT_4_simple_all_reasons_df, "\n\n GPT 4 main reasons: \n", GPT_4_simple_main_reasons_df, "\n\n")
-print("\n\n GPT O3 simple all reasons: \n", GPT_o3_simple_all_reasons_df, "\n\n GPT O3 main reasons: \n", GPT_o3_simple_main_reasons_df, "\n\n")
-print("\n\n Gemini simple all reasons: \n", Gemini_simple_all_reasons_df, "\n\n Gemini main reasons: \n", Gemini_simple_main_reasons_df, "\n\n")
-print("\n\n Gemma simple all reasons: \n", Gemma_simple_all_reasons_df, "\n\n Gemma main reasons: \n", Gemma_simple_main_reasons_df, "\n\n")
-print("\n\n Claude simple all reasons: \n", Claude_simple_all_reasons_df, "\n\n Claude main reasons: \n", Claude_simple_main_reasons_df, "\n\n")
+#
+# print("\n\n GPT 4 cases: \n",GPT_4_simple_cases_df, "\n\n GPT 4 simple all reasons: \n", GPT_4_simple_all_reasons_df, "\n\n GPT 4 main reasons: \n", GPT_4_simple_main_reasons_df, "\n\n")
+# print("\n\n GPT O3 simple all reasons: \n", GPT_o3_simple_all_reasons_df, "\n\n GPT O3 main reasons: \n", GPT_o3_simple_main_reasons_df, "\n\n")
+# print("\n\n Gemini simple all reasons: \n", Gemini_simple_all_reasons_df, "\n\n Gemini main reasons: \n", Gemini_simple_main_reasons_df, "\n\n")
+# print("\n\n Gemma simple all reasons: \n", Gemma_simple_all_reasons_df, "\n\n Gemma main reasons: \n", Gemma_simple_main_reasons_df, "\n\n")
+# print("\n\n Claude simple all reasons: \n", Claude_simple_all_reasons_df, "\n\n Claude main reasons: \n", Claude_simple_main_reasons_df, "\n\n")
 print("\n\n DeepSeek simple all reasons: \n", DeepSeek_simple_all_reasons_df, "\n\n DeepSeek main reasons: \n", DeepSeek_simple_main_reasons_df, "\n\n")
 print("\n\n Grok simple all reasons: \n", Grok_simple_all_reasons_df, "\n\n Grok main reasons: \n", Grok_simple_main_reasons_df, "\n\n")
 
