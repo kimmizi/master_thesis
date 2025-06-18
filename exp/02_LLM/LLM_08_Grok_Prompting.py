@@ -12,8 +12,6 @@ from tqdm import tqdm
 from openai import OpenAI
 from sklearn.model_selection import train_test_split
 
-data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep =",", low_memory = False)
-
 # import prompts for all test data
 X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
 X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
@@ -50,30 +48,9 @@ cot_instruction = cot_instruction_df["0"].iloc[0]
 retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
 retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
-# import instruction for reason of misclassification
-instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
-
 # convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
-
-instruction_reason = instruction_reason_df["0"].iloc[0]
-
-# predictors
-X = data_change
-X = X.drop(["hpi"], axis = 1)
-
-# target
-y = data_change["hpi"]
-
-# train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42, stratify = y)
-
-print("LLMs \n",
-      "X_train shape: ", X_train.shape, round(X_train.shape[0]/len(X), 2), "\n",
-      "X_test shape: ", X_test.shape, round(X_test.shape[0]/len(X), 2),  "\n",
-      "y_train shape: ", y_train.shape, round(y_train.shape[0]/len(y), 2), "\n",
-      "y_test shape: ", y_test.shape, round(y_test.shape[0]/len(y), 2), "\n")
 
 
 
@@ -143,28 +120,6 @@ def calc_time(start, end, filename):
     time_df = pd.DataFrame({"time": [time_taken]})
     time_df.to_csv(f"../exp/times_LLMs/Grok/time_grok_{filename}.csv", sep = ",", index = False)
     return time_taken
-
-
-#### 1 Testing prompting ####
-
-# client = OpenAI(
-#     api_key = os.environ.get("XAI_API_KEY"),
-#     base_url = "https://api.x.ai/v1",
-# )
-#
-# completion = client.chat.completions.create(
-#     model = "grok-3-beta",
-#     # model = "grok-3-mini-beta",
-#     messages = [
-#         {"role": "system", "content": simple_instruction},
-#         {"role": "user", "content": X_test_simple_prompt[0]},
-#     ],
-#     # reasoning_effort = "high"
-# )
-# print(completion.choices[0].message)
-
-# completion.choices[0].message.content
-
 
 
 #### 2 Prompting with Grok 3 Beta ####

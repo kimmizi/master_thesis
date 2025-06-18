@@ -268,13 +268,13 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class Definitions Pr
 
     if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "4_class_definitions_prompt")
+        save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_definitions_prompt")
 
 end = time.time()
-calc_time(start, end, "4_class_definitions_prompt")
+calc_time(start, end, "class_definitions_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "4_class_definitions_prompt")
+save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_definitions_prompt")
 
 
 
