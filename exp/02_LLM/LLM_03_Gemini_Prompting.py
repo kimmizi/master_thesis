@@ -224,7 +224,7 @@ thinking_simple_gemini = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt[90:], desc = "Simple prompting"):
+for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
     response, thinking = Gemini_create_response(prompt, simple_instruction)
     y_pred_simple_gemini.append(response)
     thinking_simple_gemini.append(thinking)
@@ -278,7 +278,7 @@ thinking_profiled_simple_gemini = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_profiled_simple_prompt[90:], desc = "Profiled simple prompting"):
+for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
     response, thinking = Gemini_create_response(prompt, simple_instruction)
     y_pred_profiled_simple_gemini.append(response)
     thinking_profiled_simple_gemini.append(thinking)
@@ -286,13 +286,13 @@ for prompt in tqdm(X_test_profiled_simple_prompt[90:], desc = "Profiled simple p
 
     if len(y_pred_profiled_simple_gemini) % 10 == 0 and len(y_pred_profiled_simple_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt_2")
+        save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt")
 
 end = time.time()
-calc_time(start, end, "profiled_simple_prompt_2")
+calc_time(start, end, "profiled_simple_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt_2")
+save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemini, "profiled_simple_prompt")
 
 
 
@@ -340,13 +340,13 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
 
     if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
+        save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt")
 
 end = time.time()
-calc_time(start, end, "vignette_prompt_new")
+calc_time(start, end, "vignette_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt_new")
+save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_prompt")
 
 
 
