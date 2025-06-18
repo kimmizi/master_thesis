@@ -1,0 +1,27 @@
+,count
+Lack of context,72
+Lack of counterfactual demonstrations,79
+Lack of examples,85
+Knowledge conflicts,14
+Prediction with Abstention,11
+Looking at this misclassification,2
+"the primary reasons appear to be
+
+Lack of counterfactual demonstrations",1
+"Knowledge conflicts
+
+The model seems to have overweighed certain changes like decreased social support and selfefficacy while not properly considering that the person started with very low general psychopathology GSI   and the final GSI increase was modest The model also may have conflicting understanding about how to interpret the complex pattern where some risk factors decreased fear of bodily sensations dropped dramatically while others increased More examples showing similar mixed patterns that dont lead to disorder development",1
+and counterfactual cases demonstrating when apparent deterioration doesnt constitute new disorder onset,1
+would help calibrate the decision boundaries more accurately,1
+Lack of counterfactual demonstrationsLack of examples,1
+Lack of examplesLack of counterfactual demonstrations,1
+Lack of contextLack of examplesKnowledge conflicts,1
+Lack of opinionbased information,2
+"the main issues appear to be
+
+Lack of context",1
+"Prediction with Abstention
+
+The model struggled with the complex",1
+contradictory pattern where some variables improved dramatically while others worsened significantly Without sufficient context about how to weigh competing psychological indicators or examples of similar mixed cases,1
+the model may have been uncertain about the relative importance of the substantial GSI increase versus the large improvements in positive mental health and life satisfaction,1
