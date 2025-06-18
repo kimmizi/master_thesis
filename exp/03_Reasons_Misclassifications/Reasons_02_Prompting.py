@@ -182,7 +182,7 @@ def Gemma_create_response(prompt):
         api_key = os.environ.get("GEMINI_API_KEY")
     )
 
-    time.sleep(5)  # sleep for few seconds to avoid rate limiting
+    time.sleep(15)  # sleep for few seconds to avoid rate limiting
     response = client.models.generate_content(
         model = model_gemma,
         contents = [instruction_reason, prompt]
@@ -441,17 +441,17 @@ def extract_reasons_cot(model, X_test, y_pred_model, y_test, explanation, thinki
 # print("\n\n Grok simple all reasons: \n", Grok_simple_all_reasons_df, "\n\n Grok main reasons: \n", Grok_simple_main_reasons_df, "\n\n")
 
 
-GPT_4_cot_cases_df, GPT_4_cot_all_reasons_df, GPT_4_cot_main_reasons_df = extract_reasons_cot("GPT_4", X_test_cot_prompt, y_pred_GPT_4_cot, y_test, explanation_cot_GPT_4, None, "cot")
-GPT_o3_cot_cases_df, GPT_o3_cot_all_reasons_df, GPT_o3_cot_main_reasons_df = extract_reasons_cot("GPT_O3", X_test_cot_prompt, y_pred_GPT_o3_cot, y_test, explanation_cot_GPT_o3, thinking_cot_Gemini, "cot")
-Gemini_cot_cases_df, Gemini_cot_all_reasons_df, Gemini_cot_main_reasons_df = extract_reasons_cot("Gemini", X_test_cot_prompt, y_pred_Gemini_cot, y_test, explanation_cot_Gemini, thinking_cot_Gemini, "cot")
+# GPT_4_cot_cases_df, GPT_4_cot_all_reasons_df, GPT_4_cot_main_reasons_df = extract_reasons_cot("GPT_4", X_test_cot_prompt, y_pred_GPT_4_cot, y_test, explanation_cot_GPT_4, None, "cot")
+# GPT_o3_cot_cases_df, GPT_o3_cot_all_reasons_df, GPT_o3_cot_main_reasons_df = extract_reasons_cot("GPT_O3", X_test_cot_prompt, y_pred_GPT_o3_cot, y_test, explanation_cot_GPT_o3, thinking_cot_Gemini, "cot")
+# Gemini_cot_cases_df, Gemini_cot_all_reasons_df, Gemini_cot_main_reasons_df = extract_reasons_cot("Gemini", X_test_cot_prompt, y_pred_Gemini_cot, y_test, explanation_cot_Gemini, thinking_cot_Gemini, "cot")
 Gemma_cot_cases_df, Gemma_cot_all_reasons_df, Gemma_cot_main_reasons_df = extract_reasons_cot("Gemma", X_test_cot_prompt, y_pred_Gemma_cot, y_test, explanation_cot_Gemma, None, "cot")
 Claude_cot_cases_df, Claude_cot_all_reasons_df, Claude_cot_main_reasons_df = extract_reasons_cot("Claude", X_test_cot_prompt, y_pred_Claude_cot, y_test, explanation_cot_Claude, thinking_cot_Claude, "cot")
 DeepSeek_cot_cases_df, DeepSeek_cot_all_reasons_df, DeepSeek_cot_main_reasons_df = extract_reasons_cot("DeepSeek", X_test_cot_prompt, y_pred_DeepSeek_cot, y_test, explanation_cot_DeepSeek, thinking_cot_DeepSeek, "cot")
 Grok_cot_cases_df, Grok_cot_all_reasons_df, Grok_cot_main_reasons_df = extract_reasons_cot("Grok", X_test_cot_prompt, y_pred_Grok_cot, y_test, explanation_cot_Grok, None, "cot")
 
-print("\n\n GPT 4 cases: \n",GPT_4_cot_cases_df, "\n\n GPT 4 cot all reasons: \n", GPT_4_cot_all_reasons_df, "\n\n GPT 4 main reasons: \n", GPT_4_cot_main_reasons_df, "\n\n")
-print("\n\n GPT O3 cot all reasons: \n", GPT_o3_cot_all_reasons_df, "\n\n GPT O3 main reasons: \n", GPT_o3_cot_main_reasons_df, "\n\n")
-print("\n\n Gemini cot all reasons: \n", Gemini_cot_all_reasons_df, "\n\n Gemini main reasons: \n", Gemini_cot_main_reasons_df, "\n\n")
+# print("\n\n GPT 4 cases: \n",GPT_4_cot_cases_df, "\n\n GPT 4 cot all reasons: \n", GPT_4_cot_all_reasons_df, "\n\n GPT 4 main reasons: \n", GPT_4_cot_main_reasons_df, "\n\n")
+# print("\n\n GPT O3 cot all reasons: \n", GPT_o3_cot_all_reasons_df, "\n\n GPT O3 main reasons: \n", GPT_o3_cot_main_reasons_df, "\n\n")
+# print("\n\n Gemini cot all reasons: \n", Gemini_cot_all_reasons_df, "\n\n Gemini main reasons: \n", Gemini_cot_main_reasons_df, "\n\n")
 print("\n\n Gemma cot all reasons: \n", Gemma_cot_all_reasons_df, "\n\n Gemma main reasons: \n", Gemma_cot_main_reasons_df, "\n\n")
 print("\n\n Claude cot all reasons: \n", Claude_cot_all_reasons_df, "\n\n Claude main reasons: \n", Claude_cot_main_reasons_df, "\n\n")
 print("\n\n DeepSeek cot all reasons: \n", DeepSeek_cot_all_reasons_df, "\n\n DeepSeek main reasons: \n", DeepSeek_cot_main_reasons_df, "\n\n")
