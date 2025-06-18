@@ -80,7 +80,7 @@ def Claude_create_response(prompt, instruction):
         print("\n Invalid output. Retry prompting. \n")
         message = client.messages.create(
             model = model_claude,
-            max_tokens = 10000,
+            max_tokens = 1000,
             system = retry_instruction,
             messages = [
                 {
