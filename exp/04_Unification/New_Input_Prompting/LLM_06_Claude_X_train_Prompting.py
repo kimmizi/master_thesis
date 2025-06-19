@@ -133,123 +133,123 @@ client = anthropic.Anthropic(
 )
 
 
-#### Simple prompt ####
-
-y_pred_simple_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_simple_prompt, desc = "Simple Prompting"):
-    response = Claude_create_response(prompt, simple_instruction)
-    y_pred_simple_claude.append(response)
-
-    if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_claude, "simple_prompt")
-
-end = time.time()
-calc_time(start, end, "simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_simple_claude, "simple_prompt")
-
-
-
-#### Class definition prompt ####
-
-y_pred_class_def_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class Definitions Prompting"):
-    response = Claude_create_response(prompt, class_definitions_instruction)
-    y_pred_class_def_claude.append(response)
-
-    if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_claude, "class_definitions_prompt")
-
-end = time.time()
-calc_time(start, end, "class_definitions_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_claude, "class_definitions_prompt")
-
-
-
-#### Profiled simple prompt ####
-
-y_pred_profiled_simple_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled Simple Prompting"):
-    response = Claude_create_response(prompt, profiled_simple_instruction)
-    y_pred_profiled_simple_claude.append(response)
-
-    if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_profiled_simple_claude, "profiled_simple_prompt")
-
-end = time.time()
-calc_time(start, end, "profiled_simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_profiled_simple_claude, "profiled_simple_prompt")
-
-
-
-#### Few shot prompt ####
-
-y_pred_few_shot_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_few_shot_prompt, desc = "Few Shot Prompting"):
-    response = Claude_create_response(prompt, few_shot_instruction)
-    y_pred_few_shot_claude.append(response)
-
-    if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
-
-end = time.time()
-calc_time(start, end, "few_shot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
-
-
-
-#### Vignette prompt ####
-
-y_pred_vignette_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette Prompting"):
-    response = Claude_create_response(prompt, vignette_instruction)
-    y_pred_vignette_claude.append(response)
-
-    if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_vignette_claude, "vignette_prompt")
-
-end = time.time()
-calc_time(start, end, "vignette_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_vignette_claude, "vignette_prompt")
+# #### Simple prompt ####
+#
+# y_pred_simple_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_simple_prompt, desc = "Simple Prompting"):
+#     response = Claude_create_response(prompt, simple_instruction)
+#     y_pred_simple_claude.append(response)
+#
+#     if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_simple_claude, "simple_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "simple_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_simple_claude, "simple_prompt")
+#
+#
+#
+# #### Class definition prompt ####
+#
+# y_pred_class_def_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class Definitions Prompting"):
+#     response = Claude_create_response(prompt, class_definitions_instruction)
+#     y_pred_class_def_claude.append(response)
+#
+#     if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_class_def_claude, "class_definitions_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "class_definitions_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_class_def_claude, "class_definitions_prompt")
+#
+#
+#
+# #### Profiled simple prompt ####
+#
+# y_pred_profiled_simple_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled Simple Prompting"):
+#     response = Claude_create_response(prompt, profiled_simple_instruction)
+#     y_pred_profiled_simple_claude.append(response)
+#
+#     if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_profiled_simple_claude, "profiled_simple_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "profiled_simple_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_profiled_simple_claude, "profiled_simple_prompt")
+#
+#
+#
+# #### Few shot prompt ####
+#
+# y_pred_few_shot_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_few_shot_prompt, desc = "Few Shot Prompting"):
+#     response = Claude_create_response(prompt, few_shot_instruction)
+#     y_pred_few_shot_claude.append(response)
+#
+#     if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "few_shot_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
+#
+#
+#
+# #### Vignette prompt ####
+#
+# y_pred_vignette_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette Prompting"):
+#     response = Claude_create_response(prompt, vignette_instruction)
+#     y_pred_vignette_claude.append(response)
+#
+#     if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_vignette_claude, "vignette_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "vignette_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_vignette_claude, "vignette_prompt")
 
 
 
@@ -261,16 +261,16 @@ y_pred_cot_claude = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-Thought Prompting"):
+for prompt in tqdm(X_train_cot_prompt[400:], desc = "Chain-of-Thought Prompting"):
     response = Claude_create_response(prompt, simple_instruction)
     y_pred_cot_claude.append(response)
 
     if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_cot_claude, "cot_prompt")
+        save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_3")
 
 end = time.time()
-calc_time(start, end, "cot_prompt")
+calc_time(start, end, "cot_prompt_3")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_cot_claude, "cot_prompt")
+save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_3")
