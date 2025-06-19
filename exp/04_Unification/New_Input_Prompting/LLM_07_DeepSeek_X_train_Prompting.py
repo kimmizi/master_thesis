@@ -128,7 +128,7 @@ y_pred_simple_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prompt"):
+for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, simple_instruction)
     y_pred_simple_deeps.append(response)
 
@@ -152,7 +152,7 @@ y_pred_class_def_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
+for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, class_definitions_instruction)
     y_pred_class_def_deeps.append(response)
 
@@ -176,7 +176,7 @@ y_pred_profiled_simple_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
+for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_deeps.append(response)
 
@@ -200,7 +200,7 @@ y_pred_few_shot_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt[100:], desc = "Few shot prompting", unit = "prompt"):
+for prompt in tqdm(X_train_few_shot_prompt, desc = "Few shot prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_deeps.append(response)
 
@@ -224,7 +224,7 @@ y_pred_vignette_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
+for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, vignette_instruction)
     y_pred_vignette_deeps.append(response)
 
@@ -247,7 +247,7 @@ y_pred_cot_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
+for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, simple_instruction)
 
     if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
