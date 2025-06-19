@@ -63,6 +63,9 @@ def Claude_create_response(prompt, instruction):
         model = model_claude,
         max_tokens = 1000,
         system = instruction,
+        thinking = {
+            "type": "disabled"
+        },
         messages = [
             {
                 "role": "user",
@@ -105,7 +108,7 @@ def save_prompt_to_csv(response_array, filename):
 
     # convert YES to 1 and NO to 0
     response_array = [re.sub(r'^\[|\]$', '', response.strip()) for response in response_array]
-    response_array_val = [1 if response == "YES" else 0 if response == "NO" else np.nan for response in response_array]
+    response_array_val = [1 if response == "YES" else 0 if response == "NO" else response for response in response_array]
 
     # save the array to a csv file
     df = pd.DataFrame({
@@ -261,7 +264,7 @@ y_pred_cot_claude = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_cot_prompt[400:], desc = "Chain-of-Thought Prompting"):
+for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-Thought Prompting"):
     response = Claude_create_response(prompt, simple_instruction)
     y_pred_cot_claude.append(response)
 
