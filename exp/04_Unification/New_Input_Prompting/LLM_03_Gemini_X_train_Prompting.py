@@ -129,19 +129,19 @@ y_pred_simple_gemini = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_simple_prompt[290:], desc = "Simple prompting"):
+for prompt in tqdm(X_train_simple_prompt[580:], desc = "Simple prompting"):
     response = Gemini_create_response(prompt, simple_instruction)
     y_pred_simple_gemini.append(response)
 
     if len(y_pred_simple_gemini) % 10 == 0 and len(y_pred_simple_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt_2")
+        save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt_3")
 
 end = time.time()
-calc_time(start, end, "simple_prompt_2")
+calc_time(start, end, "simple_prompt_3")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt_2")
+save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt_3")
 
 
 
