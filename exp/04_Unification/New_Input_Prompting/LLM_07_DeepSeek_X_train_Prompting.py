@@ -120,51 +120,51 @@ client = OpenAI(
 )
 
 
-#### Simple prompt ####
-
-y_pred_simple_deeps = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting", unit = "prompt"):
-    response = DeepSeek_create_response(prompt, simple_instruction)
-    y_pred_simple_deeps.append(response)
-
-    if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
-        print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_deeps, "simple_prompt")
-
-end = time.time()
-calc_time(start, end, "simple_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_simple_deeps, "simple_prompt")
-
-
-
-#### Class definition prompt ####
-
-y_pred_class_def_deeps = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
-    response = DeepSeek_create_response(prompt, class_definitions_instruction)
-    y_pred_class_def_deeps.append(response)
-
-    if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
-        print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_deeps, "class_definitions_prompt")
-
-end = time.time()
-calc_time(start, end, "class_definitions_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_deeps, "class_definitions_prompt")
+# #### Simple prompt ####
+#
+# y_pred_simple_deeps = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting", unit = "prompt"):
+#     response = DeepSeek_create_response(prompt, simple_instruction)
+#     y_pred_simple_deeps.append(response)
+#
+#     if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
+#         print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
+#         save_prompt_to_csv(y_pred_simple_deeps, "simple_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "simple_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_simple_deeps, "simple_prompt")
+#
+#
+#
+# #### Class definition prompt ####
+#
+# y_pred_class_def_deeps = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
+#     response = DeepSeek_create_response(prompt, class_definitions_instruction)
+#     y_pred_class_def_deeps.append(response)
+#
+#     if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
+#         print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
+#         save_prompt_to_csv(y_pred_class_def_deeps, "class_definitions_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "class_definitions_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_class_def_deeps, "class_definitions_prompt")
 
 
 
@@ -176,19 +176,19 @@ y_pred_profiled_simple_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
+for prompt in tqdm(X_train_profiled_simple_prompt[850:], desc = "Profiled simple prompting", unit = "prompt"):
     response = DeepSeek_create_response(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_deeps.append(response)
 
     if len(y_pred_profiled_simple_deeps) % 50 == 0 and len(y_pred_profiled_simple_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_profiled_simple_deeps, "profiled_simple_prompt")
+        save_prompt_to_csv(y_pred_profiled_simple_deeps, "profiled_simple_prompt_3")
 
 end = time.time()
-calc_time(start, end, "profiled_simple_prompt")
+calc_time(start, end, "profiled_simple_prompt_3")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_profiled_simple_deeps, "profiled_simple_prompt")
+save_prompt_to_csv(y_pred_profiled_simple_deeps, "profiled_simple_prompt_3")
 
 
 
