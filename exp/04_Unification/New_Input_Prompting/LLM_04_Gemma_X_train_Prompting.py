@@ -61,24 +61,8 @@ retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
 #### Helper functions ####
 
-def Gemma_create_response_few(prompt, instruction):
-    time.sleep(1)  # sleep for few seconds to avoid rate limiting
-    response = client.models.generate_content(
-        model = model_gemma,
-        contents = [instruction, prompt]
-    )
-
-    if response.text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        response = client.models.generate_content(
-            model = model_gemma,
-            contents = [retry_instruction, prompt]
-        )
-
-    return response.text.strip()
-
 def Gemma_create_response(prompt, instruction):
-    time.sleep(5)  # sleep for few seconds to avoid rate limiting
+    time.sleep(10)  # sleep for few seconds to avoid rate limiting
     response = client.models.generate_content(
         model = model_gemma,
         contents = [instruction, prompt]
@@ -208,7 +192,7 @@ client = genai.Client(
 #
 # # iterate over the test set and save the response for each prompt in an array
 # for prompt in tqdm(X_train_few_shot_prompt, desc = "Few shot prompting"):
-#     response = Gemma_create_response_few(prompt, few_shot_instruction)
+#     response = Gemma_create_response(prompt, few_shot_instruction)
 #     y_pred_few_shot_gemma.append(response)
 #
 #     if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
