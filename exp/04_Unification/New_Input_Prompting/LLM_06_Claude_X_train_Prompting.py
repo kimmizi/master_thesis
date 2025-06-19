@@ -61,7 +61,7 @@ def Claude_create_response(prompt, instruction):
 
     message = client.messages.create(
         model = model_claude,
-        max_tokens = 10000,
+        max_tokens = 1000,
         system = instruction,
         messages = [
             {
@@ -76,24 +76,24 @@ def Claude_create_response(prompt, instruction):
         ]
     )
 
-    if message.content[0].text.strip() not in ("YES", "NO"):
-        print("\n Invalid output. Retry prompting. \n")
-        message = client.messages.create(
-            model = model_claude,
-            max_tokens = 1000,
-            system = retry_instruction,
-            messages = [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt
-                        }
-                    ]
-                }
-            ]
-        )
+    # if message.content[0].text.strip() not in ("YES", "NO"):
+    #     print("\n Invalid output. Retry prompting. \n")
+    #     message = client.messages.create(
+    #         model = model_claude,
+    #         max_tokens = 1000,
+    #         system = retry_instruction,
+    #         messages = [
+    #             {
+    #                 "role": "user",
+    #                 "content": [
+    #                     {
+    #                         "type": "text",
+    #                         "text": prompt
+    #                     }
+    #                 ]
+    #             }
+    #         ]
+    #     )
 
     return message.content[0].text
 
