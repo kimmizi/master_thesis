@@ -50,6 +50,38 @@ y_pred_Claude_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Claud
 y_pred_DeepSeek_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.csv", sep = ",")
 y_pred_Grok_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_simple_prompt.csv", sep = ",")
 
+y_pred_GPT_4_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_class_definitions_prompt.csv", sep = ",")
+y_pred_GPT_o3_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_class_definitions_prompt.csv", sep = ",")
+y_pred_Gemini_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_class_definitions_prompt.csv", sep = ",")
+y_pred_Gemma_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_class_definitions_prompt.csv", sep = ",")
+y_pred_Claude_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Claude_4_class_definitions_prompt.csv", sep = ",")
+y_pred_DeepSeek_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions_prompt.csv", sep = ",")
+y_pred_Grok_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_grok_class_definitions_prompt.csv", sep = ",")
+
+y_pred_GPT_4_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_profiled_simple_prompt.csv", sep = ",")
+y_pred_GPT_o3_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_profiled_simple_prompt.csv", sep = ",")
+y_pred_Gemini_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_profiled_simple_prompt.csv", sep = ",")
+y_pred_Gemma_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_profiled_simple_prompt.csv", sep = ",")
+y_pred_Claude_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Claude_profiled_simple_prompt.csv", sep = ",")
+y_pred_DeepSeek_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_profiled_simple_prompt.csv", sep = ",")
+y_pred_Grok_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_profiled_simple_prompt.csv", sep = ",")
+
+y_pred_GPT_4_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_few_shot_prompt.csv", sep = ",")
+y_pred_GPT_o3_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_few_shot_prompt.csv", sep = ",")
+y_pred_Gemini_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_few_shot_prompt.csv", sep = ",")
+y_pred_Gemma_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_few_shot_prompt.csv", sep = ",")
+y_pred_Claude_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Claude_few_shot_prompt.csv", sep = ",")
+y_pred_DeepSeek_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prompt.csv", sep = ",")
+y_pred_Grok_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_few_shot_prompt.csv", sep = ",")
+
+y_pred_GPT_4_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_vignette_prompt.csv", sep = ",")
+y_pred_GPT_o3_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_vignette_prompt.csv", sep = ",")
+y_pred_Gemini_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_vignette_prompt.csv", sep = ",")
+y_pred_Gemma_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_vignette_prompt.csv", sep = ",")
+y_pred_Claude_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Claude_vignette_prompt.csv", sep = ",")
+y_pred_DeepSeek_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prompt.csv", sep = ",")
+y_pred_Grok_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_vignette_prompt.csv", sep = ",")
+
 y_pred_GPT_4_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_cot_prompt.csv", sep = ",")
 y_pred_GPT_o3_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_cot_prompt.csv", sep = ",")
 y_pred_Gemini_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_cot_prompt.csv", sep = ",")
@@ -69,6 +101,38 @@ y_pred_Claude_simple = y_pred_Claude_simple_df["y_pred"].values.flatten()
 y_pred_DeepSeek_simple = y_pred_DeepSeek_simple_df["y_pred"].values.flatten()
 y_pred_Grok_simple = y_pred_Grok_simple_df["y_pred"].values.flatten()
 
+y_pred_GPT_4_class_definitions = y_pred_GPT_4_class_definitions_df["y_pred"].values.flatten()
+y_pred_GPT_o3_class_definitions = y_pred_GPT_o3_class_definitions_df["y_pred"].values.flatten()
+y_pred_Gemini_class_definitions = y_pred_Gemini_class_definitions_df["y_pred"].values.flatten()
+y_pred_Gemma_class_definitions = y_pred_Gemma_class_definitions_df["y_pred"].values.flatten()
+y_pred_Claude_class_definitions = y_pred_Claude_class_definitions_df["y_pred"].values.flatten()
+y_pred_DeepSeek_class_definitions = y_pred_DeepSeek_class_definitions_df["y_pred"].values.flatten()
+y_pred_Grok_class_definitions = y_pred_Grok_class_definitions_df["y_pred"].values.flatten()
+
+y_pred_GPT_4_profiled_simple = y_pred_GPT_4_profiled_simple_df["y_pred"].values.flatten()
+y_pred_GPT_o3_profiled_simple = y_pred_GPT_o3_profiled_simple_df["y_pred"].values.flatten()
+y_pred_Gemini_profiled_simple = y_pred_Gemini_profiled_simple_df["y_pred"].values.flatten()
+y_pred_Gemma_profiled_simple = y_pred_Gemma_profiled_simple_df["y_pred"].values.flatten()
+y_pred_Claude_profiled_simple = y_pred_Claude_profiled_simple_df["y_pred"].values.flatten()
+y_pred_DeepSeek_profiled_simple = y_pred_DeepSeek_profiled_simple_df["y_pred"].values.flatten()
+y_pred_Grok_profiled_simple = y_pred_Grok_profiled_simple_df["y_pred"].values.flatten()
+
+y_pred_GPT_4_few_shot = y_pred_GPT_4_few_shot_df["y_pred"].values.flatten()
+y_pred_GPT_o3_few_shot = y_pred_GPT_o3_few_shot_df["y_pred"].values.flatten()
+y_pred_Gemini_few_shot = y_pred_Gemini_few_shot_df["y_pred"].values.flatten()
+y_pred_Gemma_few_shot = y_pred_Gemma_few_shot_df["y_pred"].values.flatten()
+y_pred_Claude_few_shot = y_pred_Claude_few_shot_df["y_pred"].values.flatten()
+y_pred_DeepSeek_few_shot = y_pred_DeepSeek_few_shot_df["y_pred"].values.flatten()
+y_pred_Grok_few_shot = y_pred_Grok_few_shot_df["y_pred"].values.flatten()
+
+y_pred_GPT_4_vignette = y_pred_GPT_4_vignette_df["y_pred"].values.flatten()
+y_pred_GPT_o3_vignette = y_pred_GPT_o3_vignette_df["y_pred"].values.flatten()
+y_pred_Gemini_vignette = y_pred_Gemini_vignette_df["y_pred"].values.flatten()
+y_pred_Gemma_vignette = y_pred_Gemma_vignette_df["y_pred"].values.flatten()
+y_pred_Claude_vignette = y_pred_Claude_vignette_df["y_pred"].values.flatten()
+y_pred_DeepSeek_vignette = y_pred_DeepSeek_vignette_df["y_pred"].values.flatten()
+y_pred_Grok_vignette = y_pred_Grok_vignette_df["y_pred"].values.flatten()
+
 y_pred_GPT_4_cot = y_pred_GPT_4_cot_df["y_pred"].values.flatten()
 y_pred_GPT_o3_cot = y_pred_GPT_o3_cot_df["y_pred"].values.flatten()
 y_pred_Gemini_cot = y_pred_Gemini_cot_df["y_pred"].values.flatten()
@@ -76,6 +140,36 @@ y_pred_Gemma_cot = y_pred_Gemma_cot_df["y_pred"].values.flatten()
 y_pred_Claude_cot = y_pred_Claude_cot_df["y_pred"].values.flatten()
 y_pred_DeepSeek_cot = y_pred_DeepSeek_cot_df["y_pred"].values.flatten()
 y_pred_Grok_cot = y_pred_Grok_cot_df["y_pred"].values.flatten()
+
+thinking_simple_GPT_o3 = y_pred_GPT_o3_simple_df["thinking"].values.flatten()
+thinking_simple_Gemini = y_pred_Gemini_simple_df["thinking"].values.flatten()
+thinking_simple_Claude = y_pred_Claude_simple_df["thinking"].values.flatten()
+thinking_simple_DeepSeek = y_pred_DeepSeek_simple_df["thinking"].values.flatten()
+
+thinking_class_definitions_GPT_o3 = y_pred_GPT_o3_class_definitions_df["thinking"].values.flatten()
+thinking_class_definitions_Gemini = y_pred_Gemini_class_definitions_df["thinking"].values.flatten()
+thinking_class_definitions_Claude = y_pred_Claude_class_definitions_df["thinking"].values.flatten()
+thinking_class_definitions_DeepSeek = y_pred_DeepSeek_class_definitions_df["thinking"].values.flatten()
+
+thinking_profiled_simple_GPT_o3 = y_pred_GPT_o3_profiled_simple_df["thinking"].values.flatten()
+thinking_profiled_simple_Gemini = y_pred_Gemini_profiled_simple_df["thinking"].values.flatten()
+thinking_profiled_simple_Claude = y_pred_Claude_profiled_simple_df["thinking"].values.flatten()
+thinking_profiled_simple_DeepSeek = y_pred_DeepSeek_profiled_simple_df["thinking"].values.flatten()
+
+thinking_few_shot_GPT_o3 = y_pred_GPT_o3_few_shot_df["thinking"].values.flatten()
+thinking_few_shot_Gemini = y_pred_Gemini_few_shot_df["thinking"].values.flatten()
+thinking_few_shot_Claude = y_pred_Claude_few_shot_df["thinking"].values.flatten()
+thinking_few_shot_DeepSeek = y_pred_DeepSeek_few_shot_df["thinking"].values.flatten()
+
+thinking_vignette_GPT_o3 = y_pred_GPT_o3_vignette_df["thinking"].values.flatten()
+thinking_vignette_Gemini = y_pred_Gemini_vignette_df["thinking"].values.flatten()
+thinking_vignette_Claude = y_pred_Claude_vignette_df["thinking"].values.flatten()
+thinking_vignette_DeepSeek = y_pred_DeepSeek_vignette_df["thinking"].values.flatten()
+
+thinking_cot_GPT_o3 = y_pred_GPT_o3_cot_df["thinking"].values.flatten()
+thinking_cot_Gemini = y_pred_Gemini_cot_df["thinking"].values.flatten()
+thinking_cot_Claude = y_pred_Claude_cot_df["thinking"].values.flatten()
+thinking_cot_DeepSeek = y_pred_DeepSeek_cot_df["thinking"].values.flatten()
 
 explanation_cot_GPT_4 = y_pred_GPT_4_cot_df["explanation"].values.flatten()
 explanation_cot_GPT_o3 = y_pred_GPT_o3_cot_df["explanation"].values.flatten()
@@ -85,10 +179,6 @@ explanation_cot_Claude = y_pred_Claude_cot_df["cot"].values.flatten()
 explanation_cot_DeepSeek = y_pred_DeepSeek_cot_df["explanation"].values.flatten()
 explanation_cot_Grok = y_pred_Grok_cot_df["explanation"].values.flatten()
 
-thinking_cot_GPT_o3 = y_pred_GPT_o3_cot_df["thinking"].values.flatten()
-thinking_cot_Gemini = y_pred_Gemini_cot_df["thinking"].values.flatten()
-thinking_cot_Claude = y_pred_Claude_cot_df["thinking"].values.flatten()
-thinking_cot_DeepSeek = y_pred_DeepSeek_cot_df["thinking"].values.flatten()
 
 
 # predictors
@@ -182,7 +272,7 @@ def Gemma_create_response(prompt):
         api_key = os.environ.get("GEMINI_API_KEY")
     )
 
-    time.sleep(15)  # sleep for few seconds to avoid rate limiting
+    time.sleep(20)  # sleep for few seconds to avoid rate limiting
     response = client.models.generate_content(
         model = model_gemma,
         contents = [instruction_reason, prompt]
@@ -200,7 +290,7 @@ def Claude_create_response(prompt):
 
     message = client.messages.create(
         model = model_claude,
-        max_tokens = 10000,
+        max_tokens = 1000,
         system = instruction_reason,
         messages = [
             {
@@ -404,6 +494,9 @@ def extract_reasons_cot(model, X_test, y_pred_model, y_test, explanation, thinki
     main_reasons_df = pd.DataFrame.from_dict(main_reasons_dict, orient = 'index', columns = ['count'])
     main_reasons_df.to_csv(f"../03_Reasons_Misclassifications/reasons/{model}/main_reasons_{model}_{filename}.csv", sep = ",", index = True)
 
+    # print
+    print(f"\n\n{model} cases: \n", cases_df, "\n\n{model} all reasons: \n", reasons_df, "\n\n{model} main reasons: \n", main_reasons_df, "\n\n")
+
     return cases_df, reasons_df, main_reasons_df
 
 
@@ -424,35 +517,50 @@ def extract_reasons_cot(model, X_test, y_pred_model, y_test, explanation, thinki
 
 ### 2 Get reasons for misclassifications ###
 
-# GPT_4_simple_cases_df, GPT_4_simple_all_reasons_df, GPT_4_simple_main_reasons_df = extract_reasons("GPT_4", X_test_simple_prompt, y_pred_GPT_4_simple, y_test, "simple")
-# GPT_o3_simple_cases_df, GPT_o3_simple_all_reasons_df, GPT_o3_simple_main_reasons_df = extract_reasons("GPT_O3", X_test_simple_prompt, y_pred_GPT_o3_simple, y_test, "simple")
-# Gemini_simple_cases_df, Gemini_simple_all_reasons_df, Gemini_simple_main_reasons_df = extract_reasons("Gemini", X_test_simple_prompt, y_pred_Gemini_simple, y_test, "simple")
-# Gemma_simple_cases_df, Gemma_simple_all_reasons_df, Gemma_simple_main_reasons_df = extract_reasons("Gemma", X_test_simple_prompt, y_pred_Gemma_simple, y_test, "simple")
-# Claude_simple_cases_df, Claude_simple_all_reasons_df, Claude_simple_main_reasons_df = extract_reasons("Claude", X_test_simple_prompt, y_pred_Claude_simple, y_test, "simple")
-# DeepSeek_simple_cases_df, DeepSeek_simple_all_reasons_df, DeepSeek_simple_main_reasons_df = extract_reasons("DeepSeek", X_test_simple_prompt, y_pred_DeepSeek_simple, y_test, "simple")
-# Grok_simple_cases_df, Grok_simple_all_reasons_df, Grok_simple_main_reasons_df = extract_reasons("Grok", X_test_simple_prompt, y_pred_Grok_simple, y_test, "simple")
+# # GPT_4_simple_cases_df, GPT_4_simple_all_reasons_df, GPT_4_simple_main_reasons_df = extract_reasons("GPT_4", X_test_simple_prompt, y_pred_GPT_4_simple, y_test, None, "simple")
+# # GPT_o3_simple_cases_df, GPT_o3_simple_all_reasons_df, GPT_o3_simple_main_reasons_df = extract_reasons("GPT_O3", X_test_simple_prompt, y_pred_GPT_o3_simple, y_test, thinking_simple_GPT_o3, "simple")
+# # Gemini_simple_cases_df, Gemini_simple_all_reasons_df, Gemini_simple_main_reasons_df = extract_reasons("Gemini", X_test_simple_prompt, y_pred_Gemini_simple, y_test, thinking_simple_Gemini, "simple")
+# # Gemma_simple_cases_df, Gemma_simple_all_reasons_df, Gemma_simple_main_reasons_df = extract_reasons("Gemma", X_test_simple_prompt, y_pred_Gemma_simple, y_test, None, "simple")
+# Claude_simple_cases_df, Claude_simple_all_reasons_df, Claude_simple_main_reasons_df = extract_reasons("Claude", X_test_simple_prompt, y_pred_Claude_simple, y_test, thinking_simple_Claude, "simple")
+# DeepSeek_simple_cases_df, DeepSeek_simple_all_reasons_df, DeepSeek_simple_main_reasons_df = extract_reasons("DeepSeek", X_test_simple_prompt, y_pred_DeepSeek_simple, y_test, thinking_simple_DeepSeek, "simple")
+# # Grok_simple_cases_df, Grok_simple_all_reasons_df, Grok_simple_main_reasons_df = extract_reasons("Grok", X_test_simple_prompt, y_pred_Grok_simple, y_test, None, "simple")
 #
-# print("\n\n GPT 4 cases: \n",GPT_4_simple_cases_df, "\n\n GPT 4 simple all reasons: \n", GPT_4_simple_all_reasons_df, "\n\n GPT 4 main reasons: \n", GPT_4_simple_main_reasons_df, "\n\n")
-# print("\n\n GPT O3 simple all reasons: \n", GPT_o3_simple_all_reasons_df, "\n\n GPT O3 main reasons: \n", GPT_o3_simple_main_reasons_df, "\n\n")
-# print("\n\n Gemini simple all reasons: \n", Gemini_simple_all_reasons_df, "\n\n Gemini main reasons: \n", Gemini_simple_main_reasons_df, "\n\n")
-# print("\n\n Gemma simple all reasons: \n", Gemma_simple_all_reasons_df, "\n\n Gemma main reasons: \n", Gemma_simple_main_reasons_df, "\n\n")
-# print("\n\n Claude simple all reasons: \n", Claude_simple_all_reasons_df, "\n\n Claude main reasons: \n", Claude_simple_main_reasons_df, "\n\n")
-# print("\n\n DeepSeek simple all reasons: \n", DeepSeek_simple_all_reasons_df, "\n\n DeepSeek main reasons: \n", DeepSeek_simple_main_reasons_df, "\n\n")
-# print("\n\n Grok simple all reasons: \n", Grok_simple_all_reasons_df, "\n\n Grok main reasons: \n", Grok_simple_main_reasons_df, "\n\n")
+# GPT_4_class_definitions_cases_df, GPT_4_class_definitions_all_reasons_df, GPT_4_class_definitions_main_reasons_df = extract_reasons("GPT_4", X_test_class_definitions_prompt, y_pred_GPT_4_class_definitions, y_test, None, "class_definitions")
+# GPT_o3_class_definitions_cases_df, GPT_o3_class_definitions_all_reasons_df, GPT_o3_class_definitions_main_reasons_df = extract_reasons("GPT_O3", X_test_class_definitions_prompt, y_pred_GPT_o3_class_definitions, y_test, thinking_class_definitions_GPT_o3, "class_definitions")
+# # Gemini_class_definitions_cases_df, Gemini_class_definitions_all_reasons_df, Gemini_class_definitions_main_reasons_df = extract_reasons("Gemini", X_test_class_definitions_prompt, y_pred_Gemini_class_definitions, y_test, thinking_class_definitions_Gemini, "class_definitions")
+# Gemma_class_definitions_cases_df, Gemma_class_definitions_all_reasons_df, Gemma_class_definitions_main_reasons_df = extract_reasons("Gemma", X_test_class_definitions_prompt, y_pred_Gemma_class_definitions, y_test, None, "class_definitions")
+# Claude_class_definitions_cases_df, Claude_class_definitions_all_reasons_df, Claude_class_definitions_main_reasons_df = extract_reasons("Claude", X_test_class_definitions_prompt, y_pred_Claude_class_definitions, y_test, thinking_class_definitions_Claude, "class_definitions")
+# DeepSeek_class_definitions_cases_df, DeepSeek_class_definitions_all_reasons_df, DeepSeek_class_definitions_main_reasons_df = extract_reasons("DeepSeek", X_test_class_definitions_prompt, y_pred_DeepSeek_class_definitions, y_test, thinking_class_definitions_DeepSeek, "class_definitions")
+# Grok_class_definitions_cases_df, Grok_class_definitions_all_reasons_df, Grok_class_definitions_main_reasons_df = extract_reasons("Grok", X_test_class_definitions_prompt, y_pred_Grok_class_definitions, y_test, None, "class_definitions")
+#
+# GPT_4_profiled_simple_cases_df, GPT_4_profiled_simple_all_reasons_df, GPT_4_profiled_simple_main_reasons_df = extract_reasons("GPT_4", X_test_profiled_simple_prompt, y_pred_GPT_4_profiled_simple, y_test, None, "profiled_simple")
+# GPT_o3_profiled_simple_cases_df, GPT_o3_profiled_simple_all_reasons_df, GPT_o3_profiled_simple_main_reasons_df = extract_reasons("GPT_O3", X_test_profiled_simple_prompt, y_pred_GPT_o3_profiled_simple, y_test, thinking_profiled_simple_GPT_o3, "profiled_simple")
+# # Gemini_profiled_simple_cases_df, Gemini_profiled_simple_all_reasons_df, Gemini_profiled_simple_main_reasons_df = extract_reasons("Gemini", X_test_profiled_simple_prompt, y_pred_Gemini_profiled_simple, y_test, thinking_profiled_simple_Gemini, "profiled_simple")
+# Gemma_profiled_simple_cases_df, Gemma_profiled_simple_all_reasons_df, Gemma_profiled_simple_main_reasons_df = extract_reasons("Gemma", X_test_profiled_simple_prompt, y_pred_Gemma_profiled_simple, y_test, None, "profiled_simple")
+# Claude_profiled_simple_cases_df, Claude_profiled_simple_all_reasons_df, Claude_profiled_simple_main_reasons_df = extract_reasons("Claude", X_test_profiled_simple_prompt, y_pred_Claude_profiled_simple, y_test, thinking_profiled_simple_Claude, "profiled_simple")
+# DeepSeek_profiled_simple_cases_df, DeepSeek_profiled_simple_all_reasons_df, DeepSeek_profiled_simple_main_reasons_df = extract_reasons("DeepSeek", X_test_profiled_simple_prompt, y_pred_DeepSeek_profiled_simple, y_test, thinking_profiled_simple_DeepSeek, "profiled_simple")
+# Grok_profiled_simple_cases_df, Grok_profiled_simple_all_reasons_df, Grok_profiled_simple_main_reasons_df = extract_reasons("Grok", X_test_profiled_simple_prompt, y_pred_Grok_profiled_simple, y_test, None, "profiled_simple")
+#
+# GPT_4_few_shot_cases_df, GPT_4_few_shot_all_reasons_df, GPT_4_few_shot_main_reasons_df = extract_reasons("GPT_4", X_test_few_shot_prompt, y_pred_GPT_4_few_shot, y_test, None, "few_shot")
+# GPT_o3_few_shot_cases_df, GPT_o3_few_shot_all_reasons_df, GPT_o3_few_shot_main_reasons_df = extract_reasons("GPT_O3", X_test_few_shot_prompt, y_pred_GPT_o3_few_shot, y_test, thinking_few_shot_GPT_o3, "few_shot")
+# # Gemini_few_shot_cases_df, Gemini_few_shot_all_reasons_df, Gemini_few_shot_main_reasons_df = extract_reasons("Gemini", X_test_few_shot_prompt, y_pred_Gemini_few_shot, y_test, thinking_few_shot_Gemini, "few_shot")
+Gemma_few_shot_cases_df, Gemma_few_shot_all_reasons_df, Gemma_few_shot_main_reasons_df = extract_reasons("Gemma", X_test_few_shot_prompt, y_pred_Gemma_few_shot, y_test, None, "few_shot")
+# Claude_few_shot_cases_df, Claude_few_shot_all_reasons_df, Claude_few_shot_main_reasons_df = extract_reasons("Claude", X_test_few_shot_prompt, y_pred_Claude_few_shot, y_test, thinking_few_shot_Claude, "few_shot")
+DeepSeek_few_shot_cases_df, DeepSeek_few_shot_all_reasons_df, DeepSeek_few_shot_main_reasons_df = extract_reasons("DeepSeek", X_test_few_shot_prompt, y_pred_DeepSeek_few_shot, y_test, thinking_few_shot_DeepSeek, "few_shot")
+# Grok_few_shot_cases_df, Grok_few_shot_all_reasons_df, Grok_few_shot_main_reasons_df = extract_reasons("Grok", X_test_few_shot_prompt, y_pred_Grok_few_shot, y_test, None, "few_shot")
 
+# GPT_4_vignette_cases_df, GPT_4_vignette_all_reasons_df, GPT_4_vignette_main_reasons_df = extract_reasons("GPT_4", X_test_vignette_prompt, y_pred_GPT_4_vignette, y_test, None, "vignette")
+# GPT_o3_vignette_cases_df, GPT_o3_vignette_all_reasons_df, GPT_o3_vignette_main_reasons_df = extract_reasons("GPT_O3", X_test_vignette_prompt, y_pred_GPT_o3_vignette, y_test, thinking_vignette_GPT_o3, "vignette")
+# # Gemini_vignette_cases_df, Gemini_vignette_all_reasons_df, Gemini_vignette_main_reasons_df = extract_reasons("Gemini", X_test_vignette_prompt, y_pred_Gemini_vignette, y_test, thinking_vignette_Gemini, "vignette")
+Gemma_vignette_cases_df, Gemma_vignette_all_reasons_df, Gemma_vignette_main_reasons_df = extract_reasons("Gemma", X_test_vignette_prompt, y_pred_Gemma_vignette, y_test, None, "vignette")
+# Claude_vignette_cases_df, Claude_vignette_all_reasons_df, Claude_vignette_main_reasons_df = extract_reasons("Claude", X_test_vignette_prompt, y_pred_Claude_vignette, y_test, thinking_vignette_Claude, "vignette")
+DeepSeek_vignette_cases_df, DeepSeek_vignette_all_reasons_df, DeepSeek_vignette_main_reasons_df = extract_reasons("DeepSeek", X_test_vignette_prompt, y_pred_DeepSeek_vignette, y_test, thinking_vignette_DeepSeek, "vignette")
+# Grok_vignette_cases_df, Grok_vignette_all_reasons_df, Grok_vignette_main_reasons_df = extract_reasons("Grok", X_test_vignette_prompt, y_pred_Grok_vignette, y_test, None, "vignette")
 
 # GPT_4_cot_cases_df, GPT_4_cot_all_reasons_df, GPT_4_cot_main_reasons_df = extract_reasons_cot("GPT_4", X_test_cot_prompt, y_pred_GPT_4_cot, y_test, explanation_cot_GPT_4, None, "cot")
 # GPT_o3_cot_cases_df, GPT_o3_cot_all_reasons_df, GPT_o3_cot_main_reasons_df = extract_reasons_cot("GPT_O3", X_test_cot_prompt, y_pred_GPT_o3_cot, y_test, explanation_cot_GPT_o3, thinking_cot_Gemini, "cot")
 # Gemini_cot_cases_df, Gemini_cot_all_reasons_df, Gemini_cot_main_reasons_df = extract_reasons_cot("Gemini", X_test_cot_prompt, y_pred_Gemini_cot, y_test, explanation_cot_Gemini, thinking_cot_Gemini, "cot")
-Gemma_cot_cases_df, Gemma_cot_all_reasons_df, Gemma_cot_main_reasons_df = extract_reasons_cot("Gemma", X_test_cot_prompt, y_pred_Gemma_cot, y_test, explanation_cot_Gemma, None, "cot")
-Claude_cot_cases_df, Claude_cot_all_reasons_df, Claude_cot_main_reasons_df = extract_reasons_cot("Claude", X_test_cot_prompt, y_pred_Claude_cot, y_test, explanation_cot_Claude, thinking_cot_Claude, "cot")
-DeepSeek_cot_cases_df, DeepSeek_cot_all_reasons_df, DeepSeek_cot_main_reasons_df = extract_reasons_cot("DeepSeek", X_test_cot_prompt, y_pred_DeepSeek_cot, y_test, explanation_cot_DeepSeek, thinking_cot_DeepSeek, "cot")
-Grok_cot_cases_df, Grok_cot_all_reasons_df, Grok_cot_main_reasons_df = extract_reasons_cot("Grok", X_test_cot_prompt, y_pred_Grok_cot, y_test, explanation_cot_Grok, None, "cot")
-
-# print("\n\n GPT 4 cases: \n",GPT_4_cot_cases_df, "\n\n GPT 4 cot all reasons: \n", GPT_4_cot_all_reasons_df, "\n\n GPT 4 main reasons: \n", GPT_4_cot_main_reasons_df, "\n\n")
-# print("\n\n GPT O3 cot all reasons: \n", GPT_o3_cot_all_reasons_df, "\n\n GPT O3 main reasons: \n", GPT_o3_cot_main_reasons_df, "\n\n")
-# print("\n\n Gemini cot all reasons: \n", Gemini_cot_all_reasons_df, "\n\n Gemini main reasons: \n", Gemini_cot_main_reasons_df, "\n\n")
-print("\n\n Gemma cot all reasons: \n", Gemma_cot_all_reasons_df, "\n\n Gemma main reasons: \n", Gemma_cot_main_reasons_df, "\n\n")
-print("\n\n Claude cot all reasons: \n", Claude_cot_all_reasons_df, "\n\n Claude main reasons: \n", Claude_cot_main_reasons_df, "\n\n")
-print("\n\n DeepSeek cot all reasons: \n", DeepSeek_cot_all_reasons_df, "\n\n DeepSeek main reasons: \n", DeepSeek_cot_main_reasons_df, "\n\n")
-print("\n\n Grok cot all reasons: \n", Grok_cot_all_reasons_df, "\n\n Grok main reasons: \n", Grok_cot_main_reasons_df, "\n\n")
+# Gemma_cot_cases_df, Gemma_cot_all_reasons_df, Gemma_cot_main_reasons_df = extract_reasons_cot("Gemma", X_test_cot_prompt, y_pred_Gemma_cot, y_test, explanation_cot_Gemma, None, "cot")
+# Claude_cot_cases_df, Claude_cot_all_reasons_df, Claude_cot_main_reasons_df = extract_reasons_cot("Claude", X_test_cot_prompt, y_pred_Claude_cot, y_test, explanation_cot_Claude, thinking_cot_Claude, "cot")
+# DeepSeek_cot_cases_df, DeepSeek_cot_all_reasons_df, DeepSeek_cot_main_reasons_df = extract_reasons_cot("DeepSeek", X_test_cot_prompt, y_pred_DeepSeek_cot, y_test, explanation_cot_DeepSeek, thinking_cot_DeepSeek, "cot")
+# Grok_cot_cases_df, Grok_cot_all_reasons_df, Grok_cot_main_reasons_df = extract_reasons_cot("Grok", X_test_cot_prompt, y_pred_Grok_cot, y_test, explanation_cot_Grok, None, "cot")

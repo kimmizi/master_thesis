@@ -1,0 +1,11 @@
+,count
+Lack of context,61
+Lack of examples,67
+Prediction with Abstention,42
+Lack of counterfactual demonstrations,24
+Lack of feedback,5
+Knowledge conflicts,15
+Lack of examplesLack of contextPrediction with Abstention,1
+Lack of contextLack of examplesPrediction with Abstention,2
+Lack of contextLack of examplesLack of counterfactual demonstrations,1
+Lack of examplesLack of counterfactual demonstrationsLack of context,1

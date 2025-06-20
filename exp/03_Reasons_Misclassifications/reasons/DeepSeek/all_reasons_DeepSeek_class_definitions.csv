@@ -1,0 +1,27 @@
+,count
+Lack of opinionbased information,53
+Knowledge conflicts,22
+Lack of context,55
+Lack of examples,35
+Lack of counterfactual demonstrations,22
+Prediction with Abstention,10
+"Knowledge conflicts
+
+Reasoning
+ Lack of context dominates as the prompt fails to specify diagnostic thresholds for FDIPS interviews",1
+leaving interpretation of standardized scores ambiguous eg,1
+"whether GSI constitutes a formal diagnosis at T
+ Lack of opinionbased information is critical",1
+as clinical judgment about symptom severity and diagnostic boundaries is absent,1
+"reducing complex assessments to quantitative thresholds
+ Lack of examples contributes by omitting reference cases demonstrating how similar symptom profiles translate to diagnoses in this specific assessment framework
+ Knowledge conflicts may exist regarding whether high GSI scores alone constitute disorder diagnosis versus requiring specific symptom patterns per diagnostic manuals",1
+Lack of contextLack of examplesLack of counterfactual demonstrationsLack of opinionbased informationKnowledge conflicts,1
+Lack of contextLack of examplesLack of counterfactual demonstrations,1
+Lack of feedback,1
+Lack of examplesLack of counterfactual demonstrationsLack of feedbackLack of opinionbased information,1
+Knowledge conflictsLack of opinionbased information,1
+Lack of contextLack of opinionbased informationKnowledge conflicts,1
+Lack of counterfactual demonstrationsLack of examplesKnowledge conflictsLack of opinionbased information,1
+Lack of contextLack of examplesLack of opinionbased informationKnowledge conflicts,1
+Lack of contextLack of opinionbased informationLack of examples,1

@@ -1,18 +1,25 @@
 ,count
-Lack of examples,47
-Lack of counterfactual demonstrations,36
-Lack of context,68
-Lack of opinionbased information,94
-Knowledge conflicts,28
-Prediction with Abstention,14
-Lack of contextLack of counterfactual demonstrationsLack of opinionbased information,1
+Lack of opinionbased information,95
+Lack of context,58
+Lack of examples,24
+Lack of counterfactual demonstrations,45
+Knowledge conflicts,38
+Prediction with Abstention,31
+"Lack of counterfactual demonstrations  
+
+Explanation  
+The misclassification primarily stems from Lack of opinionbased information",1
+as the model relied solely on quantitative symptom changes eg,1
+"large increases in GSI and dysfunctional attitudes without clinical interpretation of diagnostic thresholds or contextual significance  
+Lack of examples and Lack of counterfactual demonstrations are secondary factors",1
+as representative cases showing similar symptom fluctuations without disorder developmentor contrasting cases illustrating diagnostic boundarieswere absent in the prompt,1
 "Lack of context
 
-Reasoning
- Lack of opinionbased information is primary The prediction relied solely on quantitative data eg",1
-increased GSI without clinical interpretation of how protective factors improved selfefficacy,1
-"social support might mitigate risk despite symptom changes
- Lack of context is secondary Absence of domainspecific diagnostic thresholds eg",1
-minimum symptom durationimpairment prevented nuanced assessment of whether GSI increase constituted a disorder versus transient distress,1
-Lack of feedback,2
-Lack of contextLack of opinionbased informationLack of examples,1
+Key reasons  
+ Lack of opinionbased information dominates as the model failed to incorporate clinical judgment about protective factors high baseline selfefficacysocial support buffering deterioration  
+ Lack of counterfactual demonstrations prevented recognition that symptom increases may not cross diagnostic thresholds when starting from subclinical baselines  
+ Lack of context regarding diagnostic thresholds and resilience mechanisms in psychological assessments contributed to overreliance on symptom deltas",1
+Lack of contextLack of examplesLack of opinionbased information,1
+Lack of feedback,3
+Lack of contextLack of opinionbased information,1
+Lack of contextLack of opinionbased informationKnowledge conflicts,2
