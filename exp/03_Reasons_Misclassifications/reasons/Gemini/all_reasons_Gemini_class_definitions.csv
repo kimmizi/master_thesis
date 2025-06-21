@@ -1,0 +1,10 @@
+,count
+Lack of context,68
+Lack of examples,70
+Knowledge conflicts,44
+Lack of counterfactual demonstrations,9
+Lack of opinionbased information,38
+Lack of contextKnowledge conflictsLack of opinionbased information,1
+Prediction with Abstention,15
+Knowledge conflictsLack of opinionbased informationLack of contextLack of examples,2
+Knowledge conflictsLack of examplesPrediction with Abstention,1
