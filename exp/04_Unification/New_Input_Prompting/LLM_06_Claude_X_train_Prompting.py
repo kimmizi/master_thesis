@@ -208,27 +208,27 @@ client = anthropic.Anthropic(
 #
 #
 #
-# #### Few shot prompt ####
-#
-# y_pred_few_shot_claude = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_few_shot_prompt, desc = "Few Shot Prompting"):
-#     response = Claude_create_response(prompt, few_shot_instruction)
-#     y_pred_few_shot_claude.append(response)
-#
-#     if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
-#         save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "few_shot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
+#### Few shot prompt ####
+
+y_pred_few_shot_claude = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_few_shot_prompt, desc = "Few Shot Prompting"):
+    response = Claude_create_response(prompt, few_shot_instruction)
+    y_pred_few_shot_claude.append(response)
+
+    if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_claude, "few_shot_prompt")
 #
 #
 #
@@ -253,45 +253,45 @@ client = anthropic.Anthropic(
 #
 # # save the array to a csv file
 # save_prompt_to_csv(y_pred_vignette_claude, "vignette_prompt")
-
-
-
-### Chain-of-thought prompt ####
-
-y_pred_cot_claude = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_cot_prompt[900:], desc = "Chain-of-Thought Prompting"):
-    response = Claude_create_response(prompt, cot_instruction)
-    # y_pred_cot_claude.append(response)
-
-    try:
-        prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
-        prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
-        y_pred_cot_claude.append(prediction)
-
-    except IndexError:
-        print("\n IndexError. Retry prompting. \n")
-        response = Claude_create_response(prompt, retry_cot_instruction)
-        # y_pred_cot_claude.append(response)
-
-        try:
-            prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
-            prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
-            y_pred_cot_claude.append(prediction)
-
-        except IndexError:
-            print("\n STILL IndexError. \n")
-
-    if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
-        print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_2")
-
-end = time.time()
-calc_time(start, end, "cot_prompt_2")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_2")
+#
+#
+#
+# ### Chain-of-thought prompt ####
+#
+# y_pred_cot_claude = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_cot_prompt[900:], desc = "Chain-of-Thought Prompting"):
+#     response = Claude_create_response(prompt, cot_instruction)
+#     # y_pred_cot_claude.append(response)
+#
+#     try:
+#         prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
+#         prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
+#         y_pred_cot_claude.append(prediction)
+#
+#     except IndexError:
+#         print("\n IndexError. Retry prompting. \n")
+#         response = Claude_create_response(prompt, retry_cot_instruction)
+#         # y_pred_cot_claude.append(response)
+#
+#         try:
+#             prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
+#             prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
+#             y_pred_cot_claude.append(prediction)
+#
+#         except IndexError:
+#             print("\n STILL IndexError. \n")
+#
+#     if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
+#         print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
+#         save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_2")
+#
+# end = time.time()
+# calc_time(start, end, "cot_prompt_2")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_2")
