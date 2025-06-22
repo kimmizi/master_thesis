@@ -265,15 +265,36 @@ start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-Thought Prompting"):
-    response = Claude_create_response(prompt, simple_instruction)
-    y_pred_cot_claude.append(response)
+    response = Claude_create_response(prompt, cot_instruction)
+    # y_pred_cot_claude.append(response)
+
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
+        # clean prediction from ", *, **, \n, " ", and any other special characters
+        prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
+        y_pred_cot_claude.append(prediction)
+        print(prediction)
+
+    except IndexError:
+        print("\n IndexError. Retry prompting. \n")
+        response = Claude_create_response(prompt, retry_cot_instruction)
+        # y_pred_cot_claude.append(response)
+
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
+            prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
+            y_pred_cot_claude.append(prediction)
+            print(prediction)
+
+        except IndexError:
+            print("\n STILL IndexError. \n")
 
     if len(y_pred_cot_claude) % 50 == 0 and len(y_pred_cot_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_claude)} prompts.\n")
-        save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_3")
+        save_prompt_to_csv(y_pred_cot_claude, "cot_prompt")
 
 end = time.time()
-calc_time(start, end, "cot_prompt_3")
+calc_time(start, end, "cot_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_cot_claude, "cot_prompt_3")
+save_prompt_to_csv(y_pred_cot_claude, "cot_prompt")
