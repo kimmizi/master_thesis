@@ -1,2 +1,4 @@
 ,0
-0,"You must respond ONLY with YES or NO. If the answer is unclear or difficult to determine, choose the option that seems most likely based on the data provided. Do not output any thinking, explanation, rationale or reasoning. Example output format: YES/NO"
+0,"You must respond ONLY with YES or NO. If the answer is unclear or difficult to determine, choose the option that seems most likely based on the data provided. Do not output any thinking, explanation, rationale or reasoning. Example output format: 
+ Prediction: [YES/NO] 
+ Explanation: [Brief explanation supporting your prediction]."
