@@ -273,7 +273,6 @@ for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-Thought Prompting"):
         # clean prediction from ", *, **, \n, " ", and any other special characters
         prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
         y_pred_cot_claude.append(prediction)
-        print(prediction)
 
     except IndexError:
         print("\n IndexError. Retry prompting. \n")
@@ -284,7 +283,6 @@ for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-Thought Prompting"):
             prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
             prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
             y_pred_cot_claude.append(prediction)
-            print(prediction)
 
         except IndexError:
             print("\n STILL IndexError. \n")

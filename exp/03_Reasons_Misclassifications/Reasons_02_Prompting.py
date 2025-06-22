@@ -42,7 +42,7 @@ instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.c
 instruction_reason = instruction_reason_df["0"].iloc[0]
 
 # import all y_pred
-y_pred_GPT_4_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_simple_prompt.csv", sep = ",")
+y_pred_GPT_4_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_4_simple_prompt.csv", sep =",")
 y_pred_GPT_o3_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_simple_prompt.csv", sep = ",")
 y_pred_Gemini_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_simple_prompt.csv", sep = ",")
 y_pred_Gemma_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_simple_prompt.csv", sep = ",")
@@ -50,7 +50,7 @@ y_pred_Claude_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Claud
 y_pred_DeepSeek_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_simple_prompt.csv", sep = ",")
 y_pred_Grok_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_simple_prompt.csv", sep = ",")
 
-y_pred_GPT_4_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_class_definitions_prompt.csv", sep = ",")
+y_pred_GPT_4_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_4_class_definitions_prompt.csv", sep =",")
 y_pred_GPT_o3_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_class_definitions_prompt.csv", sep = ",")
 y_pred_Gemini_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_class_definitions_prompt.csv", sep = ",")
 y_pred_Gemma_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_class_definitions_prompt.csv", sep = ",")
@@ -58,7 +58,7 @@ y_pred_Claude_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y
 y_pred_DeepSeek_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_class_definitions_prompt.csv", sep = ",")
 y_pred_Grok_class_definitions_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_grok_class_definitions_prompt.csv", sep = ",")
 
-y_pred_GPT_4_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_profiled_simple_prompt.csv", sep = ",")
+y_pred_GPT_4_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_4_profiled_simple_prompt.csv", sep =",")
 y_pred_GPT_o3_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_profiled_simple_prompt.csv", sep = ",")
 y_pred_Gemini_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_profiled_simple_prompt.csv", sep = ",")
 y_pred_Gemma_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_profiled_simple_prompt.csv", sep = ",")
@@ -66,7 +66,7 @@ y_pred_Claude_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_p
 y_pred_DeepSeek_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_profiled_simple_prompt.csv", sep = ",")
 y_pred_Grok_profiled_simple_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_profiled_simple_prompt.csv", sep = ",")
 
-y_pred_GPT_4_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_few_shot_prompt.csv", sep = ",")
+y_pred_GPT_4_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_4_few_shot_prompt.csv", sep =",")
 y_pred_GPT_o3_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_few_shot_prompt.csv", sep = ",")
 y_pred_Gemini_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_few_shot_prompt.csv", sep = ",")
 y_pred_Gemma_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_few_shot_prompt.csv", sep = ",")
@@ -74,7 +74,7 @@ y_pred_Claude_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Cla
 y_pred_DeepSeek_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_few_shot_prompt.csv", sep = ",")
 y_pred_Grok_few_shot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_few_shot_prompt.csv", sep = ",")
 
-y_pred_GPT_4_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_vignette_prompt.csv", sep = ",")
+y_pred_GPT_4_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_4_vignette_prompt.csv", sep =",")
 y_pred_GPT_o3_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_vignette_prompt.csv", sep = ",")
 y_pred_Gemini_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_vignette_prompt.csv", sep = ",")
 y_pred_Gemma_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_vignette_prompt.csv", sep = ",")
@@ -82,7 +82,7 @@ y_pred_Claude_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Claude/y_pred_Cla
 y_pred_DeepSeek_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deeps_vignette_prompt.csv", sep = ",")
 y_pred_Grok_vignette_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_vignette_prompt.csv", sep = ",")
 
-y_pred_GPT_4_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_cot_prompt.csv", sep = ",")
+y_pred_GPT_4_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_4_cot_prompt.csv", sep =",")
 y_pred_GPT_o3_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/GPT/y_pred_GPT_o3_cot_prompt.csv", sep = ",")
 y_pred_Gemini_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemini/y_pred_Gemini_cot_prompt.csv", sep = ",")
 y_pred_Gemma_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Gemma/y_pred_Gemma_cot_prompt.csv", sep = ",")
