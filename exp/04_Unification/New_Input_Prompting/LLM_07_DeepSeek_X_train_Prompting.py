@@ -192,27 +192,27 @@ client = OpenAI(
 #
 #
 #
-# #### Few shot prompt ####
-#
-# y_pred_few_shot_deeps = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_few_shot_prompt[850:], desc = "Few shot prompting", unit = "prompt"):
-#     response = DeepSeek_create_response(prompt, few_shot_instruction)
-#     y_pred_few_shot_deeps.append(response)
-#
-#     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
-#         save_prompt_to_csv(y_pred_few_shot_deeps, "few_shot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "few_shot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_few_shot_deeps, "few_shot_prompt")
+#### Few shot prompt ####
+
+y_pred_few_shot_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_few_shot_prompt[150:], desc = "Few shot prompting", unit = "prompt"):
+    response = DeepSeek_create_response(prompt, few_shot_instruction)
+    y_pred_few_shot_deeps.append(response)
+
+    if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
+        save_prompt_to_csv(y_pred_few_shot_deeps, "few_shot_prompt_2")
+
+end = time.time()
+calc_time(start, end, "few_shot_prompt_2")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_few_shot_deeps, "few_shot_prompt_2")
 #
 #
 #
@@ -237,45 +237,45 @@ client = OpenAI(
 #
 # # save the array to a csv file
 # save_prompt_to_csv(y_pred_vignette_deeps, "vignette_prompt")
-
-
-
-### Chain-of-thought prompt ####
-y_pred_cot_deeps = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
-    response = DeepSeek_create_response(prompt, cot_instruction)
-    # y_pred_cot_deeps.append(response)
-    # print(response)
-
-    try:
-        prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
-        prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
-        y_pred_cot_deeps.append(prediction)
-
-    except IndexError:
-        print("\n IndexError. Retry prompting. \n")
-        response = DeepSeek_create_response(prompt, retry_cot_instruction)
-        # y_pred_cot_claude.append(response)
-
-        try:
-            prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
-            prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
-            y_pred_cot_deeps.append(prediction)
-
-        except IndexError:
-            print("\n STILL IndexError. \n")
-
-    if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
-        print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_cot_deeps, "cot_prompt")
-
-end = time.time()
-calc_time(start, end, "cot_prompt")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_cot_deeps, "cot_prompt")
+#
+#
+#
+# ### Chain-of-thought prompt ####
+# y_pred_cot_deeps = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
+#     response = DeepSeek_create_response(prompt, cot_instruction)
+#     # y_pred_cot_deeps.append(response)
+#     # print(response)
+#
+#     try:
+#         prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
+#         prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
+#         y_pred_cot_deeps.append(prediction)
+#
+#     except IndexError:
+#         print("\n IndexError. Retry prompting. \n")
+#         response = DeepSeek_create_response(prompt, retry_cot_instruction)
+#         # y_pred_cot_claude.append(response)
+#
+#         try:
+#             prediction = re.findall(r'Prediction: (.*)', response)[0].strip()
+#             prediction = re.sub(r'[\n\r\"\'\*\*]', '', prediction).strip()
+#             y_pred_cot_deeps.append(prediction)
+#
+#         except IndexError:
+#             print("\n STILL IndexError. \n")
+#
+#     if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
+#         print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
+#         save_prompt_to_csv(y_pred_cot_deeps, "cot_prompt")
+#
+# end = time.time()
+# calc_time(start, end, "cot_prompt")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_cot_deeps, "cot_prompt")

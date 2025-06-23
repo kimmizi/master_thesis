@@ -110,79 +110,79 @@ client = genai.Client(
     api_key = os.environ.get("GEMINI_API_KEY")
 )
 
-#
-# #### Simple prompt ####
-#
-# y_pred_simple_gemma = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting"):
-#     response = Gemma_create_response(prompt, simple_instruction)
-#     y_pred_simple_gemma.append(response)
-#
-#     if len(y_pred_simple_gemma) % 50 == 0 and len(y_pred_simple_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_simple_gemma)} prompts.\n")
-#         save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
-#
-#
-#
-# #### Class definition prompt ####
-#
-# y_pred_class_def_gemma = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definition prompting"):
-#     response = Gemma_create_response(prompt, class_definitions_instruction)
-#     y_pred_class_def_gemma.append(response)
-#
-#     if len(y_pred_class_def_gemma) % 50 == 0 and len(y_pred_class_def_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_gemma)} prompts.\n")
-#         save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt_2")
-#
-# end = time.time()
-# calc_time(start, end, "class_definitions_prompt_2")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt_2")
-#
-#
-#
-# #### Profiled simple prompt ####
-#
-# y_pred_profiled_simple_gemma = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting"):
-#     response = Gemma_create_response(prompt, profiled_simple_instruction)
-#     y_pred_profiled_simple_gemma.append(response)
-#
-#     if len(y_pred_profiled_simple_gemma) % 50 == 0 and len(y_pred_profiled_simple_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_gemma)} prompts.\n")
-#         save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "profiled_simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
-#
-#
-#
+
+#### Simple prompt ####
+
+y_pred_simple_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting"):
+    response = Gemma_create_response(prompt, simple_instruction)
+    y_pred_simple_gemma.append(response)
+
+    if len(y_pred_simple_gemma) % 50 == 0 and len(y_pred_simple_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_simple_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
+
+end = time.time()
+calc_time(start, end, "simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
+
+
+
+#### Class definition prompt ####
+
+y_pred_class_def_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definition prompting"):
+    response = Gemma_create_response(prompt, class_definitions_instruction)
+    y_pred_class_def_gemma.append(response)
+
+    if len(y_pred_class_def_gemma) % 50 == 0 and len(y_pred_class_def_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt_2")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt_2")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt_2")
+
+
+
+#### Profiled simple prompt ####
+
+y_pred_profiled_simple_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_profiled_simple_prompt, desc = "Profiled simple prompting"):
+    response = Gemma_create_response(prompt, profiled_simple_instruction)
+    y_pred_profiled_simple_gemma.append(response)
+
+    if len(y_pred_profiled_simple_gemma) % 50 == 0 and len(y_pred_profiled_simple_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
+
+end = time.time()
+calc_time(start, end, "profiled_simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
+
+
+
 #### Few shot prompt ####
 
 y_pred_few_shot_gemma = []
@@ -204,51 +204,51 @@ calc_time(start, end, "few_shot_prompt")
 
 # save the array to a csv file
 save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
-#
-#
-#
-# #### Vignette prompt ####
-#
-# y_pred_vignette_gemma = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
-#     response = Gemma_create_response(prompt, vignette_instruction)
-#     y_pred_vignette_gemma.append(response)
-#
-#     if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "vignette_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
-#
-#
-#
-# #### Chain-of-thought prompt ####
-#
-# y_pred_cot_gemma = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting"):
-#     response = Gemma_create_response(prompt, simple_instruction)
-#     y_pred_cot_gemma.append(response)
-#
-#     if len(y_pred_cot_gemma) % 50 == 0 and len(y_pred_cot_gemma) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_gemma)} prompts.\n")
-#         save_prompt_to_csv(y_pred_cot_gemma, "cot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "cot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_cot_gemma, "cot_prompt")
+
+
+
+#### Vignette prompt ####
+
+y_pred_vignette_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_vignette_prompt, desc = "Vignette prompting"):
+    response = Gemma_create_response(prompt, vignette_instruction)
+    y_pred_vignette_gemma.append(response)
+
+    if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
+
+
+
+#### Chain-of-thought prompt ####
+
+y_pred_cot_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting"):
+    response = Gemma_create_response(prompt, simple_instruction)
+    y_pred_cot_gemma.append(response)
+
+    if len(y_pred_cot_gemma) % 50 == 0 and len(y_pred_cot_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_cot_gemma, "cot_prompt")
+
+end = time.time()
+calc_time(start, end, "cot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_cot_gemma, "cot_prompt")
