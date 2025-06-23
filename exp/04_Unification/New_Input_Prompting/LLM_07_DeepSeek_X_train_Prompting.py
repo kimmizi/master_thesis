@@ -68,16 +68,16 @@ def DeepSeek_create_response(prompt, instruction):
         stream = False
     )
 
-    # if response.choices[0].message.content.strip() not in ("YES", "NO"):
-    #     print("\n Invalid output. Retry prompting. \n")
-    #     response = client.chat.completions.create(
-    #         model = model_deeps,
-    #         messages = [
-    #             {"role": "system", "content": retry_instruction},
-    #             {"role": "user", "content": prompt},
-    #         ],
-    #         stream = False
-    #     )
+    if response.choices[0].message.content.strip() not in ("YES", "NO"):
+        print("\n Invalid output. Retry prompting. \n")
+        response = client.chat.completions.create(
+            model = model_deeps,
+            messages = [
+                {"role": "system", "content": retry_instruction},
+                {"role": "user", "content": prompt},
+            ],
+            stream = False
+        )
 
     resp = response.choices[0].message.content.strip()
 
