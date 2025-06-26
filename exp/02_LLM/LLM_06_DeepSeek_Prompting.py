@@ -10,9 +10,7 @@ import time
 import re
 from tqdm import tqdm
 from openai import OpenAI
-from sklearn.model_selection import train_test_split
 
-data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep =",", low_memory = False)
 
 # import prompts for all test data
 X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
@@ -59,23 +57,6 @@ retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
 instruction_reason = instruction_reason_df["0"].iloc[0]
 
-# predictors
-X = data_change
-X = X.drop(["hpi"], axis = 1)
-
-# target
-y = data_change["hpi"]
-
-# train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42, stratify = y)
-
-print("LLMs \n",
-      "X_train shape: ", X_train.shape, round(X_train.shape[0]/len(X), 2), "\n",
-      "X_test shape: ", X_test.shape, round(X_test.shape[0]/len(X), 2),  "\n",
-      "y_train shape: ", y_train.shape, round(y_train.shape[0]/len(y), 2), "\n",
-      "y_test shape: ", y_test.shape, round(y_test.shape[0]/len(y), 2), "\n")
-
-
 
 #### Helper functions ####
 
@@ -120,7 +101,7 @@ def save_prompt_to_csv(response_array, thinking_array, filename):
         "y_pred": response_array_val,
         "thinking": thinking_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
 
 
 def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
@@ -138,7 +119,7 @@ def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, fi
         "thinking": thinking_array,
         "explanation": explanation_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -148,30 +129,12 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/DeepSeek/time_deeps_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"times_LLMs/DeepSeek/time_deeps_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
 
 # **Off-Peak Discounts**：DeepSeek-R1 with 75% off at off-peak hours (16:30-00:30 UTC daily)
-
-#### 1 Testing prompting ####
-
-# client = OpenAI(api_key = os.environ.get("DeepSeek_API_Key"), base_url = "https://api.deepseek.com")
-#
-# response = client.chat.completions.create(
-#     model = "deepseek-reasoner",
-#     messages = [
-#         {"role": "system", "content": simple_instruction},
-#         {"role": "user", "content": X_test_simple_prompt[0]},
-#     ],
-#     stream = False
-# )
-#
-# print(response.choices[0].message.content)
-#
-# response.choices[0].message.reasoning_content
-
 
 
 #### 2 Prompting with DeepSeek Reasoning R1 ####

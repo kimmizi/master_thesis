@@ -9,12 +9,8 @@ import pandas as pd
 import numpy as np
 import time
 import re
-import json
 from tqdm import tqdm
 from openai import OpenAI
-from sklearn.model_selection import train_test_split
-
-data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep =",", low_memory = False)
 
 # import prompts for all test data
 X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
@@ -50,22 +46,6 @@ retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
 instruction_reason = instruction_reason_df["0"].iloc[0]
-
-# predictors
-X = data_change
-X = X.drop(["hpi"], axis = 1)
-
-# target
-y = data_change["hpi"]
-
-# train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42, stratify = y)
-
-print("LLMs \n",
-      "X_train shape: ", X_train.shape, round(X_train.shape[0]/len(X), 2), "\n",
-      "X_test shape: ", X_test.shape, round(X_test.shape[0]/len(X), 2),  "\n",
-      "y_train shape: ", y_train.shape, round(y_train.shape[0]/len(y), 2), "\n",
-      "y_test shape: ", y_test.shape, round(y_test.shape[0]/len(y), 2), "\n")
 
 
 
@@ -133,7 +113,7 @@ def save_prompt_to_csv(response_array, explanation_array, thinking_array, filena
         "explanation": explanation_array,
         "thinking": thinking_array
     })
-    df.to_csv(f"../exp/y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
+    df.to_csv(f"y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
 
 
 def calc_time(start, end, filename):
@@ -143,7 +123,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"../exp/times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
+    time_df.to_csv(f"times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
