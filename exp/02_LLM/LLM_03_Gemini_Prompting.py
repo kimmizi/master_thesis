@@ -21,6 +21,8 @@ X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.cs
 X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
 X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
 X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
+X_test_few_shot_prompt_20_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_20.csv", sep=",", index_col=0)
+X_test_few_shot_prompt_50_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_50.csv", sep=",", index_col=0)
 X_test_few_shot_prompt_100_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_100.csv", sep=",", index_col=0)
 X_test_few_shot_prompt_200_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_200.csv", sep=",", index_col=0)
 X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
@@ -31,6 +33,8 @@ X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
 X_test_class_definitions_prompt = X_test_class_definitions_prompt_df.values.flatten()
 X_test_profiled_simple_prompt = X_test_profiled_simple_prompt_df.values.flatten()
 X_test_few_shot_prompt = X_test_few_shot_prompt_df.values.flatten()
+X_test_few_shot_prompt_20 = X_test_few_shot_prompt_20_df.values.flatten()
+X_test_few_shot_prompt_50 = X_test_few_shot_prompt_50_df.values.flatten()
 X_test_few_shot_prompt_100 = X_test_few_shot_prompt_100_df.values.flatten()
 X_test_few_shot_prompt_200 = X_test_few_shot_prompt_200_df.values.flatten()
 X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
@@ -249,7 +253,7 @@ thinking_few_shot_gemini = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt_100[70:], desc = "Few-shot prompting"):
+for prompt in tqdm(X_test_few_shot_prompt_20, desc = "Few-shot prompting"):
     response, thinking = Gemini_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_gemini.append(response)
     thinking_few_shot_gemini.append(thinking)
@@ -257,13 +261,13 @@ for prompt in tqdm(X_test_few_shot_prompt_100[70:], desc = "Few-shot prompting")
 
     if len(y_pred_few_shot_gemini) % 10 == 0 and len(y_pred_few_shot_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_100_2")
+        save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_20")
 
 end = time.time()
-calc_time(start, end, "few_shot_prompt_100_2")
+calc_time(start, end, "few_shot_prompt_20")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_100_2")
+save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_20")
 
 
 
