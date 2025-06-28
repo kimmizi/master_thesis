@@ -244,6 +244,7 @@ client = genai.Client(
 
 
 
+
 #### Few shot prompt ####
 
 y_pred_few_shot_gemini = []
@@ -253,7 +254,7 @@ thinking_few_shot_gemini = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt_20, desc = "Few-shot prompting"):
+for prompt in tqdm(X_test_few_shot_prompt_50[190:], desc = "Few-shot prompting"):
     response, thinking = Gemini_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_gemini.append(response)
     thinking_few_shot_gemini.append(thinking)
@@ -261,13 +262,13 @@ for prompt in tqdm(X_test_few_shot_prompt_20, desc = "Few-shot prompting"):
 
     if len(y_pred_few_shot_gemini) % 10 == 0 and len(y_pred_few_shot_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_20")
+        save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_50_2")
 
 end = time.time()
-calc_time(start, end, "few_shot_prompt_20")
+calc_time(start, end, "few_shot_prompt_50_2")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_20")
+save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_prompt_50_2")
 
 
 
