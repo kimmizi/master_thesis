@@ -23,6 +23,7 @@ X_test_few_shot_prompt_100_df = pd.read_csv("../../dat/prompts/X_test_few_shot_p
 X_test_few_shot_prompt_200_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_200.csv", sep=",", index_col=0)
 X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
 X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
+X_test_pred_def_prompt_df = pd.read_csv("../../dat/prompts/X_test_pred_def_prompt.csv", sep =",", index_col = 0)
 
 # convert to arrays
 X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
@@ -35,6 +36,7 @@ X_test_few_shot_prompt_100 = X_test_few_shot_prompt_100_df.values.flatten()
 X_test_few_shot_prompt_200 = X_test_few_shot_prompt_200_df.values.flatten()
 X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
 X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
+X_test_pred_def_prompt = X_test_pred_def_prompt_df.values.flatten()
 
 # import instructions
 simple_instruction_df = pd.read_csv("../../dat/instructions/simple_instruction.csv", sep =",", index_col = 0)
@@ -43,6 +45,7 @@ profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_si
 few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
 vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
 cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
+pred_def_instruction_df = pd.read_csv("../../dat/instructions/pred_def_instruction.csv", sep =",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -51,19 +54,15 @@ profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
 few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
 vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
+pred_def_instruction = pred_def_instruction_df["0"].iloc[0]
 
 # import retry instructions when output format was wrong
 retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
 retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
-# import instruction for reason of misclassification
-instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
-
 # convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
-
-instruction_reason = instruction_reason_df["0"].iloc[0]
 
 
 
@@ -214,34 +213,34 @@ client = genai.Client(
 #
 # # save the array to a csv file
 # save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
-
-
-
-#### Few shot prompt ####
-
-y_pred_few_shot_gemma = []
-
-# measure time in seconds
-start = time.time()
-
-# iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt_20, desc = "Few shot prompting"):
-    response = Gemma_create_response(prompt, few_shot_instruction)
-    y_pred_few_shot_gemma.append(response)
-    # print(response)
-
-    if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
-        print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt_20")
-
-end = time.time()
-calc_time(start, end, "few_shot_prompt_20")
-
-# save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt_20")
-
-
-
+#
+#
+#
+# #### Few shot prompt ####
+#
+# y_pred_few_shot_gemma = []
+#
+# # measure time in seconds
+# start = time.time()
+#
+# # iterate over the test set and save the response for each prompt in an array
+# for prompt in tqdm(X_test_few_shot_prompt_20, desc = "Few shot prompting"):
+#     response = Gemma_create_response(prompt, few_shot_instruction)
+#     y_pred_few_shot_gemma.append(response)
+#     # print(response)
+#
+#     if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
+#         print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
+#         save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt_20")
+#
+# end = time.time()
+# calc_time(start, end, "few_shot_prompt_20")
+#
+# # save the array to a csv file
+# save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt_20")
+#
+#
+#
 # #### Vignette prompt ####
 #
 # y_pred_vignette_gemma = []
@@ -317,3 +316,27 @@ save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt_20")
 #
 # # save the array to a csv file
 # save_prompt_to_csv_cot(y_pred_cot_gemma, explanation_cot_gemma, "cot_prompt")
+
+
+#### Predictors Definitions prompt ####
+
+y_pred_pred_def_gemma = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_pred_def_prompt, desc = "Predictor Definitions prompting"):
+    response = Gemma_create_response(prompt, pred_def_instruction)
+    y_pred_pred_def_gemma.append(response)
+    # print(response)
+
+    if len(y_pred_pred_def_gemma) % 50 == 0 and len(y_pred_pred_def_gemma) > 0:
+        print(f"\n\nProcessed {len(y_pred_pred_def_gemma)} prompts.\n")
+        save_prompt_to_csv(y_pred_pred_def_gemma, "pred_def_prompt")
+
+end = time.time()
+calc_time(start, end, "pred_def_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_pred_def_gemma, "pred_def_prompt")
