@@ -241,7 +241,7 @@ thinking_few_shot_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt_100, desc = "Few shot prompting", unit = "prompt"):
+for prompt in tqdm(X_test_few_shot_prompt_100[50:], desc = "Few shot prompting", unit = "prompt"):
     response, thinking = DeepSeek_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_deeps.append(response)
     thinking_few_shot_deeps.append(thinking)
@@ -249,13 +249,13 @@ for prompt in tqdm(X_test_few_shot_prompt_100, desc = "Few shot prompting", unit
 
     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_100")
+        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_100_2")
 
 end = time.time()
-calc_time(start, end, "few_shot_prompt_100")
+calc_time(start, end, "few_shot_prompt_100_2")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_100")
+save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_100_2")
 
 
 
