@@ -69,7 +69,7 @@ retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 #### Helper functions ####
 
 def Gemma_create_response(prompt, instruction):
-    # time.sleep(0)  # sleep for few seconds to avoid rate limiting
+    time.sleep(4)  # sleep for few seconds to avoid rate limiting
     response = client.models.generate_content(
         model = model_gemma,
         contents = [instruction, prompt]
@@ -326,17 +326,17 @@ y_pred_pred_def_gemma = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_pred_def_prompt, desc = "Predictor Definitions prompting"):
+for prompt in tqdm(X_test_pred_def_prompt[50:], desc = "Predictor Definitions prompting"):
     response = Gemma_create_response(prompt, pred_def_instruction)
     y_pred_pred_def_gemma.append(response)
     # print(response)
 
     if len(y_pred_pred_def_gemma) % 50 == 0 and len(y_pred_pred_def_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_pred_def_gemma)} prompts.\n")
-        save_prompt_to_csv(y_pred_pred_def_gemma, "pred_def_prompt")
+        save_prompt_to_csv(y_pred_pred_def_gemma, "pred_def_prompt_2")
 
 end = time.time()
-calc_time(start, end, "pred_def_prompt")
+calc_time(start, end, "pred_def_prompt_2")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_pred_def_gemma, "pred_def_prompt")
+save_prompt_to_csv(y_pred_pred_def_gemma, "pred_def_prompt_2")
