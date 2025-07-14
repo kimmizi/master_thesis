@@ -8,7 +8,7 @@ This thesis evaluated ML algorithms, LLMs, and unification approaches for foreca
 
 ## Structure
 
-You will find the data I used (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) and the prompts I build in the directory `.\dat`, the experiments I conducted in `.\exp` and the report and figures in `.\doc`.
+You will find the experiments I conducted in `.\exp`, the data I used (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) and the prompts I build in the directory `.\dat`, and the report and figures in `.\doc`.
 
 ---
 
@@ -16,16 +16,17 @@ You will find the data I used (Dresden Predictor Study (DPS), a study about pred
 
 I compared **six ML models**, including linear, neural, probabilistic, tree-based, kernel-based and distance-based models, **six prompting strategies** across **six state-of-the-art LLMs** and **three unification approaches** combining ML and LLM strengths.
 
-
 <p align>
-  <img src = "doc/fig/00_methods/table_methods.png" height = "300">
+  <img src = "doc/figs/00_methods/table_methods.png" height = "300">
 </p>
 
 ---
 
 ## Results
 
-All experiments can be found in `.\exp`. `Documentation_RL_Project.ipynb` is a documentation of my experiments. `comparison_models.py` is a script for comparing the five different PPO modifications, `train.py` is a training loop for training the final model, `hyperparam_search.py` is a script for hyperparameter tuning, and `run_client.py` is a script used for the final tournament.
+All experiments can be found in `.\exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Reasons_Misclassifications` contains the prompting for reasons of misclassifications, and `04_Unification` contains the unification approaches. 
+
+is a documentation of my experiments. `comparison_models.py` is a script for comparing the five different PPO modifications, `train.py` is a training loop for training the final model, `hyperparam_search.py` is a script for hyperparameter tuning, and `run_client.py` is a script used for the final tournament.
 
 
 ---
