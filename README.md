@@ -18,7 +18,7 @@ I compared **six ML models**, including linear, neural, probabilistic, tree-base
 
 
 <p align>
-  <img src = "doc/fig/00_methods/table_methods.png" height = "300">
+  <img src = "doc/figs/00_methods/table_methods.png" height = "300">
 </p>
 
 ---
