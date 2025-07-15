@@ -30,10 +30,15 @@ I compared **six ML models**, including linear, neural, probabilistic, tree-base
 
 ## Results
 
-All experiments can be found in `.\exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Unification` contains the unification approaches, and `04_Reasons_Misclassifications` contains the prompting for reasons of misclassifications. 
+All experiments can be found in `.\exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Unification` contains the unification approaches and their predictions, and `04_Reasons_Misclassifications` contains the prompting for reasons of misclassifications. 
 
 
 
 ---
 
 ## Main Literature
+
+Tavarez-Rodríguez, J., Sánchez-Vega, F., Rosales-Pérez, A., & López-Monroy, A. P. (2024, September 09–12). Better together: Llm and neural classification transformers to detect sexism. In Clef 2024: Conference and labs of the evaluation forum. Grenoble, France: CEUR Workshop Proceedings. Retrieved from http://ceur-ws.org/Vol-XXX/ (© 2024 Copyright for this paper by
+its authors. Use permitted under Creative Commons License Attribution 4.0 International (CC BY 4.0))
+
+Trumpf, J., Margraf, J., Vriends, N., Meyer, A. H., & Becker, E. S. (2010). Predictors of specific phobia in young women: A prospective community study. Journal of Anxiety Disorders, 24 (1), 87-93. Retrieved from https://www.sciencedirect.com/science/article/pii/S0887618509001844 doi:https://doi.org/10.1016/j.janxdis.2009.09.002
