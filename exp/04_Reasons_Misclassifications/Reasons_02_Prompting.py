@@ -91,7 +91,6 @@ y_pred_DeepSeek_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/DeepSeek/y_pred_deep
 y_pred_Grok_cot_df = pd.read_csv("../02_LLM/y_pred_LLMs/Grok/y_pred_Grok_cot_prompt.csv", sep = ",")
 
 
-
 # convert to arrays
 y_pred_GPT_4_simple = y_pred_GPT_4_simple_df["y_pred"].values.flatten()
 y_pred_GPT_o3_simple = y_pred_GPT_o3_simple_df["y_pred"].values.flatten()
@@ -178,8 +177,6 @@ explanation_cot_Gemma = y_pred_Gemma_cot_df["explanation"].values.flatten()
 explanation_cot_Claude = y_pred_Claude_cot_df["cot"].values.flatten()
 explanation_cot_DeepSeek = y_pred_DeepSeek_cot_df["explanation"].values.flatten()
 explanation_cot_Grok = y_pred_Grok_cot_df["explanation"].values.flatten()
-
-
 
 # predictors
 X = data_change
@@ -500,22 +497,8 @@ def extract_reasons_cot(model, X_test, y_pred_model, y_test, explanation, thinki
     return cases_df, reasons_df, main_reasons_df
 
 
-#### 1 Identify misclassified cases ####
 
-# # indentify misclassified cases by comparing y_pred and y_test, save index
-# misclassified_indices_GPT = np.where(y_pred_GPT_4_simple != y_test)[0]
-# misclassified_indices_GPT_o3 = np.where(y_pred_GPT_o3_simple != y_test)[0]
-# misclassified_indices_Gemini = np.where(y_pred_Gemini_simple != y_test)[0]
-# misclassified_indices_Gemma = np.where(y_pred_Gemma_simple != y_test)[0]
-# misclassified_indices_Claude = np.where(y_pred_Claude_simple != y_test)[0]
-# misclassified_indices_DeepSeek = np.where(y_pred_DeepSeek_simple != y_test)[0]
-# misclassified_indices_Grok = np.where(y_pred_Grok_simple != y_test)[0]
-
-
-
-
-
-### 2 Get reasons for misclassifications ###
+### 1 Get reasons for misclassifications ###
 
 GPT_4_simple_cases_df, GPT_4_simple_all_reasons_df, GPT_4_simple_main_reasons_df = extract_reasons("GPT_4", X_test_simple_prompt, y_pred_GPT_4_simple, y_test, None, "simple")
 GPT_o3_simple_cases_df, GPT_o3_simple_all_reasons_df, GPT_o3_simple_main_reasons_df = extract_reasons("GPT_O3", X_test_simple_prompt, y_pred_GPT_o3_simple, y_test, thinking_simple_GPT_o3, "simple")
