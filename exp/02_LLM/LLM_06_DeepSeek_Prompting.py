@@ -11,7 +11,6 @@ import re
 from tqdm import tqdm
 from openai import OpenAI
 
-
 # import prompts for all test data
 X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
 X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
@@ -39,6 +38,8 @@ profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_si
 few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
 vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
 cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -47,19 +48,9 @@ profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
 few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
 vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
-
-# import retry instructions when output format was wrong
-retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
-
-# import instruction for reason of misclassification
-instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
-
-# convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
-instruction_reason = instruction_reason_df["0"].iloc[0]
 
 
 #### Helper functions ####
@@ -90,7 +81,6 @@ def DeepSeek_create_response(prompt, instruction):
 
     return resp, thinking
 
-
 def save_prompt_to_csv(response_array, thinking_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
@@ -106,7 +96,6 @@ def save_prompt_to_csv(response_array, thinking_array, filename):
         "thinking": thinking_array
     })
     df.to_csv(f"y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
-
 
 def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
     # value counts for array
@@ -125,7 +114,6 @@ def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, fi
     })
     df.to_csv(f"y_pred_LLMs/DeepSeek/y_pred_deeps_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -133,13 +121,12 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"times_LLMs/DeepSeek/time_deeps_{filename}.csv", sep = ",", index = False)
+    # time_df.to_csv(f"times_LLMs/DeepSeek/time_deeps_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
 
 # **Off-Peak Discounts**：DeepSeek-R1 with 75% off at off-peak hours (16:30-00:30 UTC daily)
-
 
 #### 2 Prompting with DeepSeek Reasoning R1 ####
 
@@ -151,84 +138,84 @@ client = OpenAI(
 )
 
 
-# #### Simple prompt ####
-#
-# y_pred_simple_deeps = []
-# thinking_simple_deeps = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prompt"):
-#     response, thinking = DeepSeek_create_response(prompt, simple_instruction)
-#     y_pred_simple_deeps.append(response)
-#     thinking_simple_deeps.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
-#         save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
-#
-#
-#
-# #### Class definition prompt ####
-#
-# y_pred_class_def_deeps = []
-# thinking_class_def_deeps = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
-#     response, thinking = DeepSeek_create_response(prompt, class_definitions_instruction)
-#     y_pred_class_def_deeps.append(response)
-#     thinking_class_def_deeps.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
-#         save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_definitions_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "class_definitions_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_definitions_prompt")
-#
-#
-#
-# #### Profiled simple prompt ####
-#
-# y_pred_profiled_simple_deeps = []
-# thinking_profiled_simple_deeps = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
-#     response, thinking = DeepSeek_create_response(prompt, profiled_simple_instruction)
-#     y_pred_profiled_simple_deeps.append(response)
-#     thinking_profiled_simple_deeps.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_profiled_simple_deeps) % 50 == 0 and len(y_pred_profiled_simple_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_profiled_simple_deeps)} prompts.\n")
-#         save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps, "profiled_simple_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "profiled_simple_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps, "profiled_simple_prompt")
+#### Simple prompt ####
+
+y_pred_simple_deeps = []
+thinking_simple_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prompt"):
+    response, thinking = DeepSeek_create_response(prompt, simple_instruction)
+    y_pred_simple_deeps.append(response)
+    thinking_simple_deeps.append(thinking)
+    # print(response)
+
+    if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
+        save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
+
+end = time.time()
+calc_time(start, end, "simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
+
+
+
+#### Class definition prompt ####
+
+y_pred_class_def_deeps = []
+thinking_class_def_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions prompting", unit = "prompt"):
+    response, thinking = DeepSeek_create_response(prompt, class_definitions_instruction)
+    y_pred_class_def_deeps.append(response)
+    thinking_class_def_deeps.append(thinking)
+    # print(response)
+
+    if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
+        save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_definitions_prompt")
+
+end = time.time()
+calc_time(start, end, "class_definitions_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_definitions_prompt")
+
+
+
+#### Profiled simple prompt ####
+
+y_pred_profiled_simple_deeps = []
+thinking_profiled_simple_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting", unit = "prompt"):
+    response, thinking = DeepSeek_create_response(prompt, profiled_simple_instruction)
+    y_pred_profiled_simple_deeps.append(response)
+    thinking_profiled_simple_deeps.append(thinking)
+    # print(response)
+
+    if len(y_pred_profiled_simple_deeps) % 50 == 0 and len(y_pred_profiled_simple_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_profiled_simple_deeps)} prompts.\n")
+        save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps, "profiled_simple_prompt")
+
+end = time.time()
+calc_time(start, end, "profiled_simple_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps, "profiled_simple_prompt")
 
 
 
@@ -241,7 +228,7 @@ thinking_few_shot_deeps = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt_100[50:], desc = "Few shot prompting", unit = "prompt"):
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting", unit = "prompt"):
     response, thinking = DeepSeek_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_deeps.append(response)
     thinking_few_shot_deeps.append(thinking)
@@ -249,98 +236,98 @@ for prompt in tqdm(X_test_few_shot_prompt_100[50:], desc = "Few shot prompting",
 
     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
-        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_100_2")
+        save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 
 end = time.time()
-calc_time(start, end, "few_shot_prompt_100_2")
+calc_time(start, end, "few_shot_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt_100_2")
+save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_prompt")
 
 
 
-# #### Vignette prompt ####
-#
-# y_pred_vignette_deeps = []
-# thinking_vignette_deeps = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
-#     response, thinking = DeepSeek_create_response(prompt, vignette_instruction)
-#     y_pred_vignette_deeps.append(response)
-#     thinking_vignette_deeps.append(thinking)
-#     # print(response)
-#
-#     if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
-#         save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt_new")
-#
-# end = time.time()
-# calc_time(start, end, "vignette_prompt_new")
-#
-# # save the array to a csv file
-# save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt_new")
-#
-#
-#
-# ### Chain-of-thought prompt ####
-# y_pred_cot_deeps = []
-# explanation_cot_deeps = []
-# thinking_cot_deeps = []
-#
-# # measure time in seconds
-# start = time.time()
-#
-# # iterate over the test set and save the response for each prompt in an array
-# for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
-#     response = client.chat.completions.create(
-#         model = "deepseek-reasoner",
-#         messages = [
-#             {"role": "system", "content": cot_instruction},
-#             {"role": "user", "content": prompt},
-#         ],
-#         stream = False
-#     )
-#
-#     try:
-#         prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
-#         explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
-#         y_pred_cot_deeps.append(prediction)
-#         explanation_cot_deeps.append(explanation)
-#         thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
-#         # print(prediction)
-#     except IndexError:
-#         print("\n IndexError. Retry prompting. \n")
-#         response = client.chat.completions.create(
-#             model = "deepseek-reasoner",
-#             messages = [
-#                 {"role": "system", "content": retry_cot_instruction},
-#                 {"role": "user", "content": prompt},
-#             ],
-#             stream = False
-#         )
-#         try:
-#             prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
-#             explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
-#             y_pred_cot_deeps.append(prediction)
-#             explanation_cot_deeps.append(explanation)
-#             thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
-#             # print(prediction)
-#         except IndexError:
-#             print("\n IndexError again. Skipping prompt. \n")
-#             y_pred_cot_deeps.append("IndexError")
-#             explanation_cot_deeps.append("IndexError")
-#             thinking_cot_deeps.append("IndexError")
-#
-#     if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
-#         print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
-#         save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
-#
-# end = time.time()
-# calc_time(start, end, "cot_prompt")
-#
-# # save the array to a csv file
-# save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
+#### Vignette prompt ####
+
+y_pred_vignette_deeps = []
+thinking_vignette_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "prompt"):
+    response, thinking = DeepSeek_create_response(prompt, vignette_instruction)
+    y_pred_vignette_deeps.append(response)
+    thinking_vignette_deeps.append(thinking)
+    # print(response)
+
+    if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
+        save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt")
+
+end = time.time()
+calc_time(start, end, "vignette_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv(y_pred_vignette_deeps, thinking_vignette_deeps, "vignette_prompt")
+
+
+
+### Chain-of-thought prompt ####
+y_pred_cot_deeps = []
+explanation_cot_deeps = []
+thinking_cot_deeps = []
+
+# measure time in seconds
+start = time.time()
+
+# iterate over the test set and save the response for each prompt in an array
+for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit = "prompt"):
+    response = client.chat.completions.create(
+        model = model_deeps,
+        messages = [
+            {"role": "system", "content": cot_instruction},
+            {"role": "user", "content": prompt},
+        ],
+        stream = False
+    )
+
+    try:
+        prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
+        explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
+        y_pred_cot_deeps.append(prediction)
+        explanation_cot_deeps.append(explanation)
+        thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
+        # print(prediction)
+    except IndexError:
+        print("\n IndexError. Retry prompting. \n")
+        response = client.chat.completions.create(
+            model = model_deeps,
+            messages = [
+                {"role": "system", "content": retry_cot_instruction},
+                {"role": "user", "content": prompt},
+            ],
+            stream = False
+        )
+        try:
+            prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
+            explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
+            y_pred_cot_deeps.append(prediction)
+            explanation_cot_deeps.append(explanation)
+            thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
+            # print(prediction)
+        except IndexError:
+            print("\n IndexError again. Skipping prompt. \n")
+            y_pred_cot_deeps.append("IndexError")
+            explanation_cot_deeps.append("IndexError")
+            thinking_cot_deeps.append("IndexError")
+
+    if len(y_pred_cot_deeps) % 50 == 0 and len(y_pred_cot_deeps) > 0:
+        print(f"\n\nProcessed {len(y_pred_cot_deeps)} prompts.\n")
+        save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
+
+end = time.time()
+calc_time(start, end, "cot_prompt")
+
+# save the array to a csv file
+save_prompt_to_csv_cot(y_pred_cot_deeps, thinking_cot_deeps, explanation_cot_deeps, "cot_prompt")
