@@ -1,9 +1,8 @@
-#### LLM: Zero-shot classification through LLMs and prompts ####
-#### CHATGPT ####
+#### LLM: Asking for reasons of misclassifications by LLMs ####
+#### ALL LLMs ####
 
 
 #### 0 Imports ####
-
 import os
 import pandas as pd
 import numpy as np
@@ -15,7 +14,6 @@ from openai import OpenAI
 from sklearn.model_selection import train_test_split
 from google import genai
 from google.genai import types
-
 
 data_change = pd.read_csv("../../dat/dips/DIPS_Data_cleaned_change.csv", sep = ",", low_memory = False)
 
