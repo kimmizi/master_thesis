@@ -30,22 +30,13 @@ X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
 
 # import instructions
 cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
-
-# convert to string
-cot_instruction = cot_instruction_df["0"].iloc[0]
-
-# import retry instructions when output format was wrong
 retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
 retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
-# import instruction for reason of misclassification
-instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
-
 # convert to string
+cot_instruction = cot_instruction_df["0"].iloc[0]
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
-
-instruction_reason = instruction_reason_df["0"].iloc[0]
 
 
 
@@ -97,7 +88,6 @@ def GPT_create_response(prompt, instruction):
 
     return prediction, explanation, thinking
 
-
 def save_prompt_to_csv(response_array, explanation_array, thinking_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
@@ -115,7 +105,6 @@ def save_prompt_to_csv(response_array, explanation_array, thinking_array, filena
     })
     df.to_csv(f"y_pred_LLMs/GPT/y_pred_GPT_o3_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -123,68 +112,12 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
+    # time_df.to_csv(f"times_LLMs/GPT/time_GPT_o3_{filename}.csv", sep = ",", index = False)
     return time_taken
 
 
 
-# #### 1 Testing prompting ####
-#
-# client = OpenAI(
-#     api_key = os.environ.get("OPENAI_API_KEY"),
-# )
-#
-# model_gpt = "o3-2025-04-16"
-#
-# # testing
-# response = client.responses.create(
-#     model = "o3-2025-04-16",
-#     # model = "o4-mini",
-#     reasoning = {
-#         "effort": "medium",
-#         "summary": "auto"
-#     },
-#     instructions = cot_instruction,
-#     input = X_test_simple_prompt[0]
-# )
-#
-# # print(response.answer.upper())
-#
-#
-# print(json.dumps(response.to_dict(), indent = 2, ensure_ascii = False))
-#
-#
-# print("Output text:", response.output_text)
-#
-#
-# # summary_texts = [
-# #     summary.text
-# #     for item in response.output if hasattr(item, "summary")
-# #     for summary in item.summary if hasattr(summary, "text")
-# # ]
-#
-# summary_texts = [
-#     " ".join(
-#         summary.text
-#         for item in response.output if hasattr(item, "summary")
-#         for summary in item.summary if hasattr(summary, "text")
-#     )
-# ]
-#
-# print("Summary text:", summary_texts[0])
-#
-#
-# print("\n ----------- \n")
-#
-# prediction, explanation, thinking = GPT_create_response(X_test_simple_prompt[0], cot_instruction)
-#
-# print("Prediction:", prediction)
-# print("Explanation:", explanation)
-# print("Thinking:", thinking)
-
-
-
-#### 2 Prompting with ChatGPT ####
+#### 1 Prompting with ChatGPT ####
 
 model_gpt = "o3-2025-04-16"
 
