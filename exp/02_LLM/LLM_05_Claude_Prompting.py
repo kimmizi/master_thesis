@@ -34,6 +34,8 @@ profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_si
 few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
 vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
 cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -42,19 +44,9 @@ profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
 few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
 vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
-
-# import retry instructions when output format was wrong
-retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
-
-# import instruction for reason of misclassification
-instruction_reason_df = pd.read_csv("../../dat/instructions/instruction_reason.csv", sep=",", index_col = 0)
-
-# convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
-instruction_reason = instruction_reason_df["0"].iloc[0]
 
 
 #### Helper functions ####
@@ -106,7 +98,6 @@ def Claude_create_message(prompt, instruction):
 
     return message.content[1].text.strip(), message.content[0].thinking
 
-
 def save_prompt_to_csv(response_array, thinking_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
@@ -122,7 +113,6 @@ def save_prompt_to_csv(response_array, thinking_array, filename):
         "thinking": thinking_array
     })
     df.to_csv(f"y_pred_LLMs/Claude/y_pred_claude_{filename}.csv", sep = ",", index = False)
-
 
 def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, filename):
     # value counts for array
@@ -141,7 +131,6 @@ def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, fi
     })
     df.to_csv(f"y_pred_LLMs/Claude/y_pred_claude_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -149,54 +138,13 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    time_df.to_csv(f"times_LLMs/Claude/time_claude_{filename}.csv", sep = ",", index = False)
+    # time_df.to_csv(f"times_LLMs/Claude/time_claude_{filename}.csv", sep = ",", index = False)
     return time_taken
-
-
-
-### 1 Testing prompting ####
-
-# client = anthropic.Anthropic(
-#     api_key = os.environ.get("ANTHROPIC_API_KEY")
-# )
-#
-# message = client.messages.create(
-#     model = "claude-sonnet-4-20250514",
-#     max_tokens = 20000,
-#     temperature = 1,
-#     thinking = {
-#         "type": "enabled",
-#         "budget_tokens": 16000
-#     },
-#     system = claude_instruction,
-#     messages = [
-#         {
-#             "role": "user",
-#             "content": [
-#                 {
-#                     "type": "text",
-#                     "text": X_test_claude_prompt[0]
-#                 }
-#             ]
-#         }
-#     ]
-# )
-# print(message.content)
-
-# print(message.content[0].thinking)
-
-# prediction = re.findall(r'Prediction: (.*)', message.content[1].text)
-# prediction[0]
-
-# # extract what comes after Explanation:
-# explanation = re.findall(r'Explanation: (.*)', message.content[1].text)
-# explanation[0]
 
 
 
 ### 2 Prompting with Claude 3.7 Sonnet ####
 
-# model_claude = "claude-3-7-sonnet-20250219"
 model_claude = "claude-sonnet-4-20250514"
 
 client = anthropic.Anthropic(
@@ -351,7 +299,7 @@ start = time.time()
 # iterate over the test set and save the response for each prompt in an array
 for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
     message = client.messages.create(
-        model = "claude-sonnet-4-20250514",
+        model = model_claude,
         max_tokens = 20000,
         temperature = 1,
         thinking = {
