@@ -14,7 +14,7 @@ This thesis evaluated ML algorithms, LLMs, and unification approaches for foreca
 
 ## Structure
 
-You will find the experiments I conducted in `.\exp`, the data I used (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) and the prompts I build in the directory `.\dat`, and the report and figures in `.\doc`.
+You will find the experiments I conducted in `.\exp`, the prompts I build, using the data (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) in the directory `.\dat`, and the report and figures in `.\doc`.
 
 ---
 
@@ -42,3 +42,5 @@ Tavarez-Rodríguez, J., Sánchez-Vega, F., Rosales-Pérez, A., & López-Monroy, 
 its authors. Use permitted under Creative Commons License Attribution 4.0 International (CC BY 4.0))
 
 Trumpf, J., Margraf, J., Vriends, N., Meyer, A. H., & Becker, E. S. (2010). Predictors of specific phobia in young women: A prospective community study. _Journal of Anxiety Disorders, 24 (1)_, 87-93. Retrieved from https://www.sciencedirect.com/science/article/pii/S0887618509001844 doi:https://doi.org/10.1016/j.janxdis.2009.09.002
+
+ Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b 
