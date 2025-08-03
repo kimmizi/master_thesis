@@ -14,7 +14,7 @@ This thesis evaluated ML algorithms, LLMs, and unification approaches for foreca
 
 ## Structure
 
-You will find the experiments I conducted in `.\exp`, the prompts I build, using the data (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) in the directory `.\dat`, and the report and figures in `.\doc`.
+You will find the experiments I conducted in `./exp`, the prompts I build, using the data (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) in the directory `./dat`, and the report and figures in `.\doc`.
 
 ---
 
@@ -30,7 +30,7 @@ I compared **six ML models**, including linear, neural, probabilistic, tree-base
 
 ## Results
 
-All experiments can be found in `.\exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Unification` contains the unification approaches and their predictions, and `04_Reasons_Misclassifications` contains the prompting for reasons of misclassifications. 
+All experiments can be found in `./exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Unification` contains the unification approaches and their predictions, and `04_Reasons_Misclassifications` contains the prompting for reasons of misclassifications. 
 
 
 
