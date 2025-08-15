@@ -69,6 +69,8 @@ The aim of this study was to investigated if LLMs are able to forecast the binar
 
 Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
 
+<hr>
+
 Caruccio, L., Cirillo, S., Polese, G., Solimando, G., Sundaramurthy, S., & Tortora, G. (2024). Can chatgpt provide intelligent diagnoses? a comparative study between predictive models and chatgpt to define a new medical diagnostic bot. Expert Systems with Applications, 235 , 121186. Retrieved from https://www.sciencedirect.com/science/article/pii/S0957417423016883 doi: https://doi.org/10.1016/j.eswa.2023.121186
 
 Tavarez-Rodríguez, J., Sánchez-Vega, F., Rosales-Pérez, A., & López-Monroy, A. P. (2024, September 09–12). Better together: Llm and neural classification transformers to detect sexism. In _Clef 2024: Conference and labs of the evaluation forum_. Grenoble, France: CEUR Workshop Proceedings. Retrieved from http://ceur-ws.org/Vol-XXX/ (© 2024 Copyright for this paper by
