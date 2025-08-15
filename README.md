@@ -14,13 +14,14 @@ This thesis evaluated ML algorithms, LLMs, and unification approaches for foreca
 
 ## Structure
 
-You will find the experiments I conducted in `./exp`, the prompts I build, using the data (Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010) in the directory `./dat`, and the report and figures in `./doc`.
+You will find the prompts and instructions I build in the directory `./dat`, the report and figures in `./doc` and the experiments I conducted in `./exp`. 
+I used data from the Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010. It was made publically available at the link below. 
 
 ---
 
 ## Methods
 
-I compared **six ML models**, including linear, neural, probabilistic, tree-based, kernel-based and distance-based models, **six prompting strategies** across **six state-of-the-art LLMs** and **three unification approaches** combining ML and LLM strengths.
+I compared **six ML models**, including linear, neural, probabilistic, tree-based, kernel-based and distance-based models, **six prompting strategies** across **six state-of-the-art LLMs** and **three unification approaches** combining ML and LLM strengths. All experiments can be found in `./exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Unification` contains the unification approaches and their predictions, and `04_Reasons_Misclassifications` contains the prompting for reasons of misclassifications.
 
 <p align>
   <img src = "doc/figs/00_methods/table_methods.png" height = "600">
@@ -30,7 +31,7 @@ I compared **six ML models**, including linear, neural, probabilistic, tree-base
 
 ## Results
 
-All experiments can be found in `./exp`. `01_ML` contains all implemented ML models and their predictions, `02_LLM` contains the creation of prompts, all implemented LLM APIs, and their predictions, `03_Unification` contains the unification approaches and their predictions, and `04_Reasons_Misclassifications` contains the prompting for reasons of misclassifications. The evaluation and results for RQ1 can be found in `05_RQ1_Evaluation_Performance_ML_LLM.ipynb`, for RQ2 in `06_RQ2_Evaluation_Performance_Unification_Approaches.ipynb` and for RQ3 in `07_RQ3_Evaluation_Misclassifications.ipynb`.
+The evaluation and results for RQ1 can be found in `05_RQ1_Evaluation_Performance_ML_LLM.ipynb`, for RQ2 in `06_RQ2_Evaluation_Performance_Unification_Approaches.ipynb` and for RQ3 in `07_RQ3_Evaluation_Misclassifications.ipynb`.
 
 **Research Question 1**
 To conclude research question 1, ML models outperformed LLMs in terms of accuracy and MCC, with Naive Bayes achieving the best performance. However, ML models showed a low sensitivity and were not able to correctly forecast the majority of psychological disorder onsets. While LLMs were in general not able to predict the correct class in as many cases as the ML models, they showed a more balanced sensitivity and specificity. Among LLMs, GPT and Grok performed best on average, with GPT showing the highest specificity and Grok best sensitivity. The profiled simple prompt, few-shot prompt and vignette prompt emerged as the most effective strategies. The best LLM implementation used GPT and a profiled simple prompt. The results reveal a trade-off between specificity and sensitivity, with none of the models excelling at both metrics. 
