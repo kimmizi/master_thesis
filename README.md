@@ -51,10 +51,10 @@ Most unification approaches scored good performances. The creation of new input 
 
 LLMs were able to categorize reasons for failure, even though the reliability of such explanations may have varied across models and prompting strategies. While LLMs differ in their pattern of reasons for misclassifications, lack of context emerged as the most important reason. GPT, Gemma, Claude and Grok mentioned lack of context, Gemini knowledge conflicts and DeepSeek lack of opinion-based info most frequently as the primary reason for misclassifications. Simple prompts most often generated lack of context as reason for misclassification, while few-shot prompts generated lack of examples or counterfactual demonstrations. There is a predominance of lack of context, information or examples over knowledge conflicts and prediction with abstention.
 
-<p align="center">
-  <img src="doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height="100">
+<p align>
+  <img src="doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height="150">
 </p>
-<p align="center"><em>Figure: Sankey diagram showing reasons of misclassifications for GPT</em></p>
+<p align><em>Figure: Sankey diagram showing reasons of misclassifications for GPT</em></p>
 ---
 
 ## Conclusion
