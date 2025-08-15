@@ -2,7 +2,7 @@
 
 This repo contains the code and data used for my master thesis "From Prompts to Predictions: Forecasting Psychological Disorders with Large Language Models and Machine Learning", supervised by the Methods Center at the University of Tübingen and Christopher Stewart, Computational Linguist at Google.
 
-This thesis evaluated ML algorithms, LLMs, and unification approaches for forecasting psychological disorder incidence between two time points, using an exemplary longitudinal psychological dataset.
+Psychological disorders affect a significant percentage of the global population, contributing to a global healthcare burden. Large language models (LLMs) have demonstrated remarkable capabilities in many fields, yet their potential for forecasting psychological disorder onset from numerical data remains unexplored. This thesis evaluated ML algorithms, LLMs, and unification approaches for forecasting psychological disorder incidence between two time points, using an exemplary longitudinal psychological dataset.
 
 **RQ1**: How do traditional ML models and LLMs with prompts perform in terms of forecasting the binary incidence of psychological disorders?
 
@@ -15,7 +15,7 @@ This thesis evaluated ML algorithms, LLMs, and unification approaches for foreca
 ## Structure
 
 You will find the prompts and instructions I build in the directory `./dat`, the report and figures in `./doc` and the experiments I conducted in `./exp`. 
-I used data from the Dresden Predictor Study (DPS), a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010. It was made publically available at the link below. 
+I used publically available data from the Dresden Predictor Study (DPS)<sup>1</sup>, a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010.
 
 ---
 
@@ -33,28 +33,31 @@ I compared **six ML models**, including linear, neural, probabilistic, tree-base
 
 The evaluation and results for RQ1 can be found in `05_RQ1_Evaluation_Performance_ML_LLM.ipynb`, for RQ2 in `06_RQ2_Evaluation_Performance_Unification_Approaches.ipynb` and for RQ3 in `07_RQ3_Evaluation_Misclassifications.ipynb`.
 
-**Research Question 1**
+**RQ1**
 
 ML models outperformed LLMs in terms of accuracy and MCC, with Naive Bayes achieving the best performance. However, ML models showed a low sensitivity and were not able to correctly forecast the majority of psychological disorder onsets. While LLMs were in general not able to predict the correct class in as many cases as the ML models, they showed a more balanced sensitivity and specificity. Among LLMs, GPT and Grok performed best on average, with GPT showing the highest specificity and Grok best sensitivity. The profiled simple prompt, few-shot prompt and vignette prompt emerged as the most effective strategies. The best LLM implementation used GPT and a profiled simple prompt. The results reveal a trade-off between specificity and sensitivity, with none of the models excelling at both metrics. 
 
 <p align>
-  <img src = "doc/figs/01_LLM_ML_performance/accuracy_mcc_all_models.png" height = "300">
-  <img src = "doc/figs/01_LLM_ML_performance/sensitivity_specificity_all_models.png" height = "300">
+  <img src = "doc/figs/01_LLM_ML_performance/accuracy_mcc_all_models.png" height = "400"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src = "doc/figs/01_LLM_ML_performance/sensitivity_specificity_all_models.png" height = "400">
 </p>
 
+<br>
 
-**Research Question 2**
+**RQ2**
 
 Most unification approaches scored good performances. The creation of new input performed best, even performing a bit better than the best ML model, Naive Bayes when trained on the original predictors alone. This means that including LLM predictions in the training set as predictors increased the performance of ML models, even though only insignificantly. However, the remaining unification approaches were not able to perform better than the best performing ML models. Still, they were mostly able to score a more robust performance compared to the LLMs' performance. 
 
-**Research Question 3**
+<br>
+
+**RQ3**
 
 LLMs were able to categorize reasons for failure, even though the reliability of such explanations may have varied across models and prompting strategies. While LLMs differ in their pattern of reasons for misclassifications, lack of context emerged as the most important reason. GPT, Gemma, Claude and Grok mentioned lack of context, Gemini knowledge conflicts and DeepSeek lack of opinion-based info most frequently as the primary reason for misclassifications. Simple prompts most often generated lack of context as reason for misclassification, while few-shot prompts generated lack of examples or counterfactual demonstrations. There is a predominance of lack of context, information or examples over knowledge conflicts and prediction with abstention.
 
 <p align>
-  <img src = "doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height = "150">
+  <img src="doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height="150">
 </p>
-
+<p align><em>Sankey diagram showing reasons of misclassifications for GPT</em></p>
 
 ---
 
@@ -66,8 +69,6 @@ The aim of this study was to investigated if LLMs are able to forecast the binar
 
 ## Main Literature
 
-Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
-
 Caruccio, L., Cirillo, S., Polese, G., Solimando, G., Sundaramurthy, S., & Tortora, G. (2024). Can chatgpt provide intelligent diagnoses? a comparative study between predictive models and chatgpt to define a new medical diagnostic bot. Expert Systems with Applications, 235 , 121186. Retrieved from https://www.sciencedirect.com/science/article/pii/S0957417423016883 doi: https://doi.org/10.1016/j.eswa.2023.121186
 
 Tavarez-Rodríguez, J., Sánchez-Vega, F., Rosales-Pérez, A., & López-Monroy, A. P. (2024, September 09–12). Better together: Llm and neural classification transformers to detect sexism. In _Clef 2024: Conference and labs of the evaluation forum_. Grenoble, France: CEUR Workshop Proceedings. Retrieved from http://ceur-ws.org/Vol-XXX/ (© 2024 Copyright for this paper by
@@ -78,4 +79,7 @@ Trumpf, J., Margraf, J., Vriends, N., Meyer, A. H., & Becker, E. S. (2010). Pred
 Wu, Y., Wang, Y., Wang, C., & Zheng, Z. (2024). Llm enhanced machine learning estimators for classification. In 2024 winter simulation conference (wsc) (p. 288-298). doi: 10.1109/WSC63780.2024.10838779
 
 Zhou, W., Zhang, S., Poon, H., & Chen, M. (2023). Context-faithful prompting for large language models. Retrieved from https://arxiv.org/abs/2303.11315
+
+--- 
+<sup>1</sup> Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
  
