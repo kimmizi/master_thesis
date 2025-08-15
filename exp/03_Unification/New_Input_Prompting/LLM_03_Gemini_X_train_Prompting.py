@@ -3,7 +3,6 @@
 
 
 #### 0 Imports ####
-
 import os
 import pandas as pd
 import numpy as np
@@ -12,7 +11,6 @@ import re
 from tqdm import tqdm
 from google import genai
 from google.genai import types
-from sklearn.model_selection import train_test_split
 
 # import prompts for all train data
 X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep =",", index_col = 0)
@@ -39,6 +37,8 @@ profiled_simple_instruction_df = pd.read_csv("../../../dat/instructions/profiled
 few_shot_instruction_df = pd.read_csv("../../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
 vignette_instruction_df = pd.read_csv("../../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
 cot_instruction_df = pd.read_csv("../../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -47,12 +47,6 @@ profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
 few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
 vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
-
-# import retry instructions when output format was wrong
-retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
-
-# convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
@@ -86,7 +80,6 @@ def Gemini_create_response(prompt, instruction):
 
     return response.text.strip()
 
-
 def save_prompt_to_csv(response_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
@@ -103,7 +96,6 @@ def save_prompt_to_csv(response_array, filename):
     })
     df.to_csv(f"X_train_pred/Gemini/X_train_gemini_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -112,41 +104,38 @@ def calc_time(start, end, filename):
     print(f"Time taken: {time_taken} seconds")
 
 
-### 2 Prompting with Gemini 2.5 Pro ####
 
+### Prompting with Gemini 2.5 Pro ####
 model_gemini = "gemini-2.5-pro-preview-05-06"
 
 client = genai.Client(
     api_key = os.environ.get("GEMINI_API_KEY")
 )
 
-
 #### Simple prompt ####
-
 y_pred_simple_gemini = []
 
 # measure time in seconds
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_simple_prompt[580:], desc = "Simple prompting"):
+for prompt in tqdm(X_train_simple_prompt, desc = "Simple prompting"):
     response = Gemini_create_response(prompt, simple_instruction)
     y_pred_simple_gemini.append(response)
 
     if len(y_pred_simple_gemini) % 10 == 0 and len(y_pred_simple_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_gemini)} prompts.\n")
-        save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt_3")
+        save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt")
 
 end = time.time()
-calc_time(start, end, "simple_prompt_3")
+calc_time(start, end, "simple_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt_3")
+save_prompt_to_csv(y_pred_simple_gemini, "simple_prompt")
 
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_gemini = []
 
 # measure time in seconds
@@ -170,7 +159,6 @@ save_prompt_to_csv(y_pred_class_def_gemini, "class_definitions_prompt")
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_gemini = []
 
 # measure time in seconds
@@ -194,7 +182,6 @@ save_prompt_to_csv(y_pred_profiled_simple_gemini, "profiled_simple_prompt")
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_gemini = []
 
 # measure time in seconds
@@ -218,7 +205,6 @@ save_prompt_to_csv(y_pred_few_shot_gemini, "few_shot_prompt")
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_gemini = []
 
 # measure time in seconds
@@ -242,7 +228,6 @@ save_prompt_to_csv(y_pred_vignette_gemini, "vignette_prompt")
 
 
 #### Chain-of-thought prompt ####
-
 y_pred_cot_gemini = []
 
 # measure time in seconds
