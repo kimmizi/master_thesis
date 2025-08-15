@@ -12,12 +12,12 @@ from tqdm import tqdm
 from openai import OpenAI
 
 # import prompts for all test data
-X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep=",", index_col=0)
-X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep=",", index_col=0)
-X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep=",", index_col=0)
-X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep=",", index_col=0)
-X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep=",", index_col=0)
-X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep=",", index_col=0)
+X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep = ",", index_col=0)
+X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep = ",", index_col=0)
+X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep = ",", index_col=0)
+X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep = ",", index_col=0)
+X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep = ",", index_col=0)
+X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep = ",", index_col=0)
 
 # convert to arrays
 X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
@@ -28,14 +28,14 @@ X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
 X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
 
 # import instructions
-simple_instruction_df = pd.read_csv("../../dat/instructions/simple_instruction.csv", sep=",", index_col=0)
-class_definitions_instruction_df = pd.read_csv("../../dat/instructions/class_definitions_instruction.csv", sep=",", index_col=0)
-profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_simple_instruction.csv", sep=",", index_col=0)
-few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep=",", index_col=0)
-vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep=",", index_col=0)
-cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep=",", index_col=0)
-retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep=",", index_col=0)
-retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep=",", index_col=0)
+simple_instruction_df = pd.read_csv("../../dat/instructions/simple_instruction.csv", sep = ",", index_col=0)
+class_definitions_instruction_df = pd.read_csv("../../dat/instructions/class_definitions_instruction.csv", sep = ",", index_col=0)
+profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_simple_instruction.csv", sep = ",", index_col=0)
+few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep = ",", index_col=0)
+vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep = ",", index_col=0)
+cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep = ",", index_col=0)
+retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep = ",", index_col=0)
+retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep = ",", index_col=0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -85,7 +85,7 @@ def save_prompt_to_csv(response_array, filename):
     df = pd.DataFrame({
         "y_pred": response_array_val
     })
-    df.to_csv(f"y_pred_LLMs/Grok/y_pred_grok_{filename}.csv", sep=",", index=False)
+    df.to_csv(f"y_pred_LLMs/Grok/y_pred_grok_{filename}.csv", sep = ",", index=False)
 
 def save_prompt_to_csv_cot(response_array, explanation_array, filename):
     # value counts for array
@@ -101,7 +101,7 @@ def save_prompt_to_csv_cot(response_array, explanation_array, filename):
         "y_pred": response_array_val,
         "explanation": explanation_array
     })
-    df.to_csv(f"y_pred_LLMs/Grok/y_pred_grok_{filename}.csv", sep=",", index=False)
+    df.to_csv(f"y_pred_LLMs/Grok/y_pred_grok_{filename}.csv", sep = ",", index=False)
 
 def calc_time(start, end, filename):
     """
@@ -110,7 +110,7 @@ def calc_time(start, end, filename):
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
     time_df = pd.DataFrame({"time": [time_taken]})
-    # time_df.to_csv(f"times_LLMs/Grok/time_grok_{filename}.csv", sep=",", index=False)
+    # time_df.to_csv(f"times_LLMs/Grok/time_grok_{filename}.csv", sep = ",", index=False)
     return time_taken
 
 
@@ -120,8 +120,9 @@ model_grok = "grok-3-beta"
 
 client = OpenAI(
     api_key=os.environ.get("XAI_API_KEY"),
-    base_url="https://api.x.ai/v1",
+    base_url= "https://api.x.ai/v1",
 )
+
 
 
 #### Simple prompt ####
@@ -131,7 +132,7 @@ y_pred_simple_grok = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_simple_prompt, desc="Simple prompting"):
+for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
     completion = Grok_create_completion(prompt, simple_instruction)
     y_pred_simple_grok.append(completion)
 
@@ -154,7 +155,7 @@ y_pred_class_def_grok = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_class_definitions_prompt, desc="Class definition prompting"):
+for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
     completion = Grok_create_completion(prompt, class_definitions_instruction)
     y_pred_class_def_grok.append(completion)
 
@@ -177,7 +178,7 @@ y_pred_profiled_simple_grok = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_profiled_simple_prompt, desc="Profiled simple prompting"):
+for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
     completion = Grok_create_completion(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_grok.append(completion)
 
@@ -200,7 +201,7 @@ y_pred_few_shot_grok = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_few_shot_prompt, desc="Few shot prompting"):
+for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
     completion = Grok_create_completion(prompt, few_shot_instruction)
     y_pred_few_shot_grok.append(completion)
 
@@ -223,7 +224,7 @@ y_pred_vignette_grok = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_test_vignette_prompt, desc="Vignette prompting"):
+for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
     completion = Grok_create_completion(prompt, vignette_instruction)
     y_pred_vignette_grok.append(completion)
 
