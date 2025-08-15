@@ -13,13 +13,13 @@ from google import genai
 from google.genai import types
 
 # import prompts for all test data
-X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
-X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
-X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
-X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
-X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
-X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
-X_test_pred_def_prompt_df = pd.read_csv("../../dat/prompts/X_test_pred_def_prompt.csv", sep =",", index_col = 0)
+X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep = ",", index_col = 0)
+X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep = ",", index_col = 0)
+X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep = ",", index_col = 0)
+X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep = ",", index_col = 0)
+X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep = ",", index_col = 0)
+X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep = ",", index_col = 0)
+X_test_pred_def_prompt_df = pd.read_csv("../../dat/prompts/X_test_pred_def_prompt.csv", sep = ",", index_col = 0)
 
 # convert to arrays
 X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
@@ -31,14 +31,14 @@ X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
 X_test_pred_def_prompt = X_test_pred_def_prompt_df.values.flatten()
 
 # import instructions
-simple_instruction_df = pd.read_csv("../../dat/instructions/simple_instruction.csv", sep =",", index_col = 0)
-class_definitions_instruction_df = pd.read_csv("../../dat/instructions/class_definitions_instruction.csv", sep =",", index_col = 0)
-profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_simple_instruction.csv", sep =",", index_col = 0)
-few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
-vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
-cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
-retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
+simple_instruction_df = pd.read_csv("../../dat/instructions/simple_instruction.csv", sep = ",", index_col = 0)
+class_definitions_instruction_df = pd.read_csv("../../dat/instructions/class_definitions_instruction.csv", sep = ",", index_col = 0)
+profiled_simple_instruction_df = pd.read_csv("../../dat/instructions/profiled_simple_instruction.csv", sep = ",", index_col = 0)
+few_shot_instruction_df = pd.read_csv("../../dat/instructions/few_shot_instruction.csv", sep = ",", index_col = 0)
+vignette_instruction_df = pd.read_csv("../../dat/instructions/vignette_instruction.csv", sep = ",", index_col = 0)
+cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep = ",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep = ",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep = ",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -120,7 +120,6 @@ def save_prompt_to_csv_cot(response_array, thinking_array, explanation_array, fi
     })
     df.to_csv(f"y_pred_LLMs/Gemini/y_pred_gemini_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -139,6 +138,7 @@ model_gemini = "gemini-2.5-pro"
 client = genai.Client(
     api_key = os.environ.get("GEMINI_API_KEY")
 )
+
 
 
 #### Simple prompt ####
