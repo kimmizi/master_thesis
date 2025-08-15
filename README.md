@@ -66,9 +66,16 @@ The aim of this study was to investigated if LLMs are able to forecast the binar
 
 ## Main Literature
 
+Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
+
+Caruccio, L., Cirillo, S., Polese, G., Solimando, G., Sundaramurthy, S., & Tortora, G. (2024). Can chatgpt provide intelligent diagnoses? a comparative study between predictive models and chatgpt to define a new medical diagnostic bot. Expert Systems with Applications, 235 , 121186. Retrieved from https://www.sciencedirect.com/science/article/pii/S0957417423016883 doi: https://doi.org/10.1016/j.eswa.2023.121186
+
 Tavarez-Rodríguez, J., Sánchez-Vega, F., Rosales-Pérez, A., & López-Monroy, A. P. (2024, September 09–12). Better together: Llm and neural classification transformers to detect sexism. In _Clef 2024: Conference and labs of the evaluation forum_. Grenoble, France: CEUR Workshop Proceedings. Retrieved from http://ceur-ws.org/Vol-XXX/ (© 2024 Copyright for this paper by
 its authors. Use permitted under Creative Commons License Attribution 4.0 International (CC BY 4.0))
 
 Trumpf, J., Margraf, J., Vriends, N., Meyer, A. H., & Becker, E. S. (2010). Predictors of specific phobia in young women: A prospective community study. _Journal of Anxiety Disorders, 24 (1)_, 87-93. Retrieved from https://www.sciencedirect.com/science/article/pii/S0887618509001844 doi:https://doi.org/10.1016/j.janxdis.2009.09.002
 
- Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b 
+Wu, Y., Wang, Y., Wang, C., & Zheng, Z. (2024). Llm enhanced machine learning estimators for classification. In 2024 winter simulation conference (wsc) (p. 288-298). doi: 10.1109/WSC63780.2024.10838779
+
+Zhou, W., Zhang, S., Poon, H., & Chen, M. (2023). Context-faithful prompting for large language models. Retrieved from https://arxiv.org/abs/2303.11315
+ 
