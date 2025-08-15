@@ -5,15 +5,11 @@
 #### 0 Imports ####
 import os
 import pandas as pd
-import anthropic
 import numpy as np
 import time
 import re
-from openai import OpenAI
 from tqdm import tqdm
 from google import genai
-from google.genai import types
-from sklearn.model_selection import train_test_split
 
 # import prompts for all train data
 X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep =",", index_col = 0)
@@ -40,6 +36,8 @@ profiled_simple_instruction_df = pd.read_csv("../../../dat/instructions/profiled
 few_shot_instruction_df = pd.read_csv("../../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
 vignette_instruction_df = pd.read_csv("../../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
 cot_instruction_df = pd.read_csv("../../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -48,12 +46,6 @@ profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
 few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
 vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
-
-# import retry instructions when output format was wrong
-retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
-
-# convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
@@ -92,7 +84,6 @@ def save_prompt_to_csv(response_array, filename):
     })
     df.to_csv(f"X_train_pred/Gemma/X_train_gemma_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -101,9 +92,7 @@ def calc_time(start, end, filename):
     print(f"Time taken: {time_taken} seconds")
 
 
-### 2 Prompting with Gemma 3 ####
-
-
+### Prompting with Gemma 3 ####
 model_gemma = "gemma-3-27b-it"
 
 client = genai.Client(
@@ -111,8 +100,8 @@ client = genai.Client(
 )
 
 
-#### Simple prompt ####
 
+#### Simple prompt ####
 y_pred_simple_gemma = []
 
 # measure time in seconds
@@ -136,7 +125,6 @@ save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_gemma = []
 
 # measure time in seconds
@@ -149,18 +137,17 @@ for prompt in tqdm(X_train_class_definitions_prompt, desc = "Class definition pr
 
     if len(y_pred_class_def_gemma) % 50 == 0 and len(y_pred_class_def_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_gemma)} prompts.\n")
-        save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt_2")
+        save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt")
 
 end = time.time()
-calc_time(start, end, "class_definitions_prompt_2")
+calc_time(start, end, "class_definitions_prompt")
 
 # save the array to a csv file
-save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt_2")
+save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt")
 
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_gemma = []
 
 # measure time in seconds
@@ -184,7 +171,6 @@ save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_gemma = []
 
 # measure time in seconds
@@ -208,7 +194,6 @@ save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_gemma = []
 
 # measure time in seconds
@@ -232,7 +217,6 @@ save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
 
 
 #### Chain-of-thought prompt ####
-
 y_pred_cot_gemma = []
 
 # measure time in seconds
