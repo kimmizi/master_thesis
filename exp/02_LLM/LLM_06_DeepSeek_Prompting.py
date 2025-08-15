@@ -15,8 +15,6 @@ from openai import OpenAI
 X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
 X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
 X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
-X_test_few_shot_prompt_20_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_20.csv", sep =",", index_col = 0)
-X_test_few_shot_prompt_100_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_100.csv", sep=",", index_col=0)
 X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
 X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
 X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
@@ -25,8 +23,6 @@ X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", se
 X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
 X_test_class_definitions_prompt = X_test_class_definitions_prompt_df.values.flatten()
 X_test_profiled_simple_prompt = X_test_profiled_simple_prompt_df.values.flatten()
-X_test_few_shot_prompt_20 = X_test_few_shot_prompt_20_df.values.flatten()
-X_test_few_shot_prompt_100 = X_test_few_shot_prompt_100_df.values.flatten()
 X_test_few_shot_prompt = X_test_few_shot_prompt_df.values.flatten()
 X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
 X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
@@ -126,10 +122,8 @@ def calc_time(start, end, filename):
 
 
 
+#### Prompting with DeepSeek Reasoning R1 ####
 # **Off-Peak Discounts**：DeepSeek-R1 with 75% off at off-peak hours (16:30-00:30 UTC daily)
-
-#### 2 Prompting with DeepSeek Reasoning R1 ####
-
 model_deeps = "deepseek-reasoner"
 
 client = OpenAI(
@@ -139,7 +133,6 @@ client = OpenAI(
 
 
 #### Simple prompt ####
-
 y_pred_simple_deeps = []
 thinking_simple_deeps = []
 
@@ -151,7 +144,6 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting", unit = "prom
     response, thinking = DeepSeek_create_response(prompt, simple_instruction)
     y_pred_simple_deeps.append(response)
     thinking_simple_deeps.append(thinking)
-    # print(response)
 
     if len(y_pred_simple_deeps) % 50 == 0 and len(y_pred_simple_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_deeps)} prompts.\n")
@@ -166,7 +158,6 @@ save_prompt_to_csv(y_pred_simple_deeps, thinking_simple_deeps, "simple_prompt")
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_deeps = []
 thinking_class_def_deeps = []
 
@@ -178,7 +169,6 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions pr
     response, thinking = DeepSeek_create_response(prompt, class_definitions_instruction)
     y_pred_class_def_deeps.append(response)
     thinking_class_def_deeps.append(thinking)
-    # print(response)
 
     if len(y_pred_class_def_deeps) % 50 == 0 and len(y_pred_class_def_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_deeps)} prompts.\n")
@@ -193,7 +183,6 @@ save_prompt_to_csv(y_pred_class_def_deeps, thinking_class_def_deeps, "class_defi
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_deeps = []
 thinking_profiled_simple_deeps = []
 
@@ -205,7 +194,6 @@ for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompt
     response, thinking = DeepSeek_create_response(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_deeps.append(response)
     thinking_profiled_simple_deeps.append(thinking)
-    # print(response)
 
     if len(y_pred_profiled_simple_deeps) % 50 == 0 and len(y_pred_profiled_simple_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_deeps)} prompts.\n")
@@ -220,7 +208,6 @@ save_prompt_to_csv(y_pred_profiled_simple_deeps, thinking_profiled_simple_deeps,
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_deeps = []
 thinking_few_shot_deeps = []
 
@@ -232,7 +219,6 @@ for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting", unit = "
     response, thinking = DeepSeek_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_deeps.append(response)
     thinking_few_shot_deeps.append(thinking)
-    # print(response)
 
     if len(y_pred_few_shot_deeps) % 50 == 0 and len(y_pred_few_shot_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_deeps)} prompts.\n")
@@ -247,7 +233,6 @@ save_prompt_to_csv(y_pred_few_shot_deeps, thinking_few_shot_deeps, "few_shot_pro
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_deeps = []
 thinking_vignette_deeps = []
 
@@ -259,7 +244,6 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting", unit = "
     response, thinking = DeepSeek_create_response(prompt, vignette_instruction)
     y_pred_vignette_deeps.append(response)
     thinking_vignette_deeps.append(thinking)
-    # print(response)
 
     if len(y_pred_vignette_deeps) % 50 == 0 and len(y_pred_vignette_deeps) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_deeps)} prompts.\n")
@@ -298,7 +282,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit 
         y_pred_cot_deeps.append(prediction)
         explanation_cot_deeps.append(explanation)
         thinking_cot_deeps.append(response.choices[0].message.reasoning_content)
-        # print(prediction)
     except IndexError:
         print("\n IndexError. Retry prompting. \n")
         response = client.chat.completions.create(
@@ -309,6 +292,7 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting", unit 
             ],
             stream = False
         )
+
         try:
             prediction = re.findall(r'Prediction: (.*)', response.choices[0].message.content)[0].strip()
             explanation = re.findall(r'Explanation: (.*)', response.choices[0].message.content)[0].strip()
