@@ -36,8 +36,8 @@ All experiments can be found in `./exp`. `01_ML` contains all implemented ML mod
 To conclude research question 1, ML models outperformed LLMs in terms of accuracy and MCC, with Naive Bayes achieving the best performance. However, ML models showed a low sensitivity and were not able to correctly forecast the majority of psychological disorder onsets. While LLMs were in general not able to predict the correct class in as many cases as the ML models, they showed a more balanced sensitivity and specificity. Among LLMs, GPT and Grok performed best on average, with GPT showing the highest specificity and Grok best sensitivity. The profiled simple prompt, few-shot prompt and vignette prompt emerged as the most effective strategies. The best LLM implementation used GPT and a profiled simple prompt. The results reveal a trade-off between specificity and sensitivity, with none of the models excelling at both metrics. 
 
 <p align>
-  <img src = "doc/figs/01_LLM_ML_performance/accuracy_mcc_all_models.png" height = "600">
-  <img src = "doc/figs/01_LLM_ML_performance/sensitivity_specificity_all_models.png" height = "600">
+  <img src = "doc/figs/01_LLM_ML_performance/accuracy_mcc_all_models.png" height = "300">
+  <img src = "doc/figs/01_LLM_ML_performance/sensitivity_specificity_all_models.png" height = "300">
 </p>
 
 
@@ -48,7 +48,7 @@ To conclude research question 2, most unification approaches scored good perform
 To conclude research question 3, LLMs were able to categorize reasons for failure, even though the reliability of such explanations may have varied across models and prompting strategies. While LLMs differ in their pattern of reasons for misclassifications, lack of context emerged as the most important reason. GPT, Gemma, Claude and Grok mentioned lack of context, Gemini knowledge conflicts and DeepSeek lack of opinion-based info most frequently as the primary reason for misclassifications. Simple prompts most often generated lack of context as reason for misclassification, while few-shot prompts generated lack of examples or counterfactual demonstrations. There is a predominance of lack of context, information or examples over knowledge conflicts and prediction with abstention.
 
 <p align>
-  <img src = "doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height = "600">
+  <img src = "doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height = "150">
 </p>
 
 
