@@ -115,8 +115,7 @@ def calc_time(start, end, filename):
 
 
 
-#### 2 Prompting with Grok 3 Beta ####
-
+#### Prompting with Grok 3 Beta ####
 model_grok = "grok-3-beta"
 
 client = OpenAI(
@@ -126,7 +125,6 @@ client = OpenAI(
 
 
 #### Simple prompt ####
-
 y_pred_simple_grok = []
 
 # measure time in seconds
@@ -136,7 +134,6 @@ start = time.time()
 for prompt in tqdm(X_test_simple_prompt, desc="Simple prompting"):
     completion = Grok_create_completion(prompt, simple_instruction)
     y_pred_simple_grok.append(completion)
-    # print(completion)
 
     if len(y_pred_simple_grok) % 50 == 0 and len(y_pred_simple_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_grok)} prompts.\n")
@@ -151,7 +148,6 @@ save_prompt_to_csv(y_pred_simple_grok, "simple_prompt")
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_grok = []
 
 # measure time in seconds
@@ -161,7 +157,6 @@ start = time.time()
 for prompt in tqdm(X_test_class_definitions_prompt, desc="Class definition prompting"):
     completion = Grok_create_completion(prompt, class_definitions_instruction)
     y_pred_class_def_grok.append(completion)
-    # print(completion)
 
     if len(y_pred_class_def_grok) % 50 == 0 and len(y_pred_class_def_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_grok)} prompts.\n")
@@ -176,7 +171,6 @@ save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_grok = []
 
 # measure time in seconds
@@ -186,7 +180,6 @@ start = time.time()
 for prompt in tqdm(X_test_profiled_simple_prompt, desc="Profiled simple prompting"):
     completion = Grok_create_completion(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_grok.append(completion)
-    # print(completion)
 
     if len(y_pred_profiled_simple_grok) % 50 == 0 and len(y_pred_profiled_simple_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_grok)} prompts.\n")
@@ -201,7 +194,6 @@ save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_grok = []
 
 # measure time in seconds
@@ -211,7 +203,6 @@ start = time.time()
 for prompt in tqdm(X_test_few_shot_prompt, desc="Few shot prompting"):
     completion = Grok_create_completion(prompt, few_shot_instruction)
     y_pred_few_shot_grok.append(completion)
-    # print(completion)
 
     if len(y_pred_few_shot_grok) % 50 == 0 and len(y_pred_few_shot_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_grok)} prompts.\n")
@@ -226,7 +217,6 @@ save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_grok = []
 
 # measure time in seconds
@@ -236,7 +226,6 @@ start = time.time()
 for prompt in tqdm(X_test_vignette_prompt, desc="Vignette prompting"):
     completion = Grok_create_completion(prompt, vignette_instruction)
     y_pred_vignette_grok.append(completion)
-    # print(completion)
 
     if len(y_pred_vignette_grok) % 50 == 0 and len(y_pred_vignette_grok) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_grok)} prompts.\n")
@@ -251,7 +240,6 @@ save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
 
 
 ### Chain-of-thought prompt ####
-
 y_pred_cot_grok = []
 explanation_cot_grok = []
 
@@ -267,12 +255,12 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
             {"role": "user", "content": prompt},
         ],
     )
+
     try:
         prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
         explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
         y_pred_cot_grok.append(prediction)
         explanation_cot_grok.append(explanation)
-        # print(prediction)
     except IndexError:
         print("\n IndexError. Retry prompting. \n")
         completion = client.chat.completions.create(
@@ -282,6 +270,7 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
                 {"role": "user", "content": prompt},
             ],
         )
+
         try:
             prediction = re.findall(r'Prediction: (.*)', completion.choices[0].message.content)[0].strip()
             explanation = re.findall(r'Explanation: (.*)', completion.choices[0].message.content)[0].strip()
