@@ -103,6 +103,8 @@ client = OpenAI(
     api_key = os.environ.get("OPENAI_API_KEY"),
 )
 
+
+
 #### Simple prompt ####
 y_pred_simple_GPT = []
 
