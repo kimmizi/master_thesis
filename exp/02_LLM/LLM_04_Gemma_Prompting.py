@@ -111,8 +111,7 @@ def calc_time(start, end, filename):
 
 
 
-### 2 Prompting with Gemma 3 ####
-
+### Prompting with Gemma 3 ####
 model_gemma = "gemma-3-27b-it"
 
 client = genai.Client(
@@ -121,7 +120,6 @@ client = genai.Client(
 
 
 #### Simple prompt ####
-
 y_pred_simple_gemma = []
 
 # measure time in seconds
@@ -131,7 +129,6 @@ start = time.time()
 for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
     response = Gemma_create_response(prompt, simple_instruction)
     y_pred_simple_gemma.append(response)
-    # print(response)
 
     if len(y_pred_simple_gemma) % 50 == 0 and len(y_pred_simple_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_gemma)} prompts.\n")
@@ -146,7 +143,6 @@ save_prompt_to_csv(y_pred_simple_gemma, "simple_prompt")
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_gemma = []
 
 # measure time in seconds
@@ -156,7 +152,6 @@ start = time.time()
 for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition prompting"):
     response = Gemma_create_response(prompt, class_definitions_instruction)
     y_pred_class_def_gemma.append(response)
-    # print(response)
 
     if len(y_pred_class_def_gemma) % 50 == 0 and len(y_pred_class_def_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_gemma)} prompts.\n")
@@ -171,7 +166,6 @@ save_prompt_to_csv(y_pred_class_def_gemma, "class_definitions_prompt")
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_gemma = []
 
 # measure time in seconds
@@ -181,7 +175,6 @@ start = time.time()
 for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompting"):
     response = Gemma_create_response(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_gemma.append(response)
-    # print(response)
 
     if len(y_pred_profiled_simple_gemma) % 50 == 0 and len(y_pred_profiled_simple_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_gemma)} prompts.\n")
@@ -196,7 +189,6 @@ save_prompt_to_csv(y_pred_profiled_simple_gemma, "profiled_simple_prompt")
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_gemma = []
 
 # measure time in seconds
@@ -206,7 +198,6 @@ start = time.time()
 for prompt in tqdm(X_test_few_shot_prompt, desc = "Few shot prompting"):
     response = Gemma_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_gemma.append(response)
-    # print(response)
 
     if len(y_pred_few_shot_gemma) % 50 == 0 and len(y_pred_few_shot_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_gemma)} prompts.\n")
@@ -221,7 +212,6 @@ save_prompt_to_csv(y_pred_few_shot_gemma, "few_shot_prompt")
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_gemma = []
 
 # measure time in seconds
@@ -231,7 +221,6 @@ start = time.time()
 for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
     response = Gemma_create_response(prompt, vignette_instruction)
     y_pred_vignette_gemma.append(response)
-    # print(response)
 
     if len(y_pred_vignette_gemma) % 50 == 0 and len(y_pred_vignette_gemma) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_gemma)} prompts.\n")
@@ -246,7 +235,6 @@ save_prompt_to_csv(y_pred_vignette_gemma, "vignette_prompt")
 
 
 #### Chain-of-thought prompt ####
-
 y_pred_cot_gemma = []
 explanation_cot_gemma = []
 
@@ -266,8 +254,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
         explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
         y_pred_cot_gemma.append(prediction)
         explanation_cot_gemma.append(explanation)
-        # print(prediction)
-
     except IndexError:
         print("\n IndexError. Retry prompting. \n")
         response = client.models.generate_content(
@@ -280,7 +266,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
             explanation = re.findall(r'Explanation: (.*)', response.text)[0].strip()
             y_pred_cot_gemma.append(prediction)
             explanation_cot_gemma.append(explanation)
-
         except IndexError:
             print("\n Still IndexError. Don't retry prompting. \n")
             y_pred_cot_gemma.append("IndexError")
