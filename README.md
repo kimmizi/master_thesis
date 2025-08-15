@@ -15,7 +15,7 @@ Psychological disorders affect a significant percentage of the global population
 ## Structure
 
 You will find the prompts and instructions I build in the directory `./dat`, the report and figures in `./doc` and the experiments I conducted in `./exp`. 
-I used data was made publically available from the Dresden Predictor Study (DPS)<sup>1</sup>, a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010.
+I used publically available data from the Dresden Predictor Study (DPS)<sup>1</sup>, a study about predictors of psychological disorders by Trumpf, Margraf, Vriends, Meyer, & Becker, 2010.
 
 ---
 
