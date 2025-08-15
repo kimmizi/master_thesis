@@ -179,7 +179,7 @@ y_pred_few_shot_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_few_shot_prompt[900:], desc = "Few-shot prompting"):
+for prompt in tqdm(X_train_few_shot_prompt, desc = "Few-shot prompting"):
     response = GPT_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_GPT.append(response)
 
@@ -224,7 +224,7 @@ y_pred_cot_GPT = []
 start = time.time()
 
 # iterate over the test set and save the response for each prompt in an array
-for prompt in tqdm(X_train_cot_prompt[50:], desc = "Chain-of-thought prompting"):
+for prompt in tqdm(X_train_cot_prompt, desc = "Chain-of-thought prompting"):
     response = GPT_create_response(prompt, simple_instruction)
     y_pred_cot_GPT.append(response)
 
