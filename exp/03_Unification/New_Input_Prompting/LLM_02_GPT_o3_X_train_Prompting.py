@@ -96,7 +96,7 @@ def calc_time(start, end, filename):
 
 
 
-#### 2 Prompting with ChatGPT ####
+#### Prompting with ChatGPT ####
 model_gpt = "o3-2025-04-16"
 
 client = OpenAI(
