@@ -38,7 +38,7 @@ The evaluation and results for RQ1 can be found in `05_RQ1_Evaluation_Performanc
 ML models outperformed LLMs in terms of accuracy and MCC, with Naive Bayes achieving the best performance. However, ML models showed a low sensitivity and were not able to correctly forecast the majority of psychological disorder onsets. While LLMs were in general not able to predict the correct class in as many cases as the ML models, they showed a more balanced sensitivity and specificity. Among LLMs, GPT and Grok performed best on average, with GPT showing the highest specificity and Grok best sensitivity. The profiled simple prompt, few-shot prompt and vignette prompt emerged as the most effective strategies. The best LLM implementation used GPT and a profiled simple prompt. The results reveal a trade-off between specificity and sensitivity, with none of the models excelling at both metrics. 
 
 <p align>
-  <img src = "doc/figs/01_LLM_ML_performance/accuracy_mcc_all_models.png" height = "300"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src = "doc/figs/01_LLM_ML_performance/accuracy_mcc_all_models.png" height = "300"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src = "doc/figs/01_LLM_ML_performance/sensitivity_specificity_all_models.png" height = "300">
 </p>
 
@@ -46,6 +46,7 @@ ML models outperformed LLMs in terms of accuracy and MCC, with Naive Bayes achie
 **Research Question 2**
 
 Most unification approaches scored good performances. The creation of new input performed best, even performing a bit better than the best ML model, Naive Bayes when trained on the original predictors alone. This means that including LLM predictions in the training set as predictors increased the performance of ML models, even though only insignificantly. However, the remaining unification approaches were not able to perform better than the best performing ML models. Still, they were mostly able to score a more robust performance compared to the LLMs' performance. 
+
 
 **Research Question 3**
 
@@ -55,6 +56,7 @@ LLMs were able to categorize reasons for failure, even though the reliability of
   <img src="doc/figs/03_reasons_misclassifications/GPT_sankey_misclassifications.png" height="150">
 </p>
 <p align><em>Figure: Sankey diagram showing reasons of misclassifications for GPT</em></p>
+
 ---
 
 ## Conclusion
