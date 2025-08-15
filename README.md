@@ -42,13 +42,13 @@ ML models outperformed LLMs in terms of accuracy and MCC, with Naive Bayes achie
   <img src = "doc/figs/01_LLM_ML_performance/sensitivity_specificity_all_models.png" height = "400">
 </p>
 
-<br>
+<br><br>
 
 **RQ2**
 
 Most unification approaches scored good performances. The creation of new input performed best, even performing a bit better than the best ML model, Naive Bayes when trained on the original predictors alone. This means that including LLM predictions in the training set as predictors increased the performance of ML models, even though only insignificantly. However, the remaining unification approaches were not able to perform better than the best performing ML models. Still, they were mostly able to score a more robust performance compared to the LLMs' performance. 
 
-<br>
+<br><br>
 
 **RQ3**
 
@@ -71,7 +71,7 @@ The aim of this study was to investigated if LLMs are able to forecast the binar
 
 Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
 
-<hr style="border: 0; height: 1px; background-color: #ddd; margin: 20px 0;">
+<hr style="border: 0; height: 0.25px; background-color: #ddd; margin: 10px 0;">
 
 Caruccio, L., Cirillo, S., Polese, G., Solimando, G., Sundaramurthy, S., & Tortora, G. (2024). Can chatgpt provide intelligent diagnoses? a comparative study between predictive models and chatgpt to define a new medical diagnostic bot. Expert Systems with Applications, 235 , 121186. Retrieved from https://www.sciencedirect.com/science/article/pii/S0957417423016883 doi: https://doi.org/10.1016/j.eswa.2023.121186
 
