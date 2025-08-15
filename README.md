@@ -2,7 +2,7 @@
 
 This repo contains the code and data used for my master thesis "From Prompts to Predictions: Forecasting Psychological Disorders with Large Language Models and Machine Learning", supervised by the Methods Center at the University of Tübingen and Christopher Stewart, Computational Linguist at Google.
 
-This thesis evaluated ML algorithms, LLMs, and unification approaches for forecasting psychological disorder incidence between two time points, using an exemplary longitudinal psychological dataset.
+Psychological disorders affect a significant percentage of the global population, contributing to a global healthcare burden. Large language models (LLMs) have demonstrated remarkable capabilities in many fields, yet their potential for forecasting psychological disorder onset from numerical data remains unexplored. This thesis evaluated ML algorithms, LLMs, and unification approaches for forecasting psychological disorder incidence between two time points, using an exemplary longitudinal psychological dataset.
 
 **RQ1**: How do traditional ML models and LLMs with prompts perform in terms of forecasting the binary incidence of psychological disorders?
 
