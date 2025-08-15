@@ -81,5 +81,5 @@ Wu, Y., Wang, Y., Wang, C., & Zheng, Z. (2024). Llm enhanced machine learning es
 Zhou, W., Zhang, S., Poon, H., & Chen, M. (2023). Context-faithful prompting for large language models. Retrieved from https://arxiv.org/abs/2303.11315
 
 --- 
-<sup>1</sup> Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
+<sup>1</sup>Data for: Dresden Predictor Study (DPS) of anxiety disorders and depression in young German Women is publically available at: https://www.psycharchives.org/en/item/dcd1536b-9b99-4ff1-a917-1f9e0528368b
  
