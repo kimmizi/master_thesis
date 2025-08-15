@@ -12,14 +12,14 @@ from tqdm import tqdm
 from google import genai
 
 # import prompts for all train data
-X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep =",", index_col = 0)
+X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep = ",", index_col = 0)
 X_train_class_definitions_prompt = pd.read_csv(
-    "X_train_pred/prompts/X_train_class_definitions_prompt.csv", sep =",", index_col = 0)
+    "X_train_pred/prompts/X_train_class_definitions_prompt.csv", sep = ",", index_col = 0)
 X_train_profiled_simple_prompt = pd.read_csv(
-    "X_train_pred/prompts/X_train_profiled_simple_prompt.csv", sep =",", index_col = 0)
-X_train_few_shot_prompt = pd.read_csv("X_train_pred/prompts/X_train_few_shot_prompt.csv", sep =",", index_col = 0)
-X_train_vignette_prompt = pd.read_csv("X_train_pred/prompts/X_train_vignette_prompt.csv", sep =",", index_col = 0)
-X_train_cot_prompt = pd.read_csv("X_train_pred/prompts/X_train_cot_prompt.csv", sep =",", index_col = 0)
+    "X_train_pred/prompts/X_train_profiled_simple_prompt.csv", sep = ",", index_col = 0)
+X_train_few_shot_prompt = pd.read_csv("X_train_pred/prompts/X_train_few_shot_prompt.csv", sep = ",", index_col = 0)
+X_train_vignette_prompt = pd.read_csv("X_train_pred/prompts/X_train_vignette_prompt.csv", sep = ",", index_col = 0)
+X_train_cot_prompt = pd.read_csv("X_train_pred/prompts/X_train_cot_prompt.csv", sep = ",", index_col = 0)
 
 # convert to arrays
 X_train_simple_prompt = X_train_simple_prompt.values.flatten()
@@ -30,14 +30,14 @@ X_train_vignette_prompt = X_train_vignette_prompt.values.flatten()
 X_train_cot_prompt = X_train_cot_prompt.values.flatten()
 
 # import instructions
-simple_instruction_df = pd.read_csv("../../../dat/instructions/simple_instruction.csv", sep =",", index_col = 0)
-class_definitions_instruction_df = pd.read_csv("../../../dat/instructions/class_definitions_instruction.csv", sep =",", index_col = 0)
-profiled_simple_instruction_df = pd.read_csv("../../../dat/instructions/profiled_simple_instruction.csv", sep =",", index_col = 0)
-few_shot_instruction_df = pd.read_csv("../../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
-vignette_instruction_df = pd.read_csv("../../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
-cot_instruction_df = pd.read_csv("../../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
-retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
+simple_instruction_df = pd.read_csv("../../../dat/instructions/simple_instruction.csv", sep = ",", index_col = 0)
+class_definitions_instruction_df = pd.read_csv("../../../dat/instructions/class_definitions_instruction.csv", sep = ",", index_col = 0)
+profiled_simple_instruction_df = pd.read_csv("../../../dat/instructions/profiled_simple_instruction.csv", sep = ",", index_col = 0)
+few_shot_instruction_df = pd.read_csv("../../../dat/instructions/few_shot_instruction.csv", sep = ",", index_col = 0)
+vignette_instruction_df = pd.read_csv("../../../dat/instructions/vignette_instruction.csv", sep = ",", index_col = 0)
+cot_instruction_df = pd.read_csv("../../../dat/instructions/cot_instruction.csv", sep = ",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep = ",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep = ",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -90,6 +90,7 @@ def calc_time(start, end, filename):
     """
     time_taken = end - start
     print(f"Time taken: {time_taken} seconds")
+
 
 
 ### Prompting with Gemma 3 ####
