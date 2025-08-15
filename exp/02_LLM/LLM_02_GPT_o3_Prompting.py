@@ -12,12 +12,12 @@ from tqdm import tqdm
 from openai import OpenAI
 
 # import prompts for all test data
-X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep =",", index_col = 0)
-X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
-X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
-X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
-X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
-X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
+X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.csv", sep = ",", index_col = 0)
+X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep = ",", index_col = 0)
+X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep = ",", index_col = 0)
+X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep = ",", index_col = 0)
+X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep = ",", index_col = 0)
+X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep = ",", index_col = 0)
 
 # convert to arrays
 X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
@@ -28,9 +28,9 @@ X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
 X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
 
 # import instructions
-cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
-retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
+cot_instruction_df = pd.read_csv("../../dat/instructions/cot_instruction.csv", sep = ",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../dat/instructions/retry_instruction.csv", sep = ",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../dat/instructions/retry_cot_instruction.csv", sep = ",", index_col = 0)
 
 # convert to string
 cot_instruction = cot_instruction_df["0"].iloc[0]
@@ -70,7 +70,6 @@ def GPT_create_response(prompt, instruction):
         try:
             prediction = re.findall(r'Prediction: (.*)', response.output_text)[0].strip()
             explanation = re.findall(r'Explanation: (.*)', response.output_text)[0].strip()
-
         except IndexError:
             print("\n Still IndexError. Don't retry prompting. \n")
             prediction = "IndexError"
@@ -125,7 +124,6 @@ client = OpenAI(
 )
 
 #### Simple prompt ####
-
 y_pred_simple_GPT = []
 explanation_simple_GPT = []
 thinking_simple_GPT = []
@@ -139,7 +137,6 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
     y_pred_simple_GPT.append(response)
     explanation_simple_GPT.append(explanation)
     thinking_simple_GPT.append(thinking)
-    # print(response)
 
     if len(y_pred_simple_GPT) % 50 == 0 and len(y_pred_simple_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_GPT)} prompts.\n")
@@ -154,7 +151,6 @@ save_prompt_to_csv(y_pred_simple_GPT, explanation_simple_GPT, thinking_simple_GP
 
 
 ### Class definition prompt ####
-
 y_pred_class_def_GPT = []
 explanation_class_def_GPT = []
 thinking_class_def_GPT = []
@@ -168,7 +164,6 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definition pro
     y_pred_class_def_GPT.append(response)
     explanation_class_def_GPT.append(explanation)
     thinking_class_def_GPT.append(thinking)
-    # print(response)
 
     if len(y_pred_class_def_GPT) % 50 == 0 and len(y_pred_class_def_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_GPT)} prompts.\n")
@@ -183,7 +178,6 @@ save_prompt_to_csv(y_pred_class_def_GPT, explanation_class_def_GPT, thinking_cla
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_GPT = []
 explanation_profiled_simple_GPT = []
 thinking_profiled_simple_GPT = []
@@ -197,7 +191,6 @@ for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompt
     y_pred_profiled_simple_GPT.append(response)
     explanation_profiled_simple_GPT.append(explanation)
     thinking_profiled_simple_GPT.append(thinking)
-    # print(response)
 
     if len(y_pred_profiled_simple_GPT) % 50 == 0 and len(y_pred_profiled_simple_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_GPT)} prompts.\n")
@@ -212,7 +205,6 @@ save_prompt_to_csv(y_pred_profiled_simple_GPT, explanation_profiled_simple_GPT, 
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_GPT = []
 explanation_few_shot_GPT = []
 thinking_few_shot_GPT = []
@@ -226,7 +218,6 @@ for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
     y_pred_few_shot_GPT.append(response)
     explanation_few_shot_GPT.append(explanation)
     thinking_few_shot_GPT.append(thinking)
-    # print(response)
 
     if len(y_pred_few_shot_GPT) % 50 == 0 and len(y_pred_few_shot_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_GPT)} prompts.\n")
@@ -241,7 +232,6 @@ save_prompt_to_csv(y_pred_few_shot_GPT, explanation_few_shot_GPT, thinking_few_s
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_GPT = []
 explanation_vignette_GPT = []
 thinking_vignette_GPT = []
@@ -255,7 +245,6 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
     y_pred_vignette_GPT.append(response)
     explanation_vignette_GPT.append(explanation)
     thinking_vignette_GPT.append(thinking)
-    # print(response)
 
     if len(y_pred_vignette_GPT) % 50 == 0 and len(y_pred_vignette_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_GPT)} prompts.\n")
@@ -269,7 +258,6 @@ save_prompt_to_csv(y_pred_vignette_GPT, explanation_vignette_GPT, thinking_vigne
 
 
 #### Chain-of-thought prompt ####
-
 y_pred_cot_GPT = []
 explanation_cot_GPT = []
 thinking_cot_GPT = []
@@ -283,7 +271,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
     y_pred_cot_GPT.append(response)
     explanation_cot_GPT.append(explanation)
     thinking_cot_GPT.append(thinking)
-    # print(response)
 
     if len(y_pred_cot_GPT) % 50 == 0 and len(y_pred_cot_GPT) > 0:
         print(f"\n\nProcessed {len(y_pred_cot_GPT)} prompts.\n")
