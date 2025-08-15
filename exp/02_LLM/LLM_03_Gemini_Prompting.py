@@ -17,11 +17,6 @@ X_test_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_simple_prompt.cs
 X_test_class_definitions_prompt_df = pd.read_csv("../../dat/prompts/X_test_class_definitions_prompt.csv", sep =",", index_col = 0)
 X_test_profiled_simple_prompt_df = pd.read_csv("../../dat/prompts/X_test_profiled_simple_prompt.csv", sep =",", index_col = 0)
 X_test_few_shot_prompt_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt.csv", sep =",", index_col = 0)
-X_test_few_shot_prompt_10_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_10.csv", sep=",", index_col=0)
-X_test_few_shot_prompt_20_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_20.csv", sep=",", index_col=0)
-X_test_few_shot_prompt_50_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_50.csv", sep=",", index_col=0)
-X_test_few_shot_prompt_100_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_100.csv", sep=",", index_col=0)
-X_test_few_shot_prompt_200_df = pd.read_csv("../../dat/prompts/X_test_few_shot_prompt_200.csv", sep=",", index_col=0)
 X_test_vignette_prompt_df = pd.read_csv("../../dat/prompts/X_test_vignette_prompt.csv", sep =",", index_col = 0)
 X_test_cot_prompt_df = pd.read_csv("../../dat/prompts/X_test_cot_prompt.csv", sep =",", index_col = 0)
 X_test_pred_def_prompt_df = pd.read_csv("../../dat/prompts/X_test_pred_def_prompt.csv", sep =",", index_col = 0)
@@ -31,11 +26,6 @@ X_test_simple_prompt = X_test_simple_prompt_df.values.flatten()
 X_test_class_definitions_prompt = X_test_class_definitions_prompt_df.values.flatten()
 X_test_profiled_simple_prompt = X_test_profiled_simple_prompt_df.values.flatten()
 X_test_few_shot_prompt = X_test_few_shot_prompt_df.values.flatten()
-X_test_few_shot_prompt_10 = X_test_few_shot_prompt_10_df.values.flatten()
-X_test_few_shot_prompt_20 = X_test_few_shot_prompt_20_df.values.flatten()
-X_test_few_shot_prompt_50 = X_test_few_shot_prompt_50_df.values.flatten()
-X_test_few_shot_prompt_100 = X_test_few_shot_prompt_100_df.values.flatten()
-X_test_few_shot_prompt_200 = X_test_few_shot_prompt_200_df.values.flatten()
 X_test_vignette_prompt = X_test_vignette_prompt_df.values.flatten()
 X_test_cot_prompt = X_test_cot_prompt_df.values.flatten()
 X_test_pred_def_prompt = X_test_pred_def_prompt_df.values.flatten()
@@ -143,8 +133,7 @@ def calc_time(start, end, filename):
 
 
 
-### 2 Prompting with Gemini 2.5 Pro ####
-
+### Prompting with Gemini 2.5 Pro ####
 model_gemini = "gemini-2.5-pro"
 
 client = genai.Client(
@@ -153,7 +142,6 @@ client = genai.Client(
 
 
 #### Simple prompt ####
-
 y_pred_simple_gemini = []
 thinking_simple_gemini = []
 
@@ -165,7 +153,6 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple prompting"):
     response, thinking = Gemini_create_response(prompt, simple_instruction)
     y_pred_simple_gemini.append(response)
     thinking_simple_gemini.append(thinking)
-    # print(response)
 
     if len(y_pred_simple_gemini) % 10 == 0 and len(y_pred_simple_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_gemini)} prompts.\n")
@@ -180,7 +167,6 @@ save_prompt_to_csv(y_pred_simple_gemini, thinking_simple_gemini, "simple_prompt"
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_gemini = []
 thinking_class_def_gemini = []
 
@@ -192,7 +178,6 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class definitions pr
     response, thinking = Gemini_create_response(prompt, class_definitions_instruction)
     y_pred_class_def_gemini.append(response)
     thinking_class_def_gemini.append(thinking)
-    # print(response)
 
     if len(y_pred_class_def_gemini) % 10 == 0 and len(y_pred_class_def_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_gemini)} prompts.\n")
@@ -207,7 +192,6 @@ save_prompt_to_csv(y_pred_class_def_gemini, thinking_class_def_gemini, "class_de
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_gemini = []
 thinking_profiled_simple_gemini = []
 
@@ -219,7 +203,6 @@ for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled simple prompt
     response, thinking = Gemini_create_response(prompt, simple_instruction)
     y_pred_profiled_simple_gemini.append(response)
     thinking_profiled_simple_gemini.append(thinking)
-    # print(response)
 
     if len(y_pred_profiled_simple_gemini) % 10 == 0 and len(y_pred_profiled_simple_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_gemini)} prompts.\n")
@@ -233,9 +216,7 @@ save_prompt_to_csv(y_pred_profiled_simple_gemini, thinking_profiled_simple_gemin
 
 
 
-
 #### Few shot prompt ####
-
 y_pred_few_shot_gemini = []
 thinking_few_shot_gemini = []
 
@@ -247,7 +228,6 @@ for prompt in tqdm(X_test_few_shot_prompt, desc = "Few-shot prompting"):
     response, thinking = Gemini_create_response(prompt, few_shot_instruction)
     y_pred_few_shot_gemini.append(response)
     thinking_few_shot_gemini.append(thinking)
-    # print(response)
 
     if len(y_pred_few_shot_gemini) % 10 == 0 and len(y_pred_few_shot_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_gemini)} prompts.\n")
@@ -262,7 +242,6 @@ save_prompt_to_csv(y_pred_few_shot_gemini, thinking_few_shot_gemini, "few_shot_p
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_gemini = []
 thinking_vignette_gemini = []
 
@@ -274,7 +253,6 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette prompting"):
     response, thinking = Gemini_create_response(prompt, vignette_instruction)
     y_pred_vignette_gemini.append(response)
     thinking_vignette_gemini.append(thinking)
-    # print(response)
 
     if len(y_pred_vignette_gemini) % 10 == 0 and len(y_pred_vignette_gemini) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_gemini)} prompts.\n")
@@ -289,7 +267,6 @@ save_prompt_to_csv(y_pred_vignette_gemini, thinking_vignette_gemini, "vignette_p
 
 
 #### Chain-of-thought prompt ####
-
 y_pred_cot_gemini = []
 thinking_cot_gemini = []
 explanation_cot_gemini = []
@@ -320,8 +297,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
                 thinking_cot_gemini.append(part.text)
         y_pred_cot_gemini.append(prediction)
         explanation_cot_gemini.append(explanation)
-        # print(prediction)
-
     except IndexError:
         print("\n IndexError. Retry prompting. \n")
         response = client.models.generate_content(
@@ -345,7 +320,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-thought prompting"):
                     thinking_cot_gemini.append(part.text)
             y_pred_cot_gemini.append(prediction)
             explanation_cot_gemini.append(explanation)
-
         except IndexError:
             print("\n Still IndexError. Don't retry prompting. \n")
             y_pred_cot_gemini.append("IndexError")
