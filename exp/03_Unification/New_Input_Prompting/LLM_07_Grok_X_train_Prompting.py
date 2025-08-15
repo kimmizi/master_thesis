@@ -10,17 +10,16 @@ import time
 import re
 from tqdm import tqdm
 from openai import OpenAI
-from sklearn.model_selection import train_test_split
 
 # import prompts for all train data
-X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep =",", index_col = 0)
+X_train_simple_prompt = pd.read_csv("X_train_pred/prompts/X_train_simple_prompt.csv", sep = ",", index_col = 0)
 X_train_class_definitions_prompt = pd.read_csv(
-    "X_train_pred/prompts/X_train_class_definitions_prompt.csv", sep =",", index_col = 0)
+    "X_train_pred/prompts/X_train_class_definitions_prompt.csv", sep = ",", index_col = 0)
 X_train_profiled_simple_prompt = pd.read_csv(
-    "X_train_pred/prompts/X_train_profiled_simple_prompt.csv", sep =",", index_col = 0)
-X_train_few_shot_prompt = pd.read_csv("X_train_pred/prompts/X_train_few_shot_prompt.csv", sep =",", index_col = 0)
-X_train_vignette_prompt = pd.read_csv("X_train_pred/prompts/X_train_vignette_prompt.csv", sep =",", index_col = 0)
-X_train_cot_prompt = pd.read_csv("X_train_pred/prompts/X_train_cot_prompt.csv", sep =",", index_col = 0)
+    "X_train_pred/prompts/X_train_profiled_simple_prompt.csv", sep = ",", index_col = 0)
+X_train_few_shot_prompt = pd.read_csv("X_train_pred/prompts/X_train_few_shot_prompt.csv", sep = ",", index_col = 0)
+X_train_vignette_prompt = pd.read_csv("X_train_pred/prompts/X_train_vignette_prompt.csv", sep = ",", index_col = 0)
+X_train_cot_prompt = pd.read_csv("X_train_pred/prompts/X_train_cot_prompt.csv", sep = ",", index_col = 0)
 
 # convert to arrays
 X_train_simple_prompt = X_train_simple_prompt.values.flatten()
@@ -31,12 +30,14 @@ X_train_vignette_prompt = X_train_vignette_prompt.values.flatten()
 X_train_cot_prompt = X_train_cot_prompt.values.flatten()
 
 # import instructions
-simple_instruction_df = pd.read_csv("../../../dat/instructions/simple_instruction.csv", sep =",", index_col = 0)
-class_definitions_instruction_df = pd.read_csv("../../../dat/instructions/class_definitions_instruction.csv", sep =",", index_col = 0)
-profiled_simple_instruction_df = pd.read_csv("../../../dat/instructions/profiled_simple_instruction.csv", sep =",", index_col = 0)
-few_shot_instruction_df = pd.read_csv("../../../dat/instructions/few_shot_instruction.csv", sep =",", index_col = 0)
-vignette_instruction_df = pd.read_csv("../../../dat/instructions/vignette_instruction.csv", sep =",", index_col = 0)
-cot_instruction_df = pd.read_csv("../../../dat/instructions/cot_instruction.csv", sep =",", index_col = 0)
+simple_instruction_df = pd.read_csv("../../../dat/instructions/simple_instruction.csv", sep = ",", index_col = 0)
+class_definitions_instruction_df = pd.read_csv("../../../dat/instructions/class_definitions_instruction.csv", sep = ",", index_col = 0)
+profiled_simple_instruction_df = pd.read_csv("../../../dat/instructions/profiled_simple_instruction.csv", sep = ",", index_col = 0)
+few_shot_instruction_df = pd.read_csv("../../../dat/instructions/few_shot_instruction.csv", sep = ",", index_col = 0)
+vignette_instruction_df = pd.read_csv("../../../dat/instructions/vignette_instruction.csv", sep = ",", index_col = 0)
+cot_instruction_df = pd.read_csv("../../../dat/instructions/cot_instruction.csv", sep = ",", index_col = 0)
+retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep = ",", index_col = 0)
+retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep = ",", index_col = 0)
 
 # convert to string
 simple_instruction = simple_instruction_df["0"].iloc[0]
@@ -45,12 +46,6 @@ profiled_simple_instruction = profiled_simple_instruction_df["0"].iloc[0]
 few_shot_instruction = few_shot_instruction_df["0"].iloc[0]
 vignette_instruction = vignette_instruction_df["0"].iloc[0]
 cot_instruction = cot_instruction_df["0"].iloc[0]
-
-# import retry instructions when output format was wrong
-retry_instruction_df = pd.read_csv("../../../dat/instructions/retry_instruction.csv", sep =",", index_col = 0)
-retry_cot_instruction_df = pd.read_csv("../../../dat/instructions/retry_cot_instruction.csv", sep =",", index_col = 0)
-
-# convert to string
 retry_instruction = retry_instruction_df["0"].iloc[0]
 retry_cot_instruction = retry_cot_instruction_df["0"].iloc[0]
 
@@ -79,7 +74,6 @@ def Grok_create_completion(prompt, instruction):
 
     return completion.choices[0].message.content.strip()
 
-
 def save_prompt_to_csv(response_array, filename):
     # value counts for array
     counts = pd.Series(response_array).value_counts()
@@ -95,7 +89,6 @@ def save_prompt_to_csv(response_array, filename):
     })
     df.to_csv(f"X_train_pred/Grok/X_train_grok_{filename}.csv", sep = ",", index = False)
 
-
 def calc_time(start, end, filename):
     """
     Calculate the time taken for the prompting and save it to a CSV file.
@@ -105,8 +98,7 @@ def calc_time(start, end, filename):
 
 
 
-#### 2 Prompting with Grok 3 Beta ####
-
+#### Prompting with Grok 3 Beta ####
 model_grok = "grok-3-beta"
 
 client = OpenAI(
@@ -115,8 +107,8 @@ client = OpenAI(
 )
 
 
-#### Simple prompt ####
 
+#### Simple prompt ####
 y_pred_simple_grok = []
 
 # measure time in seconds
@@ -140,7 +132,6 @@ save_prompt_to_csv(y_pred_simple_grok, "simple_prompt")
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_grok = []
 
 # measure time in seconds
@@ -163,7 +154,6 @@ save_prompt_to_csv(y_pred_class_def_grok, "class_definitions_prompt")
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_grok = []
 
 # measure time in seconds
@@ -186,7 +176,6 @@ save_prompt_to_csv(y_pred_profiled_simple_grok, "profiled_simple_prompt")
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_grok = []
 
 # measure time in seconds
@@ -210,7 +199,6 @@ save_prompt_to_csv(y_pred_few_shot_grok, "few_shot_prompt")
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_grok = []
 
 # measure time in seconds
@@ -234,7 +222,6 @@ save_prompt_to_csv(y_pred_vignette_grok, "vignette_prompt")
 
 
 ### Chain-of-thought prompt ####
-
 y_pred_cot_grok = []
 explanation_cot_grok = []
 
