@@ -143,8 +143,7 @@ def calc_time(start, end, filename):
 
 
 
-### 2 Prompting with Claude 3.7 Sonnet ####
-
+### Prompting with Claude 4 Sonnet ####
 model_claude = "claude-sonnet-4-20250514"
 
 client = anthropic.Anthropic(
@@ -153,7 +152,6 @@ client = anthropic.Anthropic(
 
 
 #### Simple prompt ####
-
 y_pred_simple_claude = []
 thinking_simple_claude = []
 
@@ -165,7 +163,6 @@ for prompt in tqdm(X_test_simple_prompt, desc = "Simple Prompting"):
     response, thinking = Claude_create_message(prompt, simple_instruction)
     y_pred_simple_claude.append(response)
     thinking_simple_claude.append(thinking)
-    # print(response)
 
     if len(y_pred_simple_claude) % 50 == 0 and len(y_pred_simple_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_simple_claude)} prompts.\n")
@@ -180,7 +177,6 @@ save_prompt_to_csv(y_pred_simple_claude, thinking_simple_claude, "simple_prompt"
 
 
 #### Class definition prompt ####
-
 y_pred_class_def_claude = []
 thinking_class_def_claude = []
 
@@ -192,7 +188,6 @@ for prompt in tqdm(X_test_class_definitions_prompt, desc = "Class Definitions Pr
     response, thinking = Claude_create_message(prompt, class_definitions_instruction)
     y_pred_class_def_claude.append(response)
     thinking_class_def_claude.append(thinking)
-    # print(response)
 
     if len(y_pred_class_def_claude) % 50 == 0 and len(y_pred_class_def_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_class_def_claude)} prompts.\n")
@@ -207,7 +202,6 @@ save_prompt_to_csv(y_pred_class_def_claude, thinking_class_def_claude, "class_de
 
 
 #### Profiled simple prompt ####
-
 y_pred_profiled_simple_claude = []
 thinking_profiled_simple_claude = []
 
@@ -219,7 +213,6 @@ for prompt in tqdm(X_test_profiled_simple_prompt, desc = "Profiled Simple Prompt
     response, thinking = Claude_create_message(prompt, profiled_simple_instruction)
     y_pred_profiled_simple_claude.append(response)
     thinking_profiled_simple_claude.append(thinking)
-    # print(response)
 
     if len(y_pred_profiled_simple_claude) % 50 == 0 and len(y_pred_profiled_simple_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_profiled_simple_claude)} prompts.\n")
@@ -234,7 +227,6 @@ save_prompt_to_csv(y_pred_profiled_simple_claude, thinking_profiled_simple_claud
 
 
 #### Few shot prompt ####
-
 y_pred_few_shot_claude = []
 thinking_few_shot_claude = []
 
@@ -246,7 +238,6 @@ for prompt in tqdm(X_test_few_shot_prompt, desc = "Few Shot Prompting"):
     response, thinking = Claude_create_message(prompt, few_shot_instruction)
     y_pred_few_shot_claude.append(response)
     thinking_few_shot_claude.append(thinking)
-    # print(response)
 
     if len(y_pred_few_shot_claude) % 50 == 0 and len(y_pred_few_shot_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_few_shot_claude)} prompts.\n")
@@ -261,7 +252,6 @@ save_prompt_to_csv(y_pred_few_shot_claude, thinking_few_shot_claude, "few_shot_p
 
 
 #### Vignette prompt ####
-
 y_pred_vignette_claude = []
 thinking_vignette_claude = []
 
@@ -273,7 +263,6 @@ for prompt in tqdm(X_test_vignette_prompt, desc = "Vignette Prompting"):
     response, thinking = Claude_create_message(prompt, vignette_instruction)
     y_pred_vignette_claude.append(response)
     thinking_vignette_claude.append(thinking)
-    # print(response)
 
     if len(y_pred_vignette_claude) % 50 == 0 and len(y_pred_vignette_claude) > 0:
         print(f"\n\nProcessed {len(y_pred_vignette_claude)} prompts.\n")
@@ -288,7 +277,6 @@ save_prompt_to_csv(y_pred_vignette_claude, thinking_vignette_claude, "vignette_p
 
 
 ### Chain-of-thought prompt ####
-
 y_pred_cot_claude = []
 explanation_cot_claude = []
 thinking_cot_claude = []
@@ -326,8 +314,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
         y_pred_cot_claude.append(prediction)
         explanation_cot_claude.append(explanation)
         thinking_cot_claude.append(message.content[0].thinking)
-        # print(prediction)
-
     except IndexError:
         print("\n IndexError. Retry prompting. \n")
         message = client.messages.create(
@@ -358,7 +344,6 @@ for prompt in tqdm(X_test_cot_prompt, desc = "Chain-of-Thought Prompting"):
             y_pred_cot_claude.append(prediction)
             explanation_cot_claude.append(explanation)
             thinking_cot_claude.append(message.content[0].thinking)
-
         except IndexError:
             print("\n Still IndexError. Don't retry prompting. \n")
             y_pred_cot_claude.append("IndexError")
